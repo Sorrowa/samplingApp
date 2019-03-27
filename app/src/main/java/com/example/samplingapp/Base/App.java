@@ -2,12 +2,15 @@ package com.example.samplingapp.Base;
 
 import android.app.Application;
 import android.app.Activity;
+
+import com.example.core.Entity.User;
+
 import java.util.ArrayList;
 
 public class App extends Application {
 
     private ArrayList<Activity> activities;
-
+    public static User user;
 
     @Override
     public void onCreate() {

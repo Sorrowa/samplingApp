@@ -1,14 +1,20 @@
 package com.example.samplingapp.Activities;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BaseActivity;
+import com.example.samplingapp.MainActivity;
 import com.example.samplingapp.Presenter.LoginPresenter;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.BaseUtil;
+import com.example.samplingapp.utils.ShareUtil;
 
 import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
@@ -48,14 +54,14 @@ public class LoginActivity extends BaseActivity {
     protected void onClick(View view){
         switch (view.getId()){
             case R.id.login_button:
-                showToast("点击了登录按钮");
                 getLogin();
                 break;
             case R.id.keyword_see:
                 if (canYouSee){
                     //可以看到
                     keyText
-                            .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                            .setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                    | InputType.TYPE_CLASS_TEXT);
                     keywordIfsee
                             .setImageDrawable(getDrawable(R.drawable.login_hide_keyword));
                 }else{
@@ -78,22 +84,29 @@ public class LoginActivity extends BaseActivity {
         if ((account= String.valueOf(accountText.getText())).equals("")
                 ||(passWord= String.valueOf(keyText.getText())).equals("")){
             //如果有一项没有填写
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
-            builder.setTitle("注意！");
-            builder.setMessage("账户或者密码不能为空！");
-            builder.setCancelable(true);
-            builder.show();
+            BaseUtil.showDialog(this,"密码或者用户名没有输入");
+            return;
         }
-
-        presenter.getLogin(new LoginPresenter.LoginLisenter() {
+        presenter.getLogin(account,passWord,new LoginPresenter.LoginLisenter() {
             @Override
-            public void onSuccess(String res) {
+            public void onSuccess(String res, Boolean success) {
                 //成功回调
+                if (success){
+                    showToast(res);
+                    //todo:跳转的下一个活动
+                    Intent intent=new Intent(LoginActivity.this
+                            , MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    showToast(res);
+                }
             }
 
             @Override
             public void onFail(String error) {
                 //失败
+                showToast(error);
             }
         });
     }
