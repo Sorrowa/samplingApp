@@ -2,21 +2,16 @@ package com.example.samplingapp.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.MainActivity;
 import com.example.samplingapp.Presenter.LoginPresenter;
 import com.example.samplingapp.R;
 import com.example.samplingapp.utils.BaseUtil;
-import com.example.samplingapp.utils.ShareUtil;
-
-import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,8 +74,8 @@ public class LoginActivity extends BaseActivity {
      * presenter调用之前进行内容审核
      */
     private void getLogin() {
-        String account= "";
-        String passWord="";
+        String account;
+        String passWord;
         if ((account= String.valueOf(accountText.getText())).equals("")
                 ||(passWord= String.valueOf(keyText.getText())).equals("")){
             //如果有一项没有填写
