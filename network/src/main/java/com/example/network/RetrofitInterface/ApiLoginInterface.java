@@ -1,6 +1,6 @@
 package com.example.network.RetrofitInterface;
 
-import com.example.core.Entity.Message;
+import com.example.core.Entity.message.LoginMessage;
 import com.example.network.InternetUtil;
 
 import retrofit2.Call;
@@ -16,5 +16,5 @@ public interface ApiLoginInterface {
      * @return 登录回调内容
      */
     @POST(InternetUtil.LOGIN)
-    Call<Message> login(@Query("loginId") String name,@Query("pwd") String password);
+    Call<LoginMessage> login(@Query("loginId") String name, @Query("pwd") String password);
 }

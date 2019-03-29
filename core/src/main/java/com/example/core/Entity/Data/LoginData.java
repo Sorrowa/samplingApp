@@ -1,4 +1,4 @@
-package com.example.core.Entity;
+package com.example.core.Entity.Data;
 
 public class LoginData {
     private String token;

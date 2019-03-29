@@ -1,12 +1,12 @@
-package com.example.core.Entity;
+package com.example.core.Entity.message;
 
 /**
  * 存储接口回调内容
  */
-public class Message {
+public abstract class Message<T> {
     private String Message;
     private Boolean IsSuccess;
-    private LoginData Data;
+    private T Data;
 
     public String getMessage() {
         return Message;
@@ -24,11 +24,11 @@ public class Message {
         IsSuccess = success;
     }
 
-    public LoginData getData() {
+    public T getData() {
         return Data;
     }
 
-    public void setData(LoginData data) {
+    public void setData(T data) {
         Data = data;
     }
 }
