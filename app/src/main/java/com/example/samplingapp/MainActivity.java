@@ -7,9 +7,15 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.samplingapp.Activities.PersonalActivity;
+import com.example.samplingapp.Adapter.ViewPagerAdapters.MainViewPagerAdapter;
 import com.example.samplingapp.Base.BaseActivity;
+import com.example.samplingapp.mvp.Fragment.WaitingForSamplingFragment;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +29,7 @@ public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.person_center)
     ImageView personCenter;
-
+    private List<Fragment> fragments=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +41,19 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initViewPager() {
+        initFragment();
+        MainViewPagerAdapter adapter=new MainViewPagerAdapter(getSupportFragmentManager(),
+                fragments,new String[]{"待采样","已采样"});
+        viewPager.setAdapter(adapter);
+    }
+
+    private void initFragment() {
+        fragments.add(new WaitingForSamplingFragment());
+        fragments.add(new WaitingForSamplingFragment());
     }
 
     private void initTab() {
-//        tabLayout.setupWithViewPager(viewPager);
-        TabLayout.Tab tab=tabLayout.newTab();
-        tab.setText("待采样");
-        TabLayout.Tab tab1=tabLayout.newTab();
-        tab1.setText("已采样");
-        tabLayout.addTab(tab);
-        tabLayout.addTab(tab1);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @OnClick(R.id.person_center)

@@ -1,4 +1,6 @@
 package com.example.samplingapp.Activities;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -36,6 +38,8 @@ public class LoginActivity extends BaseActivity {
     Boolean canYouSee=false;//默认不能显示密码
 
     private LoginPresenter presenter;
+
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,9 @@ public class LoginActivity extends BaseActivity {
             BaseUtil.showDialog(this,"密码或者用户名没有输入");
             return;
         }
+        //显示一个dialog
+        showDialog();
+
         presenter.getLogin(account,passWord,new LoginPresenter.LoginLisenter() {
             @Override
             public void onSuccess(String res, Boolean success) {
@@ -104,14 +111,37 @@ public class LoginActivity extends BaseActivity {
                 }else{
                     showToast(res);
                 }
+                dismissDialog();
             }
 
             @Override
             public void onFail(String error) {
                 //失败
                 showToast(error);
+                dismissDialog();
             }
         });
+    }
+
+    private void dismissDialog() {
+        if (dialog!=null){
+            dialog.dismiss();
+            dialog=null;
+        }
+    }
+
+    private void showDialog() {
+        View layout = getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        dialog=new Dialog(this);
+        dialog.setContentView(layout);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
+        dialog.show();
     }
 
     /**
