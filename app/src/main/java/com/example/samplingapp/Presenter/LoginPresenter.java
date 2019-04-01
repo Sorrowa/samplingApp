@@ -2,6 +2,7 @@ package com.example.samplingapp.Presenter;
 
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.User;
+import com.example.network.RetrofitHelper;
 import com.example.network.model.ApiModel;
 import com.example.samplingapp.Activities.LoginActivity;
 import com.example.samplingapp.Base.App;
@@ -28,6 +29,13 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                             ,msg.getData().getOrgName());
                     ShareUtil.setToken((App) getView().getApplication()
                             ,msg.getData().getToken());
+                    //设置token
+                    RetrofitHelper.setToken(msg.getData().getToken());
+                    //存储登录状态
+                    ShareUtil.setLoadState((App) getView().getApplication());
+                    //存储账号信息
+                    ShareUtil.setUserInfo((App) getView().getApplication()
+                            ,App.user.getAccount(),App.user.getOrgName());
                 }
                 lisenter.onSuccess(msg.getMessage(),msg.getSuccess());
             }
@@ -38,7 +46,6 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
             }
         });
     }
-
 
 
     public interface LoginLisenter{

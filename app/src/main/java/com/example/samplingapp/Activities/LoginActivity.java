@@ -7,11 +7,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.MainActivity;
 import com.example.samplingapp.Presenter.LoginPresenter;
 import com.example.samplingapp.R;
 import com.example.samplingapp.utils.BaseUtil;
+import com.example.samplingapp.utils.ShareUtil;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,7 +44,13 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         presenter=new LoginPresenter();
         presenter.attachView(this);
-        //提醒输入内容为空
+        //如果已经登录，那么直接跳转到下一活动
+        if (checkLoadState()){
+            Intent intent=new Intent(LoginActivity.this
+                    , MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 
@@ -88,7 +97,6 @@ public class LoginActivity extends BaseActivity {
                 //成功回调
                 if (success){
                     showToast(res);
-                    //todo:跳转的下一个活动
                     Intent intent=new Intent(LoginActivity.this
                             , MainActivity.class);
                     startActivity(intent);
@@ -104,6 +112,14 @@ public class LoginActivity extends BaseActivity {
                 showToast(error);
             }
         });
+    }
+
+    /**
+     * 检测登录状态
+     * @return 是否已经登录
+     */
+    public Boolean checkLoadState(){
+        return ShareUtil.getLoadState((App) getApplication());
     }
 
     //接触绑定内容

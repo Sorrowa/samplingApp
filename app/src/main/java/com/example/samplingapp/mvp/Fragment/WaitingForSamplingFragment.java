@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.samplingapp.Base.BaseFragment;
+import com.example.samplingapp.R;
 
 import androidx.annotation.Nullable;
 
@@ -17,6 +18,8 @@ public class WaitingForSamplingFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater
             , @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view=LayoutInflater.from(getContext()).inflate(R.layout.fragment_waitingsampling
+                ,container,false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }

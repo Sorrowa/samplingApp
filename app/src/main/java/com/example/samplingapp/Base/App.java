@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Activity;
 
 import com.example.core.Entity.User;
+import com.example.samplingapp.utils.ShareUtil;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,18 @@ public class App extends Application {
 
     }
 
+    /**
+     * 获取user，如果user信息为空，那么从sharePreference中获取
+     * @return
+     */
+    public static User getUser(App app){
+        if (null==user){
+            //初始化user
+            user=ShareUtil.getUserInfo(app);
+        }
+
+        return user;
+    }
 
     public void addActivity_(Activity activity){
         activities.add(activity);

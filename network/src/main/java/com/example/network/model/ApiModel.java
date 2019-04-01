@@ -29,7 +29,10 @@ public class ApiModel {
      * @return 回调数据
      */
     private static Call<ProjectMessage> getProject(String type, String keyWord){
-        Retrofit retrofit=RetrofitHelper.getServerRetrofit();
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit();
+        if (retrofit==null){
+            return null;
+        }
         ApiGetProjectInterface apiGetProjectInterface=retrofit
                 .create(ApiGetProjectInterface.class);
         return apiGetProjectInterface.getProject(type,keyWord);
