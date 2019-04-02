@@ -1,10 +1,13 @@
 package com.example.samplingapp.Base;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity implements BaseView {
 
     App app;
+    public Handler handler;
 
     String[] permmisons = new String[]{Manifest.permission.CAMERA
             , Manifest.permission.READ_EXTERNAL_STORAGE
@@ -30,7 +34,6 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         if (app==null){
             app= (App) getApplication();
         }
-
         addActivity();
 
         //沉浸式标题栏设置
@@ -71,5 +74,25 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
     @Override
     public Context getContext(){
         return this;
+    }
+
+    /**
+     * 刷新handler
+     */
+    @SuppressLint("HandlerLeak")
+    private void resetHandler(){
+        if (handler==null){
+            handler=new Handler(){
+                @Override
+                public String getMessageName(Message message) {
+                    return super.getMessageName(message);
+                }
+            };
+        }
+    }
+
+    public void handleRunnable(Runnable runnable){
+        resetHandler();
+        handler.post(runnable);
     }
 }

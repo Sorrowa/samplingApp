@@ -117,18 +117,18 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
         datas.clear();
         datas.addAll(data);
         Log.d("zzh","内容长度为:"+datas.size());
-        showChange();
+        presenter.getView().handleRunnable(new Runnable(){
+            @Override
+            public void run() {
+                Looper myLooper = Looper.myLooper();
+                Looper mainLooper = Looper.getMainLooper();
+                Log.i("zzh", "isInMainThread myLooper=" + myLooper + ";mainLooper=" + mainLooper);
+                showChange();
+            }
+        });
 //        editText.clearFocus();
         BaseUtil.softInput(presenter.getView());
 //        refreash();
-    }
-
-    /**
-     * 刷新
-     */
-    private void refreash() {
-        adapater=new SamplingTaskAdapter(datas);
-        r.setAdapter(adapater);
     }
 
     private void showChange(){
