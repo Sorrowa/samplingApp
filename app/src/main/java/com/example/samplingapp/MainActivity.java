@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.example.samplingapp.Activities.PersonalActivity;
 import com.example.samplingapp.Adapter.ViewPagerAdapters.MainViewPagerAdapter;
 import com.example.samplingapp.Base.BaseActivity;
+import com.example.samplingapp.Presenter.MainPresenter;
 import com.example.samplingapp.mvp.Fragment.WaitingForSamplingFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -29,13 +30,20 @@ public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.person_center)
     ImageView personCenter;
+
+    private MainPresenter presenter;
     private List<Fragment> fragments=new ArrayList<>();
+
+    //待采样碎片
+    private WaitingForSamplingFragment waiting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        presenter=new MainPresenter();
+        presenter.attachView(this);
         initTab();
         initViewPager();
     }
@@ -48,7 +56,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        fragments.add(new WaitingForSamplingFragment());
+        waiting=new WaitingForSamplingFragment();
+        waiting.setPresenter(presenter);
+        fragments.add(waiting);
         fragments.add(new WaitingForSamplingFragment());
     }
 

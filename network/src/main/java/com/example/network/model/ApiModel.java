@@ -28,8 +28,10 @@ public class ApiModel {
      * @param keyWord 搜索关键字
      * @return 回调数据
      */
-    private static Call<ProjectMessage> getProject(String type, String keyWord){
-        Retrofit retrofit=RetrofitHelper.getTokenRetrofit();
+    private static Call<ProjectMessage> getProject(String type
+            , String keyWord
+            ,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
         if (retrofit==null){
             return null;
         }
@@ -43,8 +45,8 @@ public class ApiModel {
      * @param keyWord 搜索关键字
      * @return
      */
-    public static Call<ProjectMessage> getUndoProject(String keyWord){
-        return getProject(InternetUtil.UNDOPROJECTTYPE,keyWord);
+    public static Call<ProjectMessage> getUndoProject(String keyWord,String Token){
+        return getProject(InternetUtil.UNDOPROJECTTYPE,keyWord,Token);
     }
 
     /**
@@ -52,7 +54,7 @@ public class ApiModel {
      * @param keyWord 搜索关键字
      * @return
      */
-    public static Call<ProjectMessage> getHaveDoneProject(String keyWord){
-        return getProject(InternetUtil.HAVEDONEPROJECTTYPE,keyWord);
+    public static Call<ProjectMessage> getHaveDoneProject(String keyWord,String Token){
+        return getProject(InternetUtil.HAVEDONEPROJECTTYPE,keyWord,Token);
     }
 }

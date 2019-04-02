@@ -1,8 +1,10 @@
 package com.example.samplingapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -38,5 +40,14 @@ public class BaseUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 关闭软键盘
+     * @param activity
+     */
+    public static void softInput(Activity activity){
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
     }
 }

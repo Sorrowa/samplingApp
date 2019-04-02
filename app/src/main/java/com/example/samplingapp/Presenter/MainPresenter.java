@@ -1,10 +1,13 @@
 package com.example.samplingapp.Presenter;
 
+
 import com.example.core.Entity.Data.ProjectData;
 import com.example.core.Entity.message.ProjectMessage;
 import com.example.network.model.ApiModel;
+import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BasePresenter;
 import com.example.samplingapp.MainActivity;
+import com.example.samplingapp.utils.ShareUtil;
 
 import java.util.List;
 
@@ -15,7 +18,8 @@ import retrofit2.Response;
 public class MainPresenter extends BasePresenter<MainActivity> {
 
     public void getHaveDoneProject(String keyWord,ProjectListener listener){
-        Call<ProjectMessage> call=ApiModel.getHaveDoneProject(keyWord);
+        Call<ProjectMessage> call=ApiModel.getHaveDoneProject(keyWord
+                , ShareUtil.getToken((App) getView().getApplication()));
         call.enqueue(new Callback<ProjectMessage>() {
             @Override
             public void onResponse(Call<ProjectMessage> call
@@ -33,7 +37,8 @@ public class MainPresenter extends BasePresenter<MainActivity> {
     }
 
     public void getUndoProject(String keyWord,ProjectListener listener){
-        Call<ProjectMessage> call=ApiModel.getUndoProject(keyWord);
+        Call<ProjectMessage> call=ApiModel.getUndoProject(keyWord
+                ,ShareUtil.getToken((App) getView().getApplication()));
         call.enqueue(new Callback<ProjectMessage>() {
             @Override
             public void onResponse(Call<ProjectMessage> call, Response<ProjectMessage> response) {
@@ -43,6 +48,7 @@ public class MainPresenter extends BasePresenter<MainActivity> {
 
             @Override
             public void onFailure(Call<ProjectMessage> call, Throwable t) {
+                t.printStackTrace();
                 listener.onFail();
             }
         });

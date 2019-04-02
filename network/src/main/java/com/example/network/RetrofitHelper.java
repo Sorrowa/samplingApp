@@ -1,6 +1,7 @@
 package com.example.network;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -13,7 +14,7 @@ public class RetrofitHelper {
 
     private static volatile Retrofit ServerRetrofit;
     private static volatile Retrofit TokenRetrofit;
-    private static Boolean isSetToken=false;
+    private static Boolean isSetToken=true;
 
     public static Retrofit getServerRetrofit(){
         if (ServerRetrofit==null){
@@ -32,7 +33,7 @@ public class RetrofitHelper {
      * @param Token
      */
     public static void setToken(final String Token){
-        if (ServerRetrofit==null && Token!=null){
+        if (TokenRetrofit==null && Token!=null){
             OkHttpClient.Builder builder=new OkHttpClient.Builder();
             builder.addInterceptor(new Interceptor() {
                 @Override
@@ -44,7 +45,10 @@ public class RetrofitHelper {
                     return chain.proceed(request1);
                 }
             });
-            ServerRetrofit=new Retrofit
+            builder.connectTimeout(10, TimeUnit.SECONDS);
+            builder.writeTimeout(10, TimeUnit.SECONDS);
+            builder.readTimeout(30, TimeUnit.SECONDS);
+            TokenRetrofit=new Retrofit
                     .Builder()
                     .client(builder.build())
                     .addConverterFactory(GsonConverterFactory.create())
@@ -55,10 +59,11 @@ public class RetrofitHelper {
     }
 
 
-    public static Retrofit getTokenRetrofit(){
+    public static Retrofit getTokenRetrofit(String Token){
         if (!RetrofitHelper.isSetToken){
             return null;
         }
+        setToken(Token);
         return TokenRetrofit;
     }
 }

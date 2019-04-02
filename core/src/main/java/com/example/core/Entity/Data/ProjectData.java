@@ -1,9 +1,16 @@
 package com.example.core.Entity.Data;
 
+import android.annotation.SuppressLint;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 待采样与已采样
  * 获取项目列表的DataBean
  */
+@SuppressLint("SimpleDateFormat")
 public class ProjectData {
 
 //    "Id": "f1d85c28-95a0-4bc4-b714-0f4a3ffb0b00",
@@ -39,20 +46,16 @@ public class ProjectData {
     }
 
     public String getBeginTime() {
-        return BeginTime;
+        return BeginTime.toString();
     }
 
-    public void setBeginTime(String beginTime) {
-        BeginTime = beginTime;
-    }
+
 
     public String getEndTime() {
-        return EndTime;
+        return EndTime.toString();
     }
 
-    public void setEndTime(String endTime) {
-        EndTime = endTime;
-    }
+
 
     public String getTotalPoint() {
         return TotalPoint;
@@ -76,5 +79,13 @@ public class ProjectData {
 
     public void setQuaCount(String quaCount) {
         QuaCount = quaCount;
+    }
+
+    public void setBeginTime(String beginTime) {
+        BeginTime = beginTime;
+    }
+
+    public void setEndTime(String endTime) {
+        EndTime = endTime;
     }
 }
