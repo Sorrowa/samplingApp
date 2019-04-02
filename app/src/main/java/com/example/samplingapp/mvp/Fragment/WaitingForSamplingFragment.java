@@ -73,7 +73,6 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
             if (presenter==null){
                 showToast("初始化未完成");
             }
-            Log.d("zzh","开始搜索,搜索内容为:"+editText.getText().toString());
             presenter.getUndoProject(editText.getText().toString(),this);
         });
     }
@@ -90,7 +89,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
      *
      * @param presenter
      */
-    public void setPresenter(MainPresenter presenter) {
+    public static void setPresenter(MainPresenter presenter) {
         WaitingForSamplingFragment.presenter = presenter;
     }
 
@@ -116,13 +115,10 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
         }
         datas.clear();
         datas.addAll(data);
-        Log.d("zzh","内容长度为:"+datas.size());
         presenter.getView().handleRunnable(new Runnable(){
             @Override
             public void run() {
-                Looper myLooper = Looper.myLooper();
-                Looper mainLooper = Looper.getMainLooper();
-                Log.i("zzh", "isInMainThread myLooper=" + myLooper + ";mainLooper=" + mainLooper);
+                BaseUtil.softInput(presenter.getView());
                 showChange();
             }
         });

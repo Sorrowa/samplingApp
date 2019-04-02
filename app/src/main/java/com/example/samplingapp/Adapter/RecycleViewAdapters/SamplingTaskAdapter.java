@@ -1,12 +1,15 @@
 package com.example.samplingapp.Adapter.RecycleViewAdapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.core.Entity.Data.ProjectData;
+import com.example.samplingapp.Activities.TaskDetailActivity;
 import com.example.samplingapp.R;
 
 
@@ -19,6 +22,7 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
 
 
     private List<ProjectData> datas;
+    private Context context;
 
     public SamplingTaskAdapter(List<ProjectData> datas){
         this.datas=datas;
@@ -30,6 +34,7 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
         View layout= LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.item_main_undo_task,parent,false);
+        context=parent.getContext();
         return new ViewHolder(layout);
     }
 
@@ -44,6 +49,12 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
         holder.pointPercentage.setText("点位："
                 +datas.get(position).getSampCount()+"/"
                 +datas.get(position).getTotalPoint());
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent=new Intent(context, TaskDetailActivity.class);
+            intent.putExtra("type","1");
+            intent.putExtra("task",datas.get(position));
+            context.startActivity(intent);
+        });
     }
 
     @Override

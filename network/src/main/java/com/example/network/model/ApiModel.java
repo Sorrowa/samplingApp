@@ -1,9 +1,11 @@
 package com.example.network.model;
 
 import com.example.core.Entity.message.LoginMessage;
+import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.ProjectMessage;
 import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
+import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
 
@@ -56,5 +58,19 @@ public class ApiModel {
      */
     public static Call<ProjectMessage> getHaveDoneProject(String keyWord,String Token){
         return getProject(InternetUtil.HAVEDONEPROJECTTYPE,keyWord,Token);
+    }
+
+    /**
+     * 获取采样点位数据
+     * todo:改改改改改！！！！
+     * @return
+     */
+    public static Call<PointListMessage> getPointList(String type,String projectId,String keyWord,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetPointInterface apiGetPointInterface=retrofit.create(ApiGetPointInterface.class);
+        return apiGetPointInterface.getPointList(type,projectId,keyWord);
     }
 }

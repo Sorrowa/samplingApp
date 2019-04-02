@@ -1,7 +1,10 @@
 package com.example.core.Entity.Data;
 
 import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,7 +14,7 @@ import java.util.Date;
  * 获取项目列表的DataBean
  */
 @SuppressLint("SimpleDateFormat")
-public class ProjectData {
+public class ProjectData implements Parcelable {
 
 //    "Id": "f1d85c28-95a0-4bc4-b714-0f4a3ffb0b00",
 //    "ProjectName": "测试采样单任务",
@@ -28,6 +31,28 @@ public class ProjectData {
     private String TotalPoint;
     private String SampCount;
     private String QuaCount;
+
+
+    protected ProjectData(Parcel in){
+        Id=in.readString();
+        ProjectName=in.readString();
+        BeginTime=in.readString();
+        EndTime=in.readString();
+        TotalPoint=in.readString();
+        SampCount=in.readString();
+        QuaCount=in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(Id);
+        parcel.writeString(ProjectName);
+        parcel.writeString(BeginTime);
+        parcel.writeString(EndTime);
+        parcel.writeString(TotalPoint);
+        parcel.writeString(SampCount);
+        parcel.writeString(QuaCount);
+    }
 
     public String getId() {
         return Id;
@@ -88,4 +113,23 @@ public class ProjectData {
     public void setEndTime(String endTime) {
         EndTime = endTime;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ProjectData> CREATOR = new Creator<ProjectData>() {
+        @Override
+        public ProjectData createFromParcel(Parcel in) {
+            return new ProjectData(in);
+        }
+
+        @Override
+        public ProjectData[] newArray(int size) {
+            return new ProjectData[size];
+        }
+    };
+
 }

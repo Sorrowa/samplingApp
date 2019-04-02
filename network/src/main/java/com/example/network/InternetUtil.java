@@ -21,4 +21,10 @@ public class InternetUtil {
     public static final String PROJECT="api/GetProjects";
     public final static String UNDOPROJECTTYPE="1";
     public final static String HAVEDONEPROJECTTYPE="2";
+
+    /**
+     * 获取采样点位列表
+     * 参数 : type,projectId,keyWord
+     */
+    public static final String POINTLIST="api/GetSampForms";
 }

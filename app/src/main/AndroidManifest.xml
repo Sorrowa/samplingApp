@@ -15,14 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.PersonalActivity"
+        <activity android:name=".Activities.TaskDetailActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity
+            android:name=".Activities.PersonalActivity"
             android:screenOrientation="portrait"
             tools:ignore="InnerclassSeparator">
 
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
 
         </activity>
 
