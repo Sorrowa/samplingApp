@@ -73,6 +73,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
             if (presenter==null){
                 showToast("初始化未完成");
             }
+            editText.clearFocus();
             presenter.getUndoProject(editText.getText().toString(),this);
         });
     }
@@ -110,17 +111,12 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
 
     @Override
     public void onSuccess(List<ProjectData> data) {
-        if(datas==null){
-            datas=new ArrayList<>();
-        }
-        datas.clear();
-        datas.addAll(data);
-        presenter.getView().handleRunnable(new Runnable(){
-            @Override
-            public void run() {
-                BaseUtil.softInput(presenter.getView());
-                showChange();
-            }
+//        datas=new ArrayList<>();
+//        datas.addAll(data);
+        presenter.getView().handleRunnable(() -> {
+            adapater.setDatas(data);
+            BaseUtil.softInput(presenter.getView());
+            showChange();
         });
 //        editText.clearFocus();
         BaseUtil.softInput(presenter.getView());

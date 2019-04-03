@@ -75,4 +75,9 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
             taskDate=itemView.findViewById(R.id.task_date);
         }
     }
+
+    public void setDatas(List<ProjectData> datas){
+        this.datas.clear();
+        this.datas.addAll(datas);
+    }
 }

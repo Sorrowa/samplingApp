@@ -1,45 +1,54 @@
 package com.example.samplingapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.core.Entity.Data.PointData;
 import com.example.core.Entity.Data.ProjectData;
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
+import com.example.samplingapp.Activities.SamplingForm.SamplingPointActivity;
+import com.example.samplingapp.Activities.TaskDetailBaseActivity.TaskBaseActivity;
 import com.example.samplingapp.Adapter.RecycleViewAdapters.TaskDetailAdapter;
-import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.TaskPresenter;
 import com.example.samplingapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 任务详情界面
  */
-public class TaskDetailActivity extends BaseActivity implements TaskPresenter.listener {
+public class TaskDetailActivity extends TaskBaseActivity implements TaskPresenter.listener {
 
     private static ProjectData data;
 
     @BindView(R.id.left_item)
     ImageView leftItem;
+    @BindView(R.id.right_item)
+    ImageView rightItem;
     @BindView(R.id.center_title)
     TextView title;
     @BindView(R.id.point_percent)
-    TextView pointPersent;
+    TextView pointPercent;
     @BindView(R.id.point_list)
     RecyclerView r;
+    @BindView(R.id.add_new_sampling)
+    TextView addNewSampling;
 
     private TaskPresenter presenter;
     private String type;
+    private DialogListener listener;
+
+    //点位信息
+    private ArrayList<PointData> pointDatas=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +60,36 @@ public class TaskDetailActivity extends BaseActivity implements TaskPresenter.li
         presenter=new TaskPresenter();
         presenter.attachView(this);
         initView();
-        presenter.getPointList(type,data.getId(),this);
+        //开始网络请求
+        presenter.getPointList(type,data.getId(),searchRes,this);
+        //dialog显示回调接口
+        listener= () -> {
+            presenter.getPointList(type,data.getId(),searchRes,this);
+        };
+
+        addNewSampling.setOnClickListener(view -> {
+            Intent intent=new Intent(TaskDetailActivity.this
+                    ,SamplingFormActivity.class);
+            startActivity(intent);
+        });
+
+        //跳转到点位详细信息界面
+        pointPercent.setOnClickListener(view -> {
+            Intent intent=new Intent(TaskDetailActivity.this
+                    , SamplingPointActivity.class);
+            intent.putExtra("data",pointDatas);
+            startActivity(intent);
+        });
     }
 
     @SuppressLint("SetTextI18n")
     private void initView() {
-        leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         title.setText("任务详情");
+        rightItem.setImageDrawable(getDrawable(R.drawable.go_back));
+        rightItem.setOnClickListener(view -> showSearchDialog(listener));
+        leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         leftItem.setOnClickListener(view -> finish());
-        pointPersent.setText("采样点位："+data.getSampCount()+"/"+data.getTotalPoint());
+        pointPercent.setText("采样点位："+data.getSampCount()+"/"+data.getTotalPoint());
     }
 
 
@@ -67,6 +97,7 @@ public class TaskDetailActivity extends BaseActivity implements TaskPresenter.li
     @Override
     public void onSuccess(List<PointData> data, boolean isOk) {
         if (isOk){
+            pointDatas.addAll(data);
             initRecycleView(data);
         }else{
             showToast("获取点位数据失败");

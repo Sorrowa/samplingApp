@@ -37,6 +37,13 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setData(data.get(position));
+        //跳转到详情界面
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override

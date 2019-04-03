@@ -150,9 +150,9 @@
     <color name="darkblue">#00008b</color> <!-- 暗蓝色 -->
     <color name="navy">#000080</color> <!-- 海军色 -->
     <color name="black">#000000</color> <!-- 黑色 -->
-    ---------------------
-    作者：Fade龖龘
-    来源：CSDN
-    原文：https://blog.csdn.net/qq_36255612/article/details/53606305
-    版权声明：本文为博主原创文章，转载请附上博文链接！
+
+
+    <color name="sampling_input_color">#999999</color>
+    <color name="sampling_static_color">#333333</color>
+    <color name="transparent">#00000000</color>
 </resources>

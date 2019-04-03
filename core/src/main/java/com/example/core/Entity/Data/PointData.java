@@ -1,6 +1,9 @@
 package com.example.core.Entity.Data;
 
-public class PointData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class PointData implements Parcelable {
 
 //    "Id": "19591b25-6e23-404d-bef7-2e22f11b10d5",
 //            "PointName": "五号点位",
@@ -17,6 +20,40 @@ public class PointData {
     private String ActSamper;
     private String ActSampTime;
     private String PointId;
+
+
+    PointData(Parcel in){
+        Id=in.readString();
+        PointName=in.readString();
+        Status=in.readString();
+        StatusName=in.readString();
+        ActSamper=in.readString();
+        ActSampTime=in.readString();
+        PointId=in.readString();
+    }
+
+    public static final Creator<PointData> CREATOR = new Creator<PointData>() {
+        @Override
+        public PointData createFromParcel(Parcel in) {
+            return new PointData(in);
+        }
+
+        @Override
+        public PointData[] newArray(int size) {
+            return new PointData[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(Id);
+        parcel.writeString(PointName);
+        parcel.writeString(Status);
+        parcel.writeString(StatusName);
+        parcel.writeString(ActSamper);
+        parcel.writeString(ActSampTime);
+        parcel.writeString(PointId);
+    }
 
     public String getId() {
         return Id;
@@ -72,5 +109,10 @@ public class PointData {
 
     public void setPointId(String pointId) {
         PointId = pointId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

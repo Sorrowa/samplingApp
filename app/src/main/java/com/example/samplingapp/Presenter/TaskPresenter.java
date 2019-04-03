@@ -16,10 +16,10 @@ import retrofit2.Response;
 
 public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
 
-    public void getPointList(String type , String projectId,listener listener){
+    public void getPointList(String type , String projectId,String keyWord,listener listener){
         Call<PointListMessage> call=ApiModel.getPointList(type
                 ,projectId
-                ,null
+                ,keyWord
                 , ShareUtil.getToken((App) getView().getApplication()));
         call.enqueue(new Callback<PointListMessage>() {
             @Override

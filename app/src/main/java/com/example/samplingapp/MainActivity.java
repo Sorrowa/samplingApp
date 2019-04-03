@@ -10,6 +10,7 @@ import com.example.samplingapp.Activities.PersonalActivity;
 import com.example.samplingapp.Adapter.ViewPagerAdapters.MainViewPagerAdapter;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.MainPresenter;
+import com.example.samplingapp.mvp.Fragment.HasBeenSampledFragment;
 import com.example.samplingapp.mvp.Fragment.WaitingForSamplingFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
         WaitingForSamplingFragment.setPresenter(presenter);
         fragments.add(new WaitingForSamplingFragment());
-        fragments.add(new WaitingForSamplingFragment());
+        fragments.add(new HasBeenSampledFragment());
     }
 
     private void initTab() {

@@ -4,11 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * 待采样与已采样
  * 获取项目列表的DataBean
@@ -33,7 +28,7 @@ public class ProjectData implements Parcelable {
     private String QuaCount;
 
 
-    protected ProjectData(Parcel in){
+    ProjectData(Parcel in){
         Id=in.readString();
         ProjectName=in.readString();
         BeginTime=in.readString();
