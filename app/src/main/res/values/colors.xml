@@ -155,4 +155,6 @@
     <color name="sampling_input_color">#999999</color>
     <color name="sampling_static_color">#333333</color>
     <color name="transparent">#00000000</color>
+
+    <color name="generate">#0f87ff</color>
 </resources>

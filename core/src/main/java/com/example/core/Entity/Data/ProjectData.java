@@ -28,7 +28,7 @@ public class ProjectData implements Parcelable {
     private String QuaCount;
 
 
-    ProjectData(Parcel in){
+    private ProjectData(Parcel in){
         Id=in.readString();
         ProjectName=in.readString();
         BeginTime=in.readString();

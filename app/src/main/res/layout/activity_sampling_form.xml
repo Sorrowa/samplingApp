@@ -296,6 +296,7 @@
 
             <!--采样方法-->
             <RelativeLayout
+                android:id="@+id/sampling_method_select"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -341,7 +342,8 @@
             <!--采样状态-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
+                android:layout_height="48dp"
+                android:id="@+id/choose_status">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -397,7 +399,8 @@
             <!--运输方法-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
+                android:layout_height="48dp"
+                android:id="@+id/transparent_way_select">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -441,7 +444,8 @@
             <!--采样时间-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
+                android:layout_height="48dp"
+                android:id="@+id/time_pick">
 
                 <TextView
                     android:layout_width="wrap_content"

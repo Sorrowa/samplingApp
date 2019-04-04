@@ -2,13 +2,16 @@ package com.example.network.model;
 
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
+import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.core.Entity.message.ProjectMessage;
 import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
+import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
@@ -72,5 +75,21 @@ public class ApiModel {
         }
         ApiGetPointInterface apiGetPointInterface=retrofit.create(ApiGetPointInterface.class);
         return apiGetPointInterface.getPointList(type,projectId,keyWord);
+    }
+
+    /**
+     * 获取对应项目点位信息
+     * @param type
+     * @param projectId
+     * @param Token
+     * @return
+     */
+    public static Call<PointRecyListMessage> getProjectPointList(String type, String projectId, String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetPointListInterface apiGetPointListInterface=retrofit.create(ApiGetPointListInterface.class);
+        return apiGetPointListInterface.getPointList(type,projectId);
     }
 }

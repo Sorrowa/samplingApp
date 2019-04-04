@@ -8,6 +8,7 @@ import butterknife.ButterKnife;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,7 +45,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     TextView addNewSampling;
 
     private TaskPresenter presenter;
-    private String type;
+    private String type;//1:未采样 2:已采样
     private DialogListener listener;
 
     //点位信息
@@ -63,33 +64,48 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         //开始网络请求
         presenter.getPointList(type,data.getId(),searchRes,this);
         //dialog显示回调接口
-        listener= () -> {
-            presenter.getPointList(type,data.getId(),searchRes,this);
-        };
+        listener= () -> presenter.getPointList(type,data.getId(),searchRes,this);
+    }
 
-        addNewSampling.setOnClickListener(view -> {
-            Intent intent=new Intent(TaskDetailActivity.this
-                    ,SamplingFormActivity.class);
-            startActivity(intent);
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //根据type做出系列操作
+        doWithType();
+    }
 
-        //跳转到点位详细信息界面
-        pointPercent.setOnClickListener(view -> {
-            Intent intent=new Intent(TaskDetailActivity.this
-                    , SamplingPointActivity.class);
-            intent.putExtra("data",pointDatas);
-            startActivity(intent);
-        });
+    private void doWithType() {
+        //隐藏新建表单项
+        if (type.equals("2")) {
+            addNewSampling.setVisibility(View.GONE);
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private void initView() {
         title.setText("任务详情");
         rightItem.setImageDrawable(getDrawable(R.drawable.go_back));
+        //显示搜索dialog
         rightItem.setOnClickListener(view -> showSearchDialog(listener));
+
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         leftItem.setOnClickListener(view -> finish());
         pointPercent.setText("采样点位："+data.getSampCount()+"/"+data.getTotalPoint());
+
+        //跳转到点位详细信息界面
+        pointPercent.setOnClickListener(view -> {
+            Intent intent=new Intent(TaskDetailActivity.this
+                    , SamplingPointActivity.class);
+            intent.putExtra("projectId",data.getId());
+            startActivity(intent);
+        });
+
+        addNewSampling.setOnClickListener(view -> {
+            Intent intent=new Intent(TaskDetailActivity.this
+                    ,SamplingFormActivity.class);
+            intent.putExtra("projectId",data.getId());
+            startActivity(intent);
+        });
     }
 
 

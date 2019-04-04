@@ -27,4 +27,10 @@ public class InternetUtil {
      * 参数 : type,projectId,keyWord
      */
     public static final String POINTLIST="api/GetSampForms";
+
+    /**
+     * 获取对应于项目的点位列表
+     * 参数：type，projectId
+     */
+    public static final String PROJECTPOINTLIST="api/GetProjectPoint";
 }

@@ -58,6 +58,7 @@ public class MainActivity extends BaseActivity {
 
     private void initFragment() {
         WaitingForSamplingFragment.setPresenter(presenter);
+        HasBeenSampledFragment.setPresenter(presenter);
         fragments.add(new WaitingForSamplingFragment());
         fragments.add(new HasBeenSampledFragment());
     }

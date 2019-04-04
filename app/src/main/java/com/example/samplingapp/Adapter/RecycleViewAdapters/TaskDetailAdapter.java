@@ -2,6 +2,7 @@ package com.example.samplingapp.Adapter.RecycleViewAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.example.samplingapp.R;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.ViewHolder> {

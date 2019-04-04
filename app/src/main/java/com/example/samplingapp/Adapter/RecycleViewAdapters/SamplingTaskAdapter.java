@@ -23,6 +23,7 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
 
     private List<ProjectData> datas;
     private Context context;
+    private String type="1";
 
     public SamplingTaskAdapter(List<ProjectData> datas){
         this.datas=datas;
@@ -51,7 +52,7 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
                 +datas.get(position).getTotalPoint());
         holder.itemView.setOnClickListener(view -> {
             Intent intent=new Intent(context, TaskDetailActivity.class);
-            intent.putExtra("type","1");
+            intent.putExtra("type",type);
             intent.putExtra("task",datas.get(position));
             context.startActivity(intent);
         });
@@ -60,6 +61,10 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
     @Override
     public int getItemCount() {
         return datas.size();
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 
@@ -80,4 +85,6 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
         this.datas.clear();
         this.datas.addAll(datas);
     }
+
+
 }
