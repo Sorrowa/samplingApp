@@ -15,12 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.core.Entity.Data.FormData;
+import com.example.core.Entity.Data.PointDetailData;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.SelectPointActivity;
 import com.example.samplingapp.Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
-import com.example.samplingapp.utils.BaseUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -34,6 +34,7 @@ public class SamplingFormActivity extends BaseActivity
     public static final int POINTGET = 0;
 
     private String projectId = null;
+    private PointDetailData pointData = null;
 
     @BindView(R.id.center_title)
     TextView title;
@@ -115,10 +116,10 @@ public class SamplingFormActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sampling_form);
         ButterKnife.bind(this);
-        data=new FormData();
+        data = new FormData();
         projectId = getIntent().getStringExtra("projectId");
 
-        presenter=new FormPresenter();
+        presenter = new FormPresenter();
         presenter.attachView(this);
 
         initView();
@@ -145,11 +146,14 @@ public class SamplingFormActivity extends BaseActivity
     private void initgetPointStatus() {
         //todo:跳转到样品查看界面
         //必须要先选择点位，不然不能得到点位ID
-        //todo:这里暂时写死 ：86aafe92-2fcd-4dc8-b19d-1fcc211e2b87
         getPointStatus.setOnClickListener(view -> {
-            Intent intent=new Intent(SamplingFormActivity.this, SamplingStatusActivity.class);
+            if (pointData == null) {
+                showToast("请先选择点位!");
+                return;
+            }
+            Intent intent = new Intent(SamplingFormActivity.this, SamplingStatusActivity.class);
             intent.putExtra("pointId"
-                    ,"86aafe92-2fcd-4dc8-b19d-1fcc211e2b87");
+                    , pointData.getId());
             startActivity(intent);
         });
     }
@@ -162,13 +166,13 @@ public class SamplingFormActivity extends BaseActivity
 
     }
 
-    private void initTimePicker(){
+    private void initTimePicker() {
         time_pick.setOnClickListener(view -> {
             TimePickerDialog dialogMonthDayHourMin = new TimePickerDialog.Builder()
                     .setType(Type.YEAR_MONTH_DAY)
                     .setCallBack(SamplingFormActivity.this)
                     .setTitleStringId("请选择时间")
-                    .setThemeColor(ContextCompat.getColor(this,R.color.generate))
+                    .setThemeColor(ContextCompat.getColor(this, R.color.generate))
                     .build();
             dialogMonthDayHourMin.show(getSupportFragmentManager(), "MONTH_DAY_HOUR_MIN");
         });
@@ -195,7 +199,7 @@ public class SamplingFormActivity extends BaseActivity
         data.setWeather(Weather.getText().toString());
         data.setTempature(Climate.getText().toString());
         //GTempature:不明意义，暂时不写
-        data.setPressure(Pressure.getText().toString()+"MPa");
+        data.setPressure(Pressure.getText().toString() + "MPa");
         data.setTransMethod(transparent_way.getText().toString());
         //还没加入备注信息
         //定位信息在定位结束之后直接加入data
@@ -227,11 +231,20 @@ public class SamplingFormActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //处理回调结果
+        switch (resultCode) {
+            case POINTGET:
+                if (data != null && data.getParcelableExtra("pointData") != null) {
+                    pointData = data.getParcelableExtra("pointData");
+                    point_name.setText(pointData.getName());
+                }
+                break;
+        }
     }
 
 
     /**
      * 时间选择器的回调接口
+     *
      * @param timePickerView
      * @param millseconds
      */
@@ -244,18 +257,18 @@ public class SamplingFormActivity extends BaseActivity
         sampling_time_text.setText(time);
     }
 
-    @OnClick({R.id.get_place,R.id.location})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.get_place, R.id.location})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.get_place:
                 //获取位置
                 showToast("开始定位！");
-                presenter.beginLocation(getApplicationContext(),this);
+                presenter.beginLocation(getApplicationContext(), this);
                 break;
             case R.id.location:
                 //获取位置
                 showToast("开始定位！");
-                presenter.beginLocation(getApplicationContext(),this);
+                presenter.beginLocation(getApplicationContext(), this);
                 break;
         }
     }
@@ -263,20 +276,21 @@ public class SamplingFormActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         presenter.detachView();
-        presenter=null;
+        presenter = null;
         super.onDestroy();
     }
 
     /**
      * 定位回调接口
-     * @param latitude 纬度
+     *
+     * @param latitude  纬度
      * @param longitude 经度
      */
     @SuppressLint("SetTextI18n")
     @Override
     public void onSuccess(double latitude, double longitude) {
-        place.setText("纬度为:"+latitude+" 经度为:"+longitude);
-        nowLocation="纬度为:"+latitude+" 经度为:"+longitude;
+        place.setText("纬度为:" + latitude + " 经度为:" + longitude);
+        nowLocation = "纬度为:" + latitude + " 经度为:" + longitude;
         //todo:选择点位然后计算距离
         data.setActLatitude(String.valueOf(latitude));
         data.setActLongitude(String.valueOf(longitude));
@@ -284,6 +298,7 @@ public class SamplingFormActivity extends BaseActivity
 
     /**
      * 定位回调接口
+     *
      * @param msg
      */
     @Override

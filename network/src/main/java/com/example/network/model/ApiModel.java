@@ -3,6 +3,7 @@ package com.example.network.model;
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
+import com.example.core.Entity.message.PointSelectListMessage;
 import com.example.core.Entity.message.ProjectMessage;
 import com.example.core.Entity.message.SamplingMessage;
 import com.example.network.InternetUtil;
@@ -12,6 +13,7 @@ import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiGetSampByPoint;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
+import com.example.network.RetrofitInterface.ApiPointList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -80,7 +82,7 @@ public class ApiModel {
     }
 
     /**
-     * 获取对应项目点位信息
+     * 获取对应项目点位信息（主要关于各种显示信息）
      * @param type
      * @param projectId
      * @param Token
@@ -108,5 +110,21 @@ public class ApiModel {
         }
         ApiGetSampByPoint apiGetSampByPoint=retrofit.create(ApiGetSampByPoint.class);
         return apiGetSampByPoint.getSampByPoint(projectPointId);
+    }
+
+    /**
+     * 获取点位信息（偏ID类ID）
+     * todo:这个接口要改！！！！价格
+     * @param projectId
+     * @param Token
+     * @return
+     */
+    public static Call<PointSelectListMessage> getPointList(String projectId,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiPointList apiPointList=retrofit.create(ApiPointList.class);
+        return apiPointList.getPointList(projectId);
     }
 }

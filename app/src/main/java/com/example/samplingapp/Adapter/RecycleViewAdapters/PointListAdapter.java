@@ -20,9 +20,15 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
     private ArrayList<PointDetailData> pointData;
     private Context context;
+    private ItemClickListener listener;
 
     public PointListAdapter(ArrayList<PointDetailData> pointData1){
         pointData=pointData1;
+    }
+
+    public PointListAdapter(ArrayList<PointDetailData> pointData1,ItemClickListener listener){
+        pointData=pointData1;
+        this.listener=listener;
     }
 
     @NonNull
@@ -42,6 +48,9 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         if (pointData.get(position).getStatus().equals("1")){
             //默认是未采样，所以只判断一边
             holder.stateImg.setImageDrawable(context.getDrawable(R.drawable.point_has));
+        }
+        if (listener!=null){
+            holder.itemView.setOnClickListener(view -> listener.onClick(pointData.get(position)));
         }
     }
 
@@ -67,5 +76,9 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
             pointState=itemView.findViewById(R.id.point_state);
             stateImg=itemView.findViewById(R.id.state_img);
         }
+    }
+
+    public interface ItemClickListener{
+        void onClick(PointDetailData data);
     }
 }

@@ -1,21 +1,30 @@
 package com.example.samplingapp.Activities.SamplingForm.SelectActivitys;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.core.Entity.Data.PointDetailData;
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
+import com.example.samplingapp.Adapter.ViewPagerAdapters.PointViewPagerSelectAdapter;
 import com.example.samplingapp.Base.BaseActivity;
+import com.example.samplingapp.Presenter.Form.PointSelectPresenter;
 import com.example.samplingapp.R;
+import com.google.android.material.tabs.TabLayout;
 
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-//采用checkBox的模式选择
-
-public class SelectPointActivity extends BaseActivity {
+//选择点位
+public class SelectPointActivity extends BaseActivity implements PointViewPagerSelectAdapter.OnClickListener, PointSelectPresenter.onNetListener {
 
     private String projectId;
 
@@ -24,29 +33,52 @@ public class SelectPointActivity extends BaseActivity {
     ImageView leftItem;
     @BindView(R.id.center_title)
     TextView title;
-    @BindView(R.id.recy)
-    RecyclerView recyclerView;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.top_tab)
+    TabLayout topTab;
 
+    private PointViewPagerSelectAdapter adapter;
+    private List<PointDetailData> pointDatas=new ArrayList<>();
 
+    private PointSelectPresenter presenter;
+
+    private PointDetailData nowData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_point);
         ButterKnife.bind(this);
-
+        presenter=new PointSelectPresenter();
+        presenter.attachView(this);
         projectId=getIntent().getStringExtra("projectId");
 
         initView();
+        initData();
+    }
+
+    private void initData() {
+        presenter.getProjectListInfo("0",projectId,this);
     }
 
     private void initView() {
         initToolbar();
-        initRecyclerView();
+        initViewPager();
+        initTab();
     }
 
-    private void initRecyclerView() {
 
+    private void initTab() {
+        topTab.setupWithViewPager(viewPager);
+    }
+
+    private void initViewPager() {
+        adapter=new PointViewPagerSelectAdapter(this
+                ,new String[]{"全部", "未采样", "已采样"}
+                ,pointDatas
+                ,this);
+        viewPager.setAdapter(adapter);
     }
 
     private void initToolbar() {
@@ -56,8 +88,43 @@ public class SelectPointActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //todo:设置选定的点位信息
+                Intent intent=new Intent();
+                intent.putExtra("pointData",nowData);
+                setResult(SamplingFormActivity.POINTGET,intent);
                 finish();
             }
         });
+    }
+
+    /**
+     * Item点击回调接口
+     * @param data
+     */
+    @Override
+    public void onClick(PointDetailData data) {
+        //todo:存储内容
+        showToast("选择点位为："+data.getName());
+        nowData=data;
+    }
+
+    /**
+     * 获取点位信息
+     * @param datas
+     * @param isOk
+     */
+    @Override
+    public void onSuccess(List<PointDetailData> datas, boolean isOk) {
+        if (isOk) {
+            handleRunnable(() -> {
+                        adapter.setData(datas);
+                        adapter.notifyRecy();
+                    }
+            );
+        }
+    }
+
+    @Override
+    public void onFail() {
+        showToast("网络出现错误");
     }
 }

@@ -1,12 +1,11 @@
 package com.example.samplingapp.Presenter.Form;
 
-import android.util.Log;
 
 import com.example.core.Entity.Data.PointDetailData;
 import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.network.model.ApiModel;
-import com.example.samplingapp.Activities.SamplingForm.SamplingPointActivity;
 import com.example.samplingapp.Base.App;
+import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Base.BasePresenter;
 import com.example.samplingapp.utils.ShareUtil;
 
@@ -20,7 +19,7 @@ import retrofit2.Response;
 /**
  * 获取点位的presenter
  */
-public class PointSelectPresenter extends BasePresenter<SamplingPointActivity> {
+public class PointSelectPresenter extends BasePresenter<BaseActivity> {
 
     public void getProjectListInfo(String type, String projectId, onNetListener listener) {
         Call<PointRecyListMessage> call = ApiModel.getProjectPointList(type

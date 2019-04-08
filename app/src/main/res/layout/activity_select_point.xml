@@ -7,14 +7,22 @@
     tools:context=".Activities.SamplingForm.SelectActivitys.SelectPointActivity"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_generative"/>
+    <include layout="@layout/toolbar_generative" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/top_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/MyTablayoutstyle">
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/recy">
+        android:id="@+id/view_pager">
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

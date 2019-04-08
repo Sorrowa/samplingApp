@@ -1,13 +1,10 @@
 package com.example.samplingapp.Activities.SamplingForm;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.core.Entity.Data.PointData;
 import com.example.core.Entity.Data.PointDetailData;
 import com.example.samplingapp.Adapter.ViewPagerAdapters.PointViewPagerAdapter;
 import com.example.samplingapp.Base.BaseActivity;
@@ -63,7 +60,7 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
     private void initPointData() {
         //todo:修改数据
         presenter.getProjectListInfo("0"
-                , "F1D85C28-95A0-4BC4-B714-0F4A3FFB0B00"
+                , projectId
                 , this);
     }
 
@@ -89,9 +86,8 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
 
 
         leftItem.setOnClickListener(view -> {
-            Intent res = new Intent();
-            //todo:添加选择内容
-            setResult(SamplingFormActivity.POINTGET, res);
+//            Intent res = new Intent();
+//            setResult(SamplingFormActivity.POINTGET, res);
             finish();
         });
     }
@@ -101,7 +97,6 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
         if (isOk) {
             handleRunnable(() -> {
                         adapter.setData(datas);
-                        BaseUtil.softInput(this);
                         adapter.notifyRecy();
                     }
             );
