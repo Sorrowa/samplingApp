@@ -61,6 +61,7 @@
 
             <!--当前位置-->
             <RelativeLayout
+                android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -137,7 +138,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -280,7 +281,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -325,7 +326,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -359,7 +360,7 @@
 
                 <ImageView
                     android:id="@+id/get_point_status"
-                    android:layout_width="20dp"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="17dp"
                     android:layout_toEndOf="@id/status_text"
@@ -381,7 +382,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -427,7 +428,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -472,7 +473,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -504,7 +505,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -536,7 +537,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -568,7 +569,7 @@
 
                 <ImageView
                     android:layout_width="10dp"
-                    android:layout_height="30dp"
+                    android:layout_height="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,9 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.core.Entity.Data.FormData;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.SelectPointActivity;
+import com.example.samplingapp.Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity;
 import com.example.samplingapp.Base.BaseActivity;
+import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.BaseUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -23,7 +28,8 @@ import com.jzxiang.pickerview.listener.OnDateSetListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SamplingFormActivity extends BaseActivity implements OnDateSetListener {
+public class SamplingFormActivity extends BaseActivity
+        implements OnDateSetListener, FormPresenter.LocationListener {
 
     public static final int POINTGET = 0;
 
@@ -68,6 +74,8 @@ public class SamplingFormActivity extends BaseActivity implements OnDateSetListe
     View choose_status;
     @BindView(R.id.sampling_status)
     TextView sampling_status;
+    @BindView(R.id.get_point_status)
+    ImageView getPointStatus;
     String samplingStatus;
     //运输方法
     @BindView(R.id.transparent_way_select)
@@ -87,14 +95,31 @@ public class SamplingFormActivity extends BaseActivity implements OnDateSetListe
 
     //签名
 
+    //当前位置
+    @BindView(R.id.location)
+    View location;
+    @BindView(R.id.place)
+    TextView place;
+    @BindView(R.id.get_place)
+    ImageView getPlace;
+    String nowLocation;
+    String ActLongitude;
+    String ActLatitude;
+
+
+    FormPresenter presenter;
+    FormData data;//上传的form数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sampling_form);
         ButterKnife.bind(this);
-
+        data=new FormData();
         projectId = getIntent().getStringExtra("projectId");
+
+        presenter=new FormPresenter();
+        presenter.attachView(this);
 
         initView();
     }
@@ -109,8 +134,30 @@ public class SamplingFormActivity extends BaseActivity implements OnDateSetListe
         initWeatherPicker();
 
         initTimePicker();
+
+        //查看样品信息
+        initgetPointStatus();
     }
 
+    /**
+     * 查看样品信息
+     */
+    private void initgetPointStatus() {
+        //todo:跳转到样品查看界面
+        //必须要先选择点位，不然不能得到点位ID
+        //todo:这里暂时写死 ：86aafe92-2fcd-4dc8-b19d-1fcc211e2b87
+        getPointStatus.setOnClickListener(view -> {
+            Intent intent=new Intent(SamplingFormActivity.this, SamplingStatusActivity.class);
+            intent.putExtra("pointId"
+                    ,"86aafe92-2fcd-4dc8-b19d-1fcc211e2b87");
+            startActivity(intent);
+        });
+    }
+
+
+    /**
+     * 天气选择器
+     */
     private void initWeatherPicker() {
 
     }
@@ -132,17 +179,26 @@ public class SamplingFormActivity extends BaseActivity implements OnDateSetListe
 
     /**
      * 提交和保存调用这个方法
+     * 将所有的内容保存到data中去
      */
     private void saveAllData() {
-        personName = person_name.getText().toString();
+//        personName = person_name.getText().toString();
         pointName = (String) point_name.getText();
-        climate = String.valueOf(Climate.getText());
-        pressure = Pressure.getText().toString();
-        weather = Weather.getText().toString();
-        samplingMethod = sampling_method.getText().toString();
-        samplingStatus = sampling_status.getText().toString();
-        transparentWay = transparent_way.getText().toString();
-        time = sampling_time_text.getText().toString();
+        //nowLocation:
+
+        data.setPointSampPlan(null);
+        data.setProjectPointId(null);
+        data.setActSampTime(sampling_time_text.getText().toString());
+        data.setActSamper(person_name.getText().toString());
+        data.setPointSatus(sampling_status.getText().toString());
+        data.setSampMethod(sampling_method.getText().toString());
+        data.setWeather(Weather.getText().toString());
+        data.setTempature(Climate.getText().toString());
+        //GTempature:不明意义，暂时不写
+        data.setPressure(Pressure.getText().toString()+"MPa");
+        data.setTransMethod(transparent_way.getText().toString());
+        //还没加入备注信息
+        //定位信息在定位结束之后直接加入data
     }
 
     /**
@@ -186,5 +242,52 @@ public class SamplingFormActivity extends BaseActivity implements OnDateSetListe
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");//精确到分钟
         String time = format.format(date);
         sampling_time_text.setText(time);
+    }
+
+    @OnClick({R.id.get_place,R.id.location})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.get_place:
+                //获取位置
+                showToast("开始定位！");
+                presenter.beginLocation(getApplicationContext(),this);
+                break;
+            case R.id.location:
+                //获取位置
+                showToast("开始定位！");
+                presenter.beginLocation(getApplicationContext(),this);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        presenter=null;
+        super.onDestroy();
+    }
+
+    /**
+     * 定位回调接口
+     * @param latitude 纬度
+     * @param longitude 经度
+     */
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onSuccess(double latitude, double longitude) {
+        place.setText("纬度为:"+latitude+" 经度为:"+longitude);
+        nowLocation="纬度为:"+latitude+" 经度为:"+longitude;
+        //todo:选择点位然后计算距离
+        data.setActLatitude(String.valueOf(latitude));
+        data.setActLongitude(String.valueOf(longitude));
+    }
+
+    /**
+     * 定位回调接口
+     * @param msg
+     */
+    @Override
+    public void onError(String msg) {
+        showToast(msg);
     }
 }

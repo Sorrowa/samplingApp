@@ -4,11 +4,13 @@ import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.core.Entity.message.ProjectMessage;
+import com.example.core.Entity.message.SamplingMessage;
 import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
+import com.example.network.RetrofitInterface.ApiGetSampByPoint;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
 
 import okhttp3.ResponseBody;
@@ -91,5 +93,20 @@ public class ApiModel {
         }
         ApiGetPointListInterface apiGetPointListInterface=retrofit.create(ApiGetPointListInterface.class);
         return apiGetPointListInterface.getPointList(type,projectId);
+    }
+
+    /**
+     * 根据点位获取样品信息
+     * @param projectPointId 点位ID
+     * @param Token
+     * @return
+     */
+    public static Call<SamplingMessage> getSampByPoint(String projectPointId,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetSampByPoint apiGetSampByPoint=retrofit.create(ApiGetSampByPoint.class);
+        return apiGetSampByPoint.getSampByPoint(projectPointId);
     }
 }

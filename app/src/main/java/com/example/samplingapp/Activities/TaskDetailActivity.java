@@ -84,7 +84,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @SuppressLint("SetTextI18n")
     private void initView() {
         title.setText("任务详情");
-        rightItem.setImageDrawable(getDrawable(R.drawable.go_back));
+        rightItem.setImageDrawable(getDrawable(R.drawable.search));
         //显示搜索dialog
         rightItem.setOnClickListener(view -> showSearchDialog(listener));
 

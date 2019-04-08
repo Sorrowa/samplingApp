@@ -33,4 +33,10 @@ public class InternetUtil {
      * 参数：type，projectId
      */
     public static final String PROJECTPOINTLIST="api/GetProjectPoint";
+
+    /**
+     * 获取样品列表
+     * 参数： projectPointId 项目ID
+     */
+    public static final String SAMPLINGSTATUSLIST="api/GetSampByPoint";
 }
