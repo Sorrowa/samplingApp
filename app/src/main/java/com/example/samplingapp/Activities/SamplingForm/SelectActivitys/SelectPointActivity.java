@@ -3,8 +3,6 @@ package com.example.samplingapp.Activities.SamplingForm.SelectActivitys;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -84,16 +82,20 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
     private void initToolbar() {
         title.setText("选择点位");
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
-        leftItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //todo:设置选定的点位信息
-                Intent intent=new Intent();
-                intent.putExtra("pointData",nowData);
-                setResult(SamplingFormActivity.POINTGET,intent);
-                finish();
-            }
+        leftItem.setOnClickListener(view -> {
+            Intent intent=new Intent();
+            intent.putExtra("pointData",nowData);
+            setResult(SamplingFormActivity.POINTGET,intent);
+            finish();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("pointData",nowData);
+        setResult(SamplingFormActivity.POINTGET,intent);
+        finish();
     }
 
     /**
@@ -102,7 +104,6 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
      */
     @Override
     public void onClick(PointDetailData data) {
-        //todo:存储内容
         showToast("选择点位为："+data.getName());
         nowData=data;
     }

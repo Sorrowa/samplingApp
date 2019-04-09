@@ -112,19 +112,18 @@ public class ApiModel {
         return apiGetSampByPoint.getSampByPoint(projectPointId);
     }
 
-    /**
-     * 获取点位信息（偏ID类ID）
-     * todo:这个接口要改！！！！价格
-     * @param projectId
-     * @param Token
-     * @return
-     */
-    public static Call<PointSelectListMessage> getPointList(String projectId,String Token){
-        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
-        if (retrofit==null){
-            return null;
-        }
-        ApiPointList apiPointList=retrofit.create(ApiPointList.class);
-        return apiPointList.getPointList(projectId);
-    }
+//    /**
+//     * 获取点位信息（偏ID类ID）
+//     * @param projectId
+//     * @param Token
+//     * @return
+//     */
+//    public static Call<PointSelectListMessage> getPointList(String projectId,String Token){
+//        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+//        if (retrofit==null){
+//            return null;
+//        }
+//        ApiPointList apiPointList=retrofit.create(ApiPointList.class);
+//        return apiPointList.getPointList(projectId);
+//    }
 }

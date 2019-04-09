@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 public class PointDetailData implements Parcelable {
 //    "Id": "00ccdfe8-cdb2-4ea8-a12f-23359220f19d",
+//    ProjectPointId
 //            "Name": "五号点位",
 //            "Longitude": "45.24",
 //            "Latitude": "14.54",
@@ -15,6 +16,7 @@ public class PointDetailData implements Parcelable {
 //            "StatusName": "已采样"
 
     private String Id;
+    private String ProjectPointId;
     private String Name;
     private String Longitude;
     private String Latitude;
@@ -23,6 +25,7 @@ public class PointDetailData implements Parcelable {
 
     private PointDetailData(Parcel in){
         Id=in.readString();
+        ProjectPointId=in.readString();
         Name=in.readString();
         Longitude=in.readString();
         Latitude=in.readString();
@@ -45,6 +48,7 @@ public class PointDetailData implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(Id);
+        parcel.writeString(ProjectPointId);
         parcel.writeString(Name);
         parcel.writeString(Longitude);
         parcel.writeString(Latitude);
@@ -103,5 +107,13 @@ public class PointDetailData implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getProjectPointId() {
+        return ProjectPointId;
+    }
+
+    public void setProjectPointId(String projectPointId) {
+        ProjectPointId = projectPointId;
     }
 }

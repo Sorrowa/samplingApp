@@ -509,12 +509,117 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
-                    android:src="@drawable/right_arrows" />
+                    android:src="@drawable/down_arrow" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="#999999" />
+
+            <!--环境照片-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="环境照片(10张以内)"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/add_picture"
+                    android:id="@+id/add_environment_photo"/>
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:id="@+id/environment_photo"/>
+
+            <!--采样照片-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="采样照片(20张以内)"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/add_sampling_photo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/add_picture" />
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:id="@+id/sampling_photo"/>
+
+            <!--样品照片-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="样品照片(20张以内)"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/add_picture"
+                    android:id="@+id/add_sample_photo"/>
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:id="@+id/sample_photo"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="#999999" />
@@ -535,15 +640,20 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/right_arrows" />
             </RelativeLayout>
 
+            <EditText
+                android:id="@+id/samp_desc"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:padding="5dp"
+                android:layout_margin="13dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:background="@drawable/input_bg"/>
+            
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -589,12 +699,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/save_sampling">
+        android:id="@+id/save_sampling"
+        android:background="@drawable/input_bg">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/black" />-->
 
         <LinearLayout
             android:layout_width="wrap_content"

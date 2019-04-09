@@ -33,8 +33,8 @@ public class FormData {
     private String GTempature;
     private String Pressure;
     private String TransMethod;
-    private String ActLongitude;
-    private String ActLatitude;
+    private double ActLongitude;
+    private double ActLatitude;
     private String Distance;
     private String SampDesc;
 
@@ -134,19 +134,8 @@ public class FormData {
         TransMethod = transMethod;
     }
 
-    public String getActLongitude() {
-        return ActLongitude;
-    }
 
-    public void setActLongitude(String actLongitude) {
-        ActLongitude = actLongitude;
-    }
-
-    public String getActLatitude() {
-        return ActLatitude;
-    }
-
-    public void setActLatitude(String actLatitude) {
+    public void setActLatitude(double actLatitude) {
         ActLatitude = actLatitude;
     }
 
@@ -164,5 +153,17 @@ public class FormData {
 
     public void setSampDesc(String sampDesc) {
         SampDesc = sampDesc;
+    }
+
+    public double getActLongitude() {
+        return ActLongitude;
+    }
+
+    public void setActLongitude(double actLongitude) {
+        ActLongitude = actLongitude;
+    }
+
+    public double getActLatitude() {
+        return ActLatitude;
     }
 }
