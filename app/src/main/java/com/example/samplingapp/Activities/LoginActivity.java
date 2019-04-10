@@ -136,11 +136,7 @@ public class LoginActivity extends BaseActivity {
         dialog.setContentView(layout);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            }
-        });
+        dialog.setOnCancelListener(dialog -> {});
         dialog.show();
     }
 

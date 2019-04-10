@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -683,7 +682,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
-                    android:src="@drawable/right_arrows" />
+                    android:src="@drawable/down_arrow" />
             </RelativeLayout>
 
             <View
@@ -693,6 +692,151 @@
                 android:layout_marginEnd="10dp"
                 android:background="#999999" />
 
+            <!--采样人签名-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="采样人"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+           <RelativeLayout
+               android:layout_width="wrap_content"
+               android:layout_height="90dp">
+
+               <ImageView
+                   android:id="@+id/sample_man_sign"
+                   android:scaleType="fitXY"
+                   android:layout_width="match_parent"
+                   android:layout_height="90dp"
+                   android:padding="5dp"
+                   android:layout_margin="10dp"
+                   android:layout_marginTop="8dp"
+                   android:gravity="top"
+                   android:background="@drawable/input_bg"/>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="请手写签名"
+                   android:layout_alignParentEnd="true"
+                   android:layout_alignParentBottom="true"
+                   android:layout_margin="14dp"
+                   android:textSize="12sp"
+                   android:textColor="@color/sampling_input_color"
+                   />
+           </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="90dp">
+
+                <ImageView
+                    android:id="@+id/sample_man_sign_two"
+                    android:scaleType="fitXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:padding="5dp"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="top"
+                    android:background="@drawable/input_bg"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请手写签名"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="14dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/sampling_input_color"
+                    />
+            </RelativeLayout>
+
+            <!--现场监督人-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="现场监督人"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="90dp">
+
+                <ImageView
+                    android:id="@+id/monitor_man_sign"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="top"
+                    android:background="@drawable/input_bg"
+                    android:scaleType="fitXY"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请手写签名"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="14dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/sampling_input_color"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="@drawable/company_input_bg"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="所属单位"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:gravity="center_vertical|end"
+                    android:hint="请输入"
+                    android:textColor="@color/sampling_input_color"
+                    android:textSize="12sp"
+                    android:background="@color/transparent"
+                    android:id="@+id/company_info"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+
         </LinearLayout>
     </ScrollView>
 
@@ -700,7 +844,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/save_sampling"
-        android:background="@drawable/input_bg">
+        android:background="@drawable/input_bg"
+        android:elevation="4dp">
 
         <!--<View-->
             <!--android:layout_width="match_parent"-->

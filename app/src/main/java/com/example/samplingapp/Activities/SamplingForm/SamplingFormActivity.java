@@ -1,6 +1,7 @@
 package com.example.samplingapp.Activities.SamplingForm;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,8 @@ import butterknife.OnClick;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -26,6 +29,7 @@ import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.SamplingA
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
+import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 import com.example.samplingapp.utils.BaseUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
@@ -33,6 +37,7 @@ import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.wildma.pictureselector.PictureSelector;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,8 +52,15 @@ public class SamplingFormActivity extends BaseActivity
     public static final int SAMPLING = 11;
     public static final int SAMPLE=12;
 
+    //签名
+    public static final int SAMPLEMANONE=21;
+    public static final int SAMPLEMANTWO=22;
+    public static final int MONITOR=23;
+
     private String projectId = null;
     private PointDetailData pointData = null;
+
+    private boolean isSaved=false;
 
     @BindView(R.id.center_title)
     TextView title;
@@ -130,7 +142,21 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.samp_desc)
     EditText samp_desc;
     //签名
-
+    //一号采样签名
+    @BindView(R.id.sample_man_sign)
+    ImageView sample_man_sign;
+    String sampleManOnePath=null;
+    //二号采样签名
+    @BindView(R.id.sample_man_sign_two)
+    ImageView sample_man_sign_two;
+    String sampleManTwoPath=null;
+    //监督人签名
+    @BindView(R.id.monitor_man_sign)
+    ImageView monitor_man_sign;
+    String monitorManSignPath=null;
+    //所属单位
+    @BindView(R.id.company_info)
+    EditText company_info;
     //当前位置
     @BindView(R.id.location)
     View location;
@@ -169,13 +195,14 @@ public class SamplingFormActivity extends BaseActivity
         //查看样品信息
         initgetPointStatus();
         initPictureSelect();
+        initSign();
     }
+
 
     /**
      * 查看样品信息
      */
     private void initgetPointStatus() {
-        //todo:跳转到样品查看界面
         //必须要先选择点位，不然不能得到点位ID
         getPointStatus.setOnClickListener(view -> {
             if (pointData == null) {
@@ -233,13 +260,13 @@ public class SamplingFormActivity extends BaseActivity
         data.setTransMethod(transparent_way.getText().toString());
         data.setSampDesc(samp_desc.getText().toString());//备注
         //定位信息在定位结束之后直接加入data
+        //所属单位信息不存在？？
     }
 
     /**
      * 点位选择
      */
     private void initPointSelect() {
-        //todo:开启下一个活动选择对应的点位
         point_select.setOnClickListener(view -> {
             Intent intent = new Intent(SamplingFormActivity.this, SelectPointActivity.class);
             intent.putExtra("projectId", projectId);
@@ -252,7 +279,7 @@ public class SamplingFormActivity extends BaseActivity
         title.setText("采样详情");
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         rightItem.setImageDrawable(getDrawable(R.drawable.submit));
-        leftItem.setOnClickListener(view -> finish());
+        leftItem.setOnClickListener(view -> doBack());
         //todo:提交的逻辑
 
     }
@@ -332,6 +359,53 @@ public class SamplingFormActivity extends BaseActivity
 
     }
 
+    /**
+     * 签名信息初始化
+     */
+    private void initSign() {
+        initSampleManSign();
+        initSampleManSignTow();
+        initMonitor();
+    }
+
+    /**
+     * 初始化监督人
+     */
+    private void initMonitor() {
+        monitor_man_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
+                intent.putExtra("type",MONITOR);
+                startActivityForResult(intent,MONITOR);
+            }
+        });
+    }
+
+    /**
+     * 初始化二号采样人
+     */
+    private void initSampleManSignTow() {
+        sample_man_sign_two.setOnClickListener(view -> {
+            Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
+            intent.putExtra("type",SAMPLEMANTWO);
+            startActivityForResult(intent,SAMPLEMANONE);
+        });
+    }
+
+    /**
+     * 初始化一号采样人
+     */
+    private void initSampleManSign() {
+        sample_man_sign.setOnClickListener(view -> {
+            //跳转到绘图界面
+            Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
+            intent.putExtra("type",SAMPLEMANONE);
+//            intent.putExtra("path",sampleManOnePath);
+            startActivityForResult(intent,SAMPLEMANONE);
+        });
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -372,6 +446,39 @@ public class SamplingFormActivity extends BaseActivity
                         runOnUiThread(() -> {
                             sampleAdapter.notifyDataSetChanged();
                         });
+                    }
+                }
+                break;
+            case SAMPLEMANONE:
+                if (data!=null){
+                    sampleManOnePath=data.getStringExtra("path");
+                    File file = new File(sampleManOnePath);
+                    if(file.exists()){
+                        Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
+                        sample_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        bm.recycle();
+                    }
+                }
+                break;
+            case SAMPLEMANTWO:
+                if (data!=null){
+                    sampleManTwoPath=data.getStringExtra("path");
+                    File file = new File(sampleManTwoPath);
+                    if(file.exists()){
+                        Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
+                        sample_man_sign_two.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        bm.recycle();
+                    }
+                }
+                break;
+            case MONITOR:
+                if (data!=null){
+                    monitorManSignPath=data.getStringExtra("path");
+                    File file = new File(monitorManSignPath);
+                    if(file.exists()){
+                        Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
+                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        bm.recycle();
                     }
                 }
                 break;
@@ -506,9 +613,27 @@ public class SamplingFormActivity extends BaseActivity
     }
 
 
-    //todo:询问是否退出，保存内容
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        doBack();
+    }
+
+    /**
+     * 退出操作
+     */
+    private void doBack() {
+        if (isSaved){
+            finish();
+        }
+        AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(SamplingFormActivity.this);
+        normalDialog.setTitle("提示");
+        normalDialog.setMessage("还未保存，确定退出吗?");
+        normalDialog.setPositiveButton("退出",
+                (dialog, which) -> finish());
+        normalDialog.setNegativeButton("取消",
+                (dialog, which) -> dialog.dismiss());
+        // 显示
+        normalDialog.show();
     }
 }

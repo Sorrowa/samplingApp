@@ -1,7 +1,9 @@
 package com.example.samplingapp.Activities.SamplingForm;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,7 +12,6 @@ import com.example.samplingapp.Adapter.ViewPagerAdapters.PointViewPagerAdapter;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.PointSelectPresenter;
 import com.example.samplingapp.R;
-import com.example.samplingapp.utils.BaseUtil;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
     private PointSelectPresenter presenter;
     private PointViewPagerAdapter adapter;
 
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,14 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
         presenter.attachView(this);
         initPointData();
         initView();
+
+        View layout = getLayoutInflater().inflate(R.layout.dialog_waitting_network, null);
+        dialog=new Dialog(this);
+        dialog.setContentView(layout);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(dialog -> {});
+        dialog.show();
     }
 
     /**
@@ -101,10 +112,12 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
                     }
             );
         }
+        dialog.dismiss();
     }
 
     @Override
     public void onFail() {
         showToast("请检查网络状况");
+        dialog.dismiss();
     }
 }

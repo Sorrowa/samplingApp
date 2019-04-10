@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +35,8 @@ public class SamplingStatusActivity extends BaseActivity implements SamplingStat
     private List<SamplingData> datas=new ArrayList<>();
     private SamplingStatusPresenter presenter;
 
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,14 @@ public class SamplingStatusActivity extends BaseActivity implements SamplingStat
         initView();
 
         presenter.getStatus(pointId,(App) getApplication(),this);
+
+        View layout = getLayoutInflater().inflate(R.layout.dialog_waitting_network, null);
+        dialog=new Dialog(this);
+        dialog.setContentView(layout);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(dialog -> {});
+        dialog.show();
     }
 
 
@@ -87,10 +99,12 @@ public class SamplingStatusActivity extends BaseActivity implements SamplingStat
     public void onSuccess(List<SamplingData> data) {
         adapter.setDatas(data);
         runOnUiThread(() -> adapter.notifyDataSetChanged());
+        dialog.dismiss();
     }
 
     @Override
     public void onFail() {
         showToast("因网络原因无法显示样品信息");
+        dialog.dismiss();
     }
 }

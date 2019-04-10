@@ -1,8 +1,10 @@
 package com.example.samplingapp.Activities.SamplingForm.SelectActivitys;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +45,8 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
 
     private PointDetailData nowData;
 
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,13 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
 
     private void initData() {
         presenter.getProjectListInfo("0",projectId,this);
+        View layout = getLayoutInflater().inflate(R.layout.dialog_waitting_network, null);
+        dialog=new Dialog(this);
+        dialog.setContentView(layout);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(dialog -> {});
+        dialog.show();
     }
 
     private void initView() {
@@ -122,10 +133,12 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
                     }
             );
         }
+        dialog.dismiss();
     }
 
     @Override
     public void onFail() {
         showToast("网络出现错误");
+        dialog.dismiss();
     }
 }
