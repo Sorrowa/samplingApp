@@ -23,51 +23,56 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".mvp.ui.DrawActivity"
+        <activity android:name=".mvp.ui.VideoActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".mvp.ui.DrawActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".mvp.ui.PreviewActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.SamplingForm.SelectActivitys.SelectPointActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.SamplingForm.SamplingPointActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.SamplingForm.SamplingFormActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.TaskDetailActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.PersonalActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask"/>
+            tools:ignore="InnerclassSeparator" />
 
         <meta-data
             android:name="design_width_in_dp"
@@ -81,9 +86,9 @@
 
         <activity
             android:name=".Activities.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"
-            android:launchMode="singleTask">
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

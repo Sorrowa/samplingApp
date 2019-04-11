@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -15,12 +16,12 @@ import androidx.appcompat.app.AlertDialog;
  * 各种工具类
  */
 public class BaseUtil {
-    public static void showToast(Context context,String text){
-        Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
+    public static void showToast(Context context, String text) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showDialog(Context context,String text){
-        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+    public static void showDialog(Context context, String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("注意");
         builder.setMessage(text);
         builder.setCancelable(true);
@@ -29,6 +30,7 @@ public class BaseUtil {
 
     /**
      * 判断网络是否正常
+     *
      * @param context
      * @return
      */
@@ -46,15 +48,17 @@ public class BaseUtil {
 
     /**
      * 关闭软键盘
+     *
      * @param activity
      */
-    public static void softInput(Activity activity){
+    public static void softInput(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
     }
 
     /**
      * 计算两个坐标之间的距离
+     *
      * @param lat1
      * @param lng1
      * @param lat2
@@ -62,7 +66,7 @@ public class BaseUtil {
      * @return 距离M为单位
      */
     public static double getDistance(double lat1, double lng1, double lat2,
-                                     double lng2){
+                                     double lng2) {
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
         double a = radLat1 - radLat2;
@@ -78,6 +82,7 @@ public class BaseUtil {
 
     /**
      * 角度转换为弧度
+     *
      * @param d
      * @return 弧度
      */
@@ -108,6 +113,20 @@ public class BaseUtil {
         }
 //        origin.recycle();
         return newBM;
+    }
+
+
+    /**
+     * 获取视频文件截图
+     *
+     * @param path 视频文件的路径
+     * @return Bitmap 返回获取的Bitmap
+     */
+
+    public static Bitmap getVideoThumb(String path) {
+        MediaMetadataRetriever media = new MediaMetadataRetriever();
+        media.setDataSource(path);
+        return media.getFrameAtTime();
     }
 
 }

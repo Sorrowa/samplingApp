@@ -13,7 +13,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,16 +24,20 @@ import android.widget.TextView;
 
 import com.example.core.Entity.Data.FormData;
 import com.example.core.Entity.Data.PointDetailData;
+import com.example.core.Others.GetPathFromUri;
+import com.example.core.Others.Rom;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.SelectPointActivity;
 import com.example.samplingapp.Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity;
 import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.EnvironmentAdapter;
 import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.SampleAdapter;
 import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.SamplingAdapter;
+import com.example.samplingapp.Adapter.RecycleViewAdapters.VideoSelecte.VideoAdapter;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
+import com.example.samplingapp.mvp.ui.VideoActivity;
 import com.example.samplingapp.utils.BaseUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
@@ -50,17 +57,20 @@ public class SamplingFormActivity extends BaseActivity
     //图片选择
     public static final int ENVIRONMENT = 10;
     public static final int SAMPLING = 11;
-    public static final int SAMPLE=12;
+    public static final int SAMPLE = 12;
 
     //签名
-    public static final int SAMPLEMANONE=21;
-    public static final int SAMPLEMANTWO=22;
-    public static final int MONITOR=23;
+    public static final int SAMPLEMANONE = 21;
+    public static final int SAMPLEMANTWO = 22;
+    public static final int MONITOR = 23;
+
+    //视频选择
+    public static final int REQUEST_CODE_PICK = 30;
 
     private String projectId = null;
     private PointDetailData pointData = null;
 
-    private boolean isSaved=false;
+    private boolean isSaved = false;
 
     @BindView(R.id.center_title)
     TextView title;
@@ -88,11 +98,11 @@ public class SamplingFormActivity extends BaseActivity
     String pressure;
     //天气
     @BindView(R.id.weather)
-    TextView Weather;
+    EditText Weather;
     String weather;
     //采样方法
     @BindView(R.id.sampling_method)
-    TextView sampling_method;
+    EditText sampling_method;
     String samplingMethod;
     @BindView(R.id.sampling_method_select)
     View sampling_method_select;//选择采样方法
@@ -100,7 +110,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.choose_status)
     View choose_status;
     @BindView(R.id.sampling_status)
-    TextView sampling_status;
+    EditText sampling_status;
     @BindView(R.id.get_point_status)
     ImageView getPointStatus;
     String samplingStatus;
@@ -108,7 +118,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.transparent_way_select)
     View transparent_way_select;
     @BindView(R.id.transparent_way)
-    TextView transparent_way;
+    EditText transparent_way;
     String transparentWay;
     //采样时间
     @BindView(R.id.time_pick)
@@ -136,8 +146,15 @@ public class SamplingFormActivity extends BaseActivity
     ImageView add_sample_photo;
     @BindView(R.id.sample_photo)
     RecyclerView sample_photo;
-    List<String> samplePhotos=new ArrayList<>();
+    List<String> samplePhotos = new ArrayList<>();
     SampleAdapter sampleAdapter;
+    //视频
+    @BindView(R.id.add_sample_video)
+    ImageView add_sample_video;
+    @BindView(R.id.sample_video)
+    RecyclerView sample_video;
+    List<String> sampleVideo = new ArrayList<>();
+    VideoAdapter videoAdapter;
     //备注
     @BindView(R.id.samp_desc)
     EditText samp_desc;
@@ -145,15 +162,15 @@ public class SamplingFormActivity extends BaseActivity
     //一号采样签名
     @BindView(R.id.sample_man_sign)
     ImageView sample_man_sign;
-    String sampleManOnePath=null;
+    String sampleManOnePath = null;
     //二号采样签名
     @BindView(R.id.sample_man_sign_two)
     ImageView sample_man_sign_two;
-    String sampleManTwoPath=null;
+    String sampleManTwoPath = null;
     //监督人签名
     @BindView(R.id.monitor_man_sign)
     ImageView monitor_man_sign;
-    String monitorManSignPath=null;
+    String monitorManSignPath = null;
     //所属单位
     @BindView(R.id.company_info)
     EditText company_info;
@@ -189,13 +206,42 @@ public class SamplingFormActivity extends BaseActivity
     private void initView() {
         initToolBar();
         initPointSelect();
-        initEditText();
-        initWeatherPicker();
         initTimePicker(0);
         //查看样品信息
         initgetPointStatus();
         initPictureSelect();
         initSign();
+        initVideo();
+    }
+
+    /**
+     * 初始化视频列表
+     */
+    private void initVideo() {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(RecyclerView.HORIZONTAL);
+        sample_video.setLayoutManager(manager);
+        videoAdapter = new VideoAdapter(sampleVideo, this);
+        sample_video.setAdapter(videoAdapter);
+        add_sample_video.setOnClickListener(view -> {
+
+            if (sampleVideo.size()>2){
+                showToast("超出视频可接受上限！");
+                return;
+            }
+
+            if (Rom.isMiui()) {//是否是小米设备,是的话用到弹窗选取入口的方法去选取视频
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*");
+                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
+            } else {//直接跳到系统相册去选取视频
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("video/*");
+                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
+            }
+        });
     }
 
 
@@ -216,14 +262,6 @@ public class SamplingFormActivity extends BaseActivity
         });
     }
 
-
-    /**
-     * 天气选择器
-     */
-    private void initWeatherPicker() {
-
-    }
-
     private void initTimePicker(int i) {
         time_pick.setOnClickListener(view -> {
             TimePickerDialog dialogMonthDayHourMin = new TimePickerDialog.Builder()
@@ -236,17 +274,14 @@ public class SamplingFormActivity extends BaseActivity
         });
     }
 
-    private void initEditText() {
-    }
-
     /**
      * 提交和保存调用这个方法
      * 将所有的内容保存到data中去
      */
     private void saveAllData() {
 //        personName = person_name.getText().toString();
-        pointName = (String) point_name.getText();
-        //nowLocation:
+//        pointName = (String) point_name.getText();
+        //只能传入数据
         data.setPointSampPlan(null);
         data.setProjectPointId(pointData.getProjectPointId());
         data.setActSampTime(sampling_time_text.getText().toString());
@@ -254,13 +289,15 @@ public class SamplingFormActivity extends BaseActivity
         data.setPointSatus(sampling_status.getText().toString());
         data.setSampMethod(sampling_method.getText().toString());
         data.setWeather(Weather.getText().toString());
-        data.setTempature(Climate.getText().toString());
+        data.setTempature(Climate.getText().toString() + " ℃");
         //GTempature:不明意义，暂时不写
-        data.setPressure(Pressure.getText().toString() + "MPa");
+        data.setPressure(Pressure.getText().toString() + " MPa");
         data.setTransMethod(transparent_way.getText().toString());
         data.setSampDesc(samp_desc.getText().toString());//备注
         //定位信息在定位结束之后直接加入data
         //所属单位信息不存在？？
+
+        isSaved = true;
     }
 
     /**
@@ -298,11 +335,11 @@ public class SamplingFormActivity extends BaseActivity
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.HORIZONTAL);
         sample_photo.setLayoutManager(manager);
-        sampleAdapter=new SampleAdapter(this,samplingPhotos);
+        sampleAdapter = new SampleAdapter(this, samplingPhotos);
         sample_photo.setAdapter(sampleAdapter);
 
         add_sample_photo.setOnClickListener(view -> {
-            if (samplePhotos.size()>=20){
+            if (samplePhotos.size() >= 20) {
                 showToast("样品照片数量达到上限!");
                 return;
             }
@@ -318,11 +355,11 @@ public class SamplingFormActivity extends BaseActivity
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.HORIZONTAL);
         sampling_photo.setLayoutManager(manager);
-        samplingAdapter=new SamplingAdapter(this,samplingPhotos);
+        samplingAdapter = new SamplingAdapter(this, samplingPhotos);
         sampling_photo.setAdapter(samplingAdapter);
 
         add_sampling_photo.setOnClickListener(view -> {
-            if (samplingPhotos.size()>=20){
+            if (samplingPhotos.size() >= 20) {
                 showToast("采样照片数量达到上限!");
                 return;
             }
@@ -348,7 +385,7 @@ public class SamplingFormActivity extends BaseActivity
          * selectPicture()方法参数分别为 是否裁剪、裁剪后图片的宽(单位px)、裁剪后图片的高、宽比例、高比例。都不传则默认为裁剪，宽200，高200，宽高比例为1：1。
          */
         add_environment_photo.setOnClickListener(view -> {
-            if (environmentPhotos.size()>=10){
+            if (environmentPhotos.size() >= 10) {
                 showToast("环境照片数量达到上限!");
                 return;
             }
@@ -372,13 +409,10 @@ public class SamplingFormActivity extends BaseActivity
      * 初始化监督人
      */
     private void initMonitor() {
-        monitor_man_sign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
-                intent.putExtra("type",MONITOR);
-                startActivityForResult(intent,MONITOR);
-            }
+        monitor_man_sign.setOnClickListener(view -> {
+            Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
+            intent.putExtra("type", MONITOR);
+            startActivityForResult(intent, MONITOR);
         });
     }
 
@@ -388,8 +422,8 @@ public class SamplingFormActivity extends BaseActivity
     private void initSampleManSignTow() {
         sample_man_sign_two.setOnClickListener(view -> {
             Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
-            intent.putExtra("type",SAMPLEMANTWO);
-            startActivityForResult(intent,SAMPLEMANONE);
+            intent.putExtra("type", SAMPLEMANTWO);
+            startActivityForResult(intent, SAMPLEMANONE);
         });
     }
 
@@ -400,9 +434,9 @@ public class SamplingFormActivity extends BaseActivity
         sample_man_sign.setOnClickListener(view -> {
             //跳转到绘图界面
             Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
-            intent.putExtra("type",SAMPLEMANONE);
+            intent.putExtra("type", SAMPLEMANONE);
 //            intent.putExtra("path",sampleManOnePath);
-            startActivityForResult(intent,SAMPLEMANONE);
+            startActivityForResult(intent, SAMPLEMANONE);
         });
     }
 
@@ -450,35 +484,48 @@ public class SamplingFormActivity extends BaseActivity
                 }
                 break;
             case SAMPLEMANONE:
-                if (data!=null){
-                    sampleManOnePath=data.getStringExtra("path");
+                if (data != null) {
+                    sampleManOnePath = data.getStringExtra("path");
                     File file = new File(sampleManOnePath);
-                    if(file.exists()){
+                    if (file.exists()) {
                         Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
-                        sample_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        sample_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                         bm.recycle();
                     }
                 }
                 break;
             case SAMPLEMANTWO:
-                if (data!=null){
-                    sampleManTwoPath=data.getStringExtra("path");
+                if (data != null) {
+                    sampleManTwoPath = data.getStringExtra("path");
                     File file = new File(sampleManTwoPath);
-                    if(file.exists()){
+                    if (file.exists()) {
                         Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
-                        sample_man_sign_two.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        sample_man_sign_two.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                         bm.recycle();
                     }
                 }
                 break;
             case MONITOR:
-                if (data!=null){
-                    monitorManSignPath=data.getStringExtra("path");
+                if (data != null) {
+                    monitorManSignPath = data.getStringExtra("path");
                     File file = new File(monitorManSignPath);
-                    if(file.exists()){
+                    if (file.exists()) {
                         Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
-                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm,90f));
+                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                         bm.recycle();
+                    }
+                }
+                break;
+
+            case VideoActivity
+                        .VIDEO_ACTIVITY:
+                if (data!=null){
+                    String path=data.getStringExtra("path");
+                    File file=new File(path);
+                    if (file.exists()){
+                        sampleVideo.remove(path);
+                        videoAdapter.setPaths(sampleVideo);
+                        videoAdapter.notifyDataSetChanged();
                     }
                 }
                 break;
@@ -512,6 +559,15 @@ public class SamplingFormActivity extends BaseActivity
                     runOnUiThread(() -> {
                         sampleAdapter.notifyDataSetChanged();
                     });
+                }
+                break;
+
+            case REQUEST_CODE_PICK:
+                if (resultCode == RESULT_OK && data != null) {
+                    String videoPath = GetPathFromUri.getPath(this, data.getData());
+                    sampleVideo.add(videoPath);
+                    videoAdapter.setPaths(sampleVideo);
+                    videoAdapter.notifyDataSetChanged();
                 }
                 break;
         }
@@ -622,13 +678,13 @@ public class SamplingFormActivity extends BaseActivity
      * 退出操作
      */
     private void doBack() {
-        if (isSaved){
+        if (isSaved) {
             finish();
         }
         AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(SamplingFormActivity.this);
         normalDialog.setTitle("提示");
-        normalDialog.setMessage("还未保存，确定退出吗?");
+        normalDialog.setMessage("如果未保存，数据将会丢失");
         normalDialog.setPositiveButton("退出",
                 (dialog, which) -> finish());
         normalDialog.setNegativeButton("取消",
