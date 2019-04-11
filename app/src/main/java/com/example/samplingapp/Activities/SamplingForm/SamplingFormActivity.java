@@ -13,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -51,7 +50,8 @@ import java.util.Date;
 import java.util.List;
 
 public class SamplingFormActivity extends BaseActivity
-        implements OnDateSetListener, FormPresenter.LocationListener {
+        implements OnDateSetListener, FormPresenter.LocationListener
+        ,FormPresenter.FileUploadListener {
 
     public static final int POINTGET = 0;
     //图片选择
@@ -185,6 +185,11 @@ public class SamplingFormActivity extends BaseActivity
     String ActLongitude;
     String ActLatitude;
 
+    //保存与提交
+    //保存
+    @BindView(R.id.save)
+    View save;
+
 
     FormPresenter presenter;
     FormData data;//上传的form数据
@@ -212,6 +217,17 @@ public class SamplingFormActivity extends BaseActivity
         initPictureSelect();
         initSign();
         initVideo();
+
+        initSave();
+    }
+
+    /**
+     * 保存逻辑
+     */
+    private void initSave() {
+        save.setOnClickListener(view
+                -> presenter.uploadFile(sampleManOnePath
+                ,SamplingFormActivity.this,FormPresenter.SAMPLEMAN));
     }
 
     /**
@@ -691,5 +707,24 @@ public class SamplingFormActivity extends BaseActivity
                 (dialog, which) -> dialog.dismiss());
         // 显示
         normalDialog.show();
+    }
+
+    /**
+     * 文件上传回调接口
+     * @param isOk
+     */
+    @Override
+    public void onSuccess(boolean isOk,String path,int type) {
+        if (isOk){
+            Log.e("zzh","上传的文件为:"+path+" 上传的种类为:"+type);
+            //todo:上传文件
+        }else{
+            showToast("发生错误");
+        }
+    }
+
+    @Override
+    public void onFail(String msg) {
+        showToast(msg);
     }
 }

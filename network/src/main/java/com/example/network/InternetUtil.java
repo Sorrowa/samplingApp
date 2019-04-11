@@ -45,4 +45,14 @@ public class InternetUtil {
      * 参数：projectId
      */
     public static final String GETPOINTLIST="api/PointList";
+
+    /**
+     * 保存表单
+     */
+    public static final String SAVEFORM="api/SaveForm";
+
+    /**
+     * 文件上传接口
+     */
+    public static final String UOLOADFILE="api/UploadFile";
 }

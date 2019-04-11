@@ -1,21 +1,28 @@
 package com.example.network.model;
 
+import com.example.core.Entity.Data.FormSubmitData;
+import com.example.core.Entity.message.FileMessage;
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
-import com.example.core.Entity.message.PointSelectListMessage;
 import com.example.core.Entity.message.ProjectMessage;
 import com.example.core.Entity.message.SamplingMessage;
+import com.example.core.Entity.message.SaveOrSubmitFormMessage;
 import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
+import com.example.network.RetrofitInterface.ApiFormInterface;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiGetSampByPoint;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
-import com.example.network.RetrofitInterface.ApiPointList;
+import com.example.network.RetrofitInterface.ApiUploadFile;
 
-import okhttp3.ResponseBody;
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
@@ -110,6 +117,40 @@ public class ApiModel {
         }
         ApiGetSampByPoint apiGetSampByPoint=retrofit.create(ApiGetSampByPoint.class);
         return apiGetSampByPoint.getSampByPoint(projectPointId);
+    }
+
+    /**
+     * 保存表单信息
+     * @param Token
+     * @param data
+     * @return
+     */
+    public static Call<SaveOrSubmitFormMessage> saveForm(String Token, FormSubmitData data){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiFormInterface apiFormInterface=retrofit.create(ApiFormInterface.class);
+        return apiFormInterface.SaveForm(data);
+    }
+
+    /**
+     * 上传文件
+     * @param Token
+     * @param file
+     * @return
+     */
+    public static Call<FileMessage> uploadFile(String Token, File file){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiUploadFile apiUploadFile=retrofit.create(ApiUploadFile.class);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/jpg"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        return apiUploadFile.uploadFile(body);
     }
 
 //    /**
