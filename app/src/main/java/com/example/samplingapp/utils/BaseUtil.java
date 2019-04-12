@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import androidx.appcompat.app.AlertDialog;
 
 /**
@@ -127,6 +129,15 @@ public class BaseUtil {
         MediaMetadataRetriever media = new MediaMetadataRetriever();
         media.setDataSource(path);
         return media.getFrameAtTime();
+    }
+
+    /**
+     * 保留小数点后一位
+     * @return
+     */
+    public static String FomatNumber(double num){
+        DecimalFormat decimalFormat=new DecimalFormat("0.0");
+        return decimalFormat.format(num);
     }
 
 }

@@ -8,8 +8,8 @@ import java.util.List;
 public class FormSubmitData {
 
     private FormData form;
-    private List<FileInfo> files;
-    private boolean submit=true;
+    private List<FileData> files;
+    private boolean submit=false;
 
     public FormData getForm() {
         return form;
@@ -19,11 +19,11 @@ public class FormSubmitData {
         this.form = form;
     }
 
-    public List<FileInfo> getFiles() {
+    public List<FileData> getFiles() {
         return files;
     }
 
-    public void setFiles(List<FileInfo> files) {
+    public void setFiles(List<FileData> files) {
         this.files = files;
     }
 
@@ -35,14 +35,4 @@ public class FormSubmitData {
         this.submit = submit;
     }
 
-
-    class FileInfo{
-//        "FileType":0,
-//        "FileName":"左中右框架模板标注_PxCook",
-//        "FilePath":"/Upload/20190321/ReName_左中右框架模板标注_PxCook-副本(2)-副本(1).png"
-
-        private String FileType;
-        private String FileName;
-        private String FilePath;
-    }
 }

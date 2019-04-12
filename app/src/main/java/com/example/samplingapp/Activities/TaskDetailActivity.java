@@ -74,6 +74,12 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         doWithType();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        presenter.getPointList(type,data.getId(),searchRes,this);
+    }
+
     private void doWithType() {
         //隐藏新建表单项
         if (type.equals("2")) {

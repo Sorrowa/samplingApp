@@ -22,6 +22,7 @@ public class PointDetailData implements Parcelable {
     private String Latitude;
     private String Status;
     private String StatusName;
+    private String PointSampPlan;
 
     private PointDetailData(Parcel in){
         Id=in.readString();
@@ -115,5 +116,13 @@ public class PointDetailData implements Parcelable {
 
     public void setProjectPointId(String projectPointId) {
         ProjectPointId = projectPointId;
+    }
+
+    public String getPointSampPlan() {
+        return PointSampPlan;
+    }
+
+    public void setPointSampPlan(String pointSampPlan) {
+        PointSampPlan = pointSampPlan;
     }
 }

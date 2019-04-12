@@ -147,7 +147,7 @@ public class ApiModel {
         }
         ApiUploadFile apiUploadFile=retrofit.create(ApiUploadFile.class);
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/jpg"), file);
+                RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", file.getName(), requestFile);
         return apiUploadFile.uploadFile(body);
