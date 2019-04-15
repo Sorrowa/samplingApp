@@ -55,4 +55,9 @@ public class InternetUtil {
      * 文件上传接口
      */
     public static final String UOLOADFILE="api/UploadFile";
+
+    /**
+     * 删除表单的接口
+     */
+    public static final String DELETEFORM="api/DelSampForm";
 }

@@ -1,12 +1,15 @@
 package com.example.samplingapp.Activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +23,12 @@ import com.example.samplingapp.Activities.TaskDetailBaseActivity.TaskBaseActivit
 import com.example.samplingapp.Adapter.RecycleViewAdapters.TaskDetailAdapter;
 import com.example.samplingapp.Presenter.TaskPresenter;
 import com.example.samplingapp.R;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +49,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @BindView(R.id.point_percent)
     TextView pointPercent;
     @BindView(R.id.point_list)
-    RecyclerView r;
+    SwipeRecyclerView r;
     @BindView(R.id.add_new_sampling)
     TextView addNewSampling;
 
@@ -48,8 +57,12 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     private String type;//1:未采样 2:已采样
     private DialogListener listener;
 
+    private TaskDetailAdapter adapter;
+
     //点位信息
     private ArrayList<PointData> pointDatas=new ArrayList<>();
+
+    private Dialog deleteDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +74,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         presenter=new TaskPresenter();
         presenter.attachView(this);
         initView();
+        initRecycleView(pointDatas);
         //开始网络请求
         presenter.getPointList(type,data.getId(),searchRes,this);
         //dialog显示回调接口
@@ -77,7 +91,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     protected void onRestart() {
         super.onRestart();
-        presenter.getPointList(type,data.getId(),searchRes,this);
+        presenter.getPointList(type,data.getId(),null,this);
     }
 
     private void doWithType() {
@@ -119,8 +133,9 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     public void onSuccess(List<PointData> data, boolean isOk) {
         if (isOk){
+            pointDatas.clear();
             pointDatas.addAll(data);
-            initRecycleView(data);
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
         }else{
             showToast("获取点位数据失败");
         }
@@ -134,12 +149,89 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         r.setLayoutManager(manager);
-        TaskDetailAdapter adapter=new TaskDetailAdapter(data);
+        //菜单删除
+        if (adapter==null){
+            r.setSwipeMenuCreator(mSwipeMenuCreator);
+            r.setOnItemMenuClickListener(mOnItemMenuClickListener);
+            adapter=new TaskDetailAdapter(data);
+        }
         r.setAdapter(adapter);
     }
 
     @Override
     public void onFail() {
         showToast("获取点位数据失败");
+    }
+
+
+    //创建侧滑菜单
+    SwipeMenuCreator mSwipeMenuCreator=new SwipeMenuCreator() {
+        @Override
+        public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
+            SwipeMenuItem deleteItem=new SwipeMenuItem(TaskDetailActivity.this)
+                    .setText("删除")
+                    .setBackground(R.drawable.delete_item)
+                    .setTextColor(Color.WHITE)
+                    .setHeight(140)
+                    .setWidth(200)
+                    .setWeight(1)
+                    .setTextSize(14);
+            rightMenu.addMenuItem(deleteItem);
+        }
+    };
+    //删除监听器
+    OnItemMenuClickListener mOnItemMenuClickListener= (menuBridge, adapterPosition) -> {
+        menuBridge.closeMenu();
+        //因为只有一个点击项，所以直接删除
+
+        AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(TaskDetailActivity.this);
+        normalDialog.setTitle("提示");
+        normalDialog.setMessage("您确定要删除此条信息吗");
+        normalDialog.setPositiveButton("确定",
+                (dialog, which) -> deleteItem(adapterPosition));
+        normalDialog.setNegativeButton("取消",
+                (dialog, which) -> dialog.dismiss());
+        // 显示
+        normalDialog.show();
+
+    };
+
+    /**
+     * 删除对应位置的信息
+     * @param adapterPosition
+     */
+    private void deleteItem(int adapterPosition) {
+
+        showDeleteDialog();
+
+        presenter.deleteForm(pointDatas.get(adapterPosition).getId()
+                , new TaskPresenter.deleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        deleteDialog.dismiss();
+                        pointDatas.remove(adapterPosition);
+                        runOnUiThread(() -> adapter.notifyDataSetChanged());
+                    }
+
+                    @Override
+                    public void onFail(String info) {
+                        showToast(info);
+                    }
+                });
+    }
+
+    private void showDeleteDialog() {
+
+        if (deleteDialog== null) {
+            View layout = getLayoutInflater().inflate(R.layout.dialog_form_delete
+                    , null);
+            deleteDialog = new Dialog(TaskDetailActivity.this);
+            deleteDialog.setContentView(layout);
+            deleteDialog.setCancelable(false);
+            deleteDialog.setCanceledOnTouchOutside(true);
+            deleteDialog.setOnCancelListener(dialog -> showToast("后台将继续删除信息"));
+        }
+        deleteDialog.show();
     }
 }

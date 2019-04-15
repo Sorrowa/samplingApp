@@ -11,8 +11,11 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class BaseActivity extends AppCompatActivity implements BaseView {
 
@@ -25,14 +28,17 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             , Manifest.permission.INTERNET
             , Manifest.permission.ACCESS_FINE_LOCATION
             , Manifest.permission.ACCESS_COARSE_LOCATION
-            , Manifest.permission_group.PHONE};
+            , Manifest.permission.ACCESS_WIFI_STATE};
+
+//    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+//    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (app==null){
-            app= (App) getApplication();
+        if (app == null) {
+            app = (App) getApplication();
         }
         addActivity();
 
@@ -45,17 +51,32 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             decorView.setSystemUiVisibility(option);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        ActionBar actionBar=getSupportActionBar();
-        if (null!=actionBar){
+        ActionBar actionBar = getSupportActionBar();
+        if (null != actionBar) {
             actionBar.hide();
+        }
+
+        getRight();
+    }
+
+    /**
+     * 统一获取权限
+     */
+    private void getRight() {
+        if (!EasyPermissions.hasPermissions(this,permmisons)){
+            EasyPermissions.requestPermissions(this
+                    ,"请允许以下权限，否则app将不能使用"
+                    ,996
+                    ,permmisons);
         }
     }
 
-    public void addActivity(){
+
+    public void addActivity() {
         app.addActivity_(this);
     }
 
-    public void removeActivity(){
+    public void removeActivity() {
         app.removeActivity_(this);
     }
 
@@ -66,13 +87,13 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
     }
 
     @Override
-    public void showToast(String text){
-        Toast.makeText(this,text,Toast.LENGTH_SHORT)
+    public void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT)
                 .show();
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
 
@@ -80,9 +101,9 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
      * 刷新handler
      */
     @SuppressLint("HandlerLeak")
-    private void resetHandler(){
-        if (handler==null){
-            handler=new Handler(){
+    private void resetHandler() {
+        if (handler == null) {
+            handler = new Handler() {
                 @Override
                 public String getMessageName(Message message) {
                     return super.getMessageName(message);
@@ -91,8 +112,25 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         }
     }
 
-    public void handleRunnable(Runnable runnable){
+    public void handleRunnable(Runnable runnable) {
         resetHandler();
         handler.post(runnable);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(996
+                ,permmisons
+                ,grantResults
+                ,this);
+    }
+
+    /**
+     * 权限请求回调
+     */
+    @AfterPermissionGranted(996)
+    public void afterGetPermission(){
+        getRight();
     }
 }

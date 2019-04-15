@@ -252,7 +252,6 @@ public class SamplingFormActivity extends BaseActivity
                 return;
             }
 
-            isSaved = true;
             showDialog("1");
             environmentPictureNum = environmentPhotos.size();
             samplingPictureNum = samplingPhotos.size();
@@ -288,20 +287,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             if (videoNum > 0) {
                 for (String path : sampleVideo) {
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                String newPath= SiliCompressor.with(SamplingFormActivity.this).compressVideo(path,SamplingFormActivity.this.getFilesDir().getPath());
-//                                Log.e("zzh","新的视频路径为:"+newPath);
-//                                presenter.uploadFile(newPath,SamplingFormActivity.this,FormPresenter.VIDEO);
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    };
                     presenter.uploadFile(path, this, FormPresenter.VIDEO);
-
                 }
             }
             if (sampleManOneNum > 0) {
@@ -848,7 +834,7 @@ public class SamplingFormActivity extends BaseActivity
      * 退出操作
      */
     private void doBack() {
-        if (!isSaved) {
+        if (isSaved) {
             finish();
             return;
         }
@@ -981,7 +967,6 @@ public class SamplingFormActivity extends BaseActivity
 
     @Override
     public void onFailSaveOrSubmit(String msg) {
-        Log.e("zzh", "回调信息为:" + msg);
         showToast(msg);
         formUploadDialog.dismiss();
     }

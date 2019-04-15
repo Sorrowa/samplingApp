@@ -1,6 +1,7 @@
 package com.example.network.model;
 
 import com.example.core.Entity.Data.FormSubmitData;
+import com.example.core.Entity.message.DeleteFormMessage;
 import com.example.core.Entity.message.FileMessage;
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
@@ -10,6 +11,7 @@ import com.example.core.Entity.message.SamplingMessage;
 import com.example.core.Entity.message.SaveOrSubmitFormMessage;
 import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
+import com.example.network.RetrofitInterface.ApiDeleteFormInterface;
 import com.example.network.RetrofitInterface.ApiFormInterface;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
@@ -151,6 +153,21 @@ public class ApiModel {
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", file.getName(), requestFile);
         return apiUploadFile.uploadFile(body);
+    }
+
+    /**
+     * 删除表单
+     * @param formId
+     * @param Token
+     * @return
+     */
+    public static Call<DeleteFormMessage> deleteForm(String formId,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiDeleteFormInterface apiDeleteFormInterface=retrofit.create(ApiDeleteFormInterface.class);
+        return apiDeleteFormInterface.deleteForm(formId);
     }
 
 //    /**
