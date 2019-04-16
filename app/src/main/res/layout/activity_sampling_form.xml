@@ -266,18 +266,27 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/weather"
-                    android:layout_width="100dp"
+                <TextView
+                    android:id="@+id/weahter"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
-                    android:gravity="center_vertical|end"
-                    android:hint="请输入"
+                    android:layout_marginEnd="28dp"
+                    android:gravity="center_vertical"
+                    android:hint="晴天"
                     android:textColor="@color/sampling_static_color"
                     android:textSize="14sp"
                     android:background="#00000000"/>
+
+                <ImageView
+                    android:id="@+id/weahter_arrows"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/right_arrows" />
             </RelativeLayout>
 
             <View
@@ -304,18 +313,27 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/sampling_method"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
-                    android:gravity="center_vertical|end"
-                    android:hint="请输入"
+                    android:layout_marginEnd="28dp"
+                    android:gravity="center_vertical"
+                    android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
                     android:textSize="14sp"
                     android:background="#00000000"/>
+
+                <ImageView
+                    android:id="@+id/sampling_method_arrows"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/right_arrows" />
             </RelativeLayout>
 
             <View
@@ -401,18 +419,27 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/transparent_way"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
-                    android:gravity="center_vertical|end"
-                    android:hint="请输入"
+                    android:layout_marginEnd="28dp"
+                    android:gravity="center_vertical"
+                    android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
                     android:textSize="14sp"
                     android:background="#00000000"/>
+
+                <ImageView
+                    android:id="@+id/transparent_way_arrows"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/right_arrows" />
 
             </RelativeLayout>
 

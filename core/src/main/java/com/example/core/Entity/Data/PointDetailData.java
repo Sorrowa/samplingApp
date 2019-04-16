@@ -14,6 +14,7 @@ public class PointDetailData implements Parcelable {
 //            "Latitude": "14.54",
 //            "Status": 1,
 //            "StatusName": "已采样"
+//    PointSampPlan
 
     private String Id;
     private String ProjectPointId;
@@ -32,6 +33,7 @@ public class PointDetailData implements Parcelable {
         Latitude=in.readString();
         Status=in.readString();
         StatusName=in.readString();
+        PointSampPlan=in.readString();
     }
 
     public static final Creator<PointDetailData> CREATOR = new Creator<PointDetailData>() {
@@ -55,6 +57,7 @@ public class PointDetailData implements Parcelable {
         parcel.writeString(Latitude);
         parcel.writeString(Status);
         parcel.writeString(StatusName);
+        parcel.writeString(PointSampPlan);
     }
 
     public String getId() {

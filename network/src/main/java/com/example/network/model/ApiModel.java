@@ -7,6 +7,7 @@ import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.core.Entity.message.ProjectMessage;
+import com.example.core.Entity.message.SampMethodListMessage;
 import com.example.core.Entity.message.SamplingMessage;
 import com.example.core.Entity.message.SaveOrSubmitFormMessage;
 import com.example.network.InternetUtil;
@@ -17,6 +18,7 @@ import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiGetSampByPoint;
+import com.example.network.RetrofitInterface.ApiGetSampMethodList;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
 import com.example.network.RetrofitInterface.ApiUploadFile;
 
@@ -168,6 +170,21 @@ public class ApiModel {
         }
         ApiDeleteFormInterface apiDeleteFormInterface=retrofit.create(ApiDeleteFormInterface.class);
         return apiDeleteFormInterface.deleteForm(formId);
+    }
+
+    /**
+     * 获取方法列表
+     * @param keyWord 查找关键字
+     * @param Token
+     * @return
+     */
+    public static Call<SampMethodListMessage> getMethod(String keyWord,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetSampMethodList apiGetSampMethodList=retrofit.create(ApiGetSampMethodList.class);
+        return apiGetSampMethodList.getMethodList(keyWord);
     }
 
 //    /**

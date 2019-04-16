@@ -60,4 +60,9 @@ public class InternetUtil {
      * 删除表单的接口
      */
     public static final String DELETEFORM="api/DelSampForm";
+
+    /**
+     * 获得方法列表
+     */
+    public static final String GETMETHODLIST="api/GetMethodList";
 }

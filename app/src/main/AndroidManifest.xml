@@ -23,7 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".mvp.ui.VideoActivity"
+        <activity android:name=".Activities.SamplingForm.SelectActivitys.MethodSelectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator"/>
+        <activity
+            android:name=".mvp.ui.VideoActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="InnerclassSeparator" />

@@ -1,7 +1,6 @@
 package com.example.samplingapp.Presenter.Form;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;

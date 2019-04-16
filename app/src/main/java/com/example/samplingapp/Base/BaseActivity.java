@@ -2,6 +2,7 @@ package com.example.samplingapp.Base;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -10,6 +11,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.samplingapp.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -21,6 +24,8 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
 
     App app;
     public Handler handler;
+
+    Dialog loadingDialog;
 
     String[] permmisons = new String[]{Manifest.permission.CAMERA
             , Manifest.permission.READ_EXTERNAL_STORAGE
@@ -132,5 +137,25 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
     @AfterPermissionGranted(996)
     public void afterGetPermission(){
         getRight();
+    }
+
+    /**
+     * 显示加载中的图标
+     */
+    public void showLoadingDialog() {
+        if (loadingDialog == null) {
+            View layout = getLayoutInflater().inflate(R.layout.dialog_loading
+                    , null);
+            loadingDialog = new Dialog(this);
+            loadingDialog.setContentView(layout);
+            loadingDialog.setCancelable(false);
+            loadingDialog.setCanceledOnTouchOutside(true);
+            loadingDialog.setOnCancelListener(dialog -> showToast("后台将继续上传信息"));
+        }
+        loadingDialog.show();
+    }
+
+    public void dismissLoadingDialog(){
+        loadingDialog.dismiss();
     }
 }

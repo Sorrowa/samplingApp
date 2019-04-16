@@ -1,4 +1,4 @@
-package com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect;
+package com.example.samplingapp.Adapter.RecycleViewAdapters.Select.PhotoSelect;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,8 +35,7 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
     public SampleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo
                 ,parent,false);
-        SampleAdapter.ViewHolder holder=new SampleAdapter.ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override

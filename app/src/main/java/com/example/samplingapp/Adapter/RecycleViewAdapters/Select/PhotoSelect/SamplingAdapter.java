@@ -1,4 +1,4 @@
-package com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect;
+package com.example.samplingapp.Adapter.RecycleViewAdapters.Select.PhotoSelect;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,26 +19,28 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.ViewHolder> {
+public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHolder>{
+
 
     private Activity context;
     private List<String> photos=new ArrayList<>();
 
-    public EnvironmentAdapter(Activity context, List<String> photos){
+    public SamplingAdapter(Activity context, List<String> photos){
         this.context=context;
         this.photos.addAll(photos);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SamplingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo
                 ,parent,false);
-        return new ViewHolder(view);
+        SamplingAdapter.ViewHolder holder=new SamplingAdapter.ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SamplingAdapter.ViewHolder holder, int position) {
         File file = new File(photos.get(position));
         if(file.exists()){
             Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
@@ -47,7 +49,7 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
         holder.itemView.setOnClickListener(view -> {
             Intent intent=new Intent(context, PreviewActivity.class);
             intent.putExtra("path",photos.get(position));
-            intent.putExtra("type","1");
+            intent.putExtra("type","2");
             context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
         });
     }
@@ -61,6 +63,7 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
     public int getItemCount() {
         return photos.size();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder{
 

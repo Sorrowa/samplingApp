@@ -1,4 +1,4 @@
-package com.example.samplingapp.Adapter.RecycleViewAdapters.VideoSelecte;
+package com.example.samplingapp.Adapter.RecycleViewAdapters.Select.VideoSelecte;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

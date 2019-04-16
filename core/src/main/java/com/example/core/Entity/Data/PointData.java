@@ -22,7 +22,7 @@ public class PointData implements Parcelable {
     private String PointId;
 
 
-    PointData(Parcel in){
+    private PointData(Parcel in){
         Id=in.readString();
         PointName=in.readString();
         Status=in.readString();

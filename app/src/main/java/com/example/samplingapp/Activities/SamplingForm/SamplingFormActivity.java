@@ -26,14 +26,16 @@ import android.widget.TextView;
 import com.example.core.Entity.Data.FileData;
 import com.example.core.Entity.Data.FormData;
 import com.example.core.Entity.Data.PointDetailData;
+import com.example.core.Entity.Data.SampMethodData;
 import com.example.core.Others.GetPathFromUri;
 import com.example.core.Others.Rom;
+import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.MethodSelectActivity;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.SelectPointActivity;
 import com.example.samplingapp.Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity;
-import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.EnvironmentAdapter;
-import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.SampleAdapter;
-import com.example.samplingapp.Adapter.RecycleViewAdapters.PhotoSelect.SamplingAdapter;
-import com.example.samplingapp.Adapter.RecycleViewAdapters.VideoSelecte.VideoAdapter;
+import com.example.samplingapp.Adapter.RecycleViewAdapters.Select.PhotoSelect.EnvironmentAdapter;
+import com.example.samplingapp.Adapter.RecycleViewAdapters.Select.PhotoSelect.SampleAdapter;
+import com.example.samplingapp.Adapter.RecycleViewAdapters.Select.PhotoSelect.SamplingAdapter;
+import com.example.samplingapp.Adapter.RecycleViewAdapters.Select.VideoSelecte.VideoAdapter;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
@@ -72,6 +74,9 @@ public class SamplingFormActivity extends BaseActivity
     //视频选择
     public static final int REQUEST_CODE_PICK = 30;
 
+    //方法选择
+    public static final int METHOD=40;
+
     private String projectId = null;
     private PointDetailData pointData = null;
 
@@ -104,13 +109,18 @@ public class SamplingFormActivity extends BaseActivity
     EditText Pressure;
     String pressure;
     //天气
-    @BindView(R.id.weather)
-    EditText Weather;
+    @BindView(R.id.weahter)
+    TextView Weather;
+    @BindView(R.id.weahter_arrows)
+    ImageView getWeatherList;
     String weather;
+    private int nowWeather = 0;
     //采样方法
     @BindView(R.id.sampling_method)
-    EditText sampling_method;
-    String samplingMethod;
+    TextView sampling_method;
+    @BindView(R.id.sampling_method_arrows)
+    ImageView sampling_method_arrows;
+    SampMethodData samplingMethod;
     @BindView(R.id.sampling_method_select)
     View sampling_method_select;//选择采样方法
     //采样状态
@@ -126,8 +136,10 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.transparent_way_select)
     View transparent_way_select;
     @BindView(R.id.transparent_way)
-    EditText transparent_way;
-    String transparentWay;
+    TextView transparent_way;
+    @BindView(R.id.transparent_way_arrows)
+    ImageView transparent_way_arrows;
+    int transparentWay;
     //采样时间
     @BindView(R.id.time_pick)
     View time_pick;
@@ -236,15 +248,101 @@ public class SamplingFormActivity extends BaseActivity
         initPictureSelect();
         initSign();
         initVideo();
-
+        initWeather();
+        initTransport();
+        initSampleMethod();
         initSave();
+    }
+
+    /**
+     * 初始化采样方法选择
+     */
+    private void initSampleMethod() {
+//        //采样方法
+//        @BindView(R.id.sampling_method)
+//        TextView sampling_method;
+//        @BindView(R.id.sampling_method_arrows)
+//        ImageView sampling_method_arrows;
+//        String samplingMethod;
+//        @BindView(R.id.sampling_method_select)
+//        View sampling_method_select;//选择采样方法
+        //todo:跳转到采样方法选择界面
+        sampling_method.setOnClickListener(view -> {
+            Intent intent=new Intent(SamplingFormActivity.this
+                    , MethodSelectActivity.class);
+            startActivityForResult(intent,METHOD);
+        });
+    }
+
+    /**
+     * 初始化交通
+     */
+    private void initTransport() {
+        transparent_way.setOnClickListener(view -> showTransList());
+        transparent_way_arrows.setOnClickListener(view -> showTransList());
+    }
+
+    private void showTransList() {
+        List<String> list = new ArrayList<>();
+        list.add("空运");
+        list.add("汽运");
+        list.add("步行");
+        list.add("海运");
+        list.add("自行车");
+
+        BottomFullDialog bottomFullDialog =
+                new BottomFullDialog(SamplingFormActivity.this
+                        , R.style.BottomFullDialog
+                        , list
+                        , item -> {
+                    transparentWay=item;
+                    transparent_way.setText(list.get(item));
+                }
+                        , transparentWay);
+        bottomFullDialog.setCancelable(true);
+        bottomFullDialog.setCanceledOnTouchOutside(true);
+        bottomFullDialog.show();
+    }
+
+    /**
+     * 初始化天气选择器
+     */
+    private void initWeather() {
+
+        Weather.setOnClickListener(view -> showWeatherList());
+        getWeatherList.setOnClickListener(view -> showWeatherList());
+
+    }
+
+    private void showWeatherList() {
+        List<String> list = new ArrayList<>();
+        list.add("晴天");
+        list.add("多云");
+        list.add("阴天");
+        list.add("小雨");
+        list.add("中雨");
+        list.add("暴雨");
+        list.add("雪天");
+        list.add("冰雹");
+
+        BottomFullDialog bottomFullDialog =
+                new BottomFullDialog(SamplingFormActivity.this
+                        , R.style.BottomFullDialog
+                        , list
+                        , item -> {
+                    nowWeather = item;
+                    Weather.setText(list.get(item));
+                }
+                        , nowWeather);
+        bottomFullDialog.setCancelable(true);
+        bottomFullDialog.setCanceledOnTouchOutside(true);
+        bottomFullDialog.show();
     }
 
     /**
      * 保存逻辑
      */
     private void initSave() {
-        //todo:上传逻辑
         save.setOnClickListener(view
                 -> {
 
@@ -370,23 +468,19 @@ public class SamplingFormActivity extends BaseActivity
             startActivity(intent);
         });
         //todo:点击事件处理
-//        @BindView(R.id.sampling_status)
-//        TextView sampling_status;
-//        @BindView(R.id.sampling_status_arrows)
-//        ImageView getPointStatus;
         List<String> list = new ArrayList<>();
         list.add("正常");
         list.add("异常");
         sampling_status.setOnClickListener(view -> {
             BottomFullDialog bottomFullDialog =
                     new BottomFullDialog(SamplingFormActivity.this
-                    , R.style.BottomFullDialog
-                    , list
-                    , item -> {
-                nowStatus = item;
-                sampling_status.setText(list.get(item));
-            }
-                    , nowStatus);
+                            , R.style.BottomFullDialog
+                            , list
+                            , item -> {
+                        nowStatus = item;
+                        sampling_status.setText(list.get(item));
+                    }
+                            , nowStatus);
             bottomFullDialog.setCancelable(true);
             bottomFullDialog.setCanceledOnTouchOutside(true);
             bottomFullDialog.show();
@@ -414,7 +508,6 @@ public class SamplingFormActivity extends BaseActivity
 //        pointName = (String) point_name.getText();
         //只能传入数据
         showDialog("2");//显示dialog
-        //todo:设置pointData
         data.setPointSampPlan(pointData.getPointSampPlan());
 //        if (pointData==null){
 //            showToast("还未选择点位!");
@@ -424,8 +517,13 @@ public class SamplingFormActivity extends BaseActivity
         data.setProjectPointId(pointData.getProjectPointId());
         data.setActSampTime(sampling_time_text.getText().toString());
         data.setActSamper(person_name.getText().toString());
-        data.setPointSatus(sampling_status.getText().toString());
-        data.setSampMethod(sampling_method.getText().toString());
+//        data.setPointSatus(sampling_status.getText().toString());
+        if (sampling_status.getText().toString().equals("正常"))
+            data.setPointSatus("0");
+        else
+            data.setPointSatus("1");
+        if (samplingMethod!=null)
+            data.setSampMethod(samplingMethod.getSampMethod());
         data.setWeather(Weather.getText().toString());
         data.setTempature(Climate.getText().toString() + " ℃");
         //GTempature:不明意义，暂时不写
@@ -604,27 +702,21 @@ public class SamplingFormActivity extends BaseActivity
                         case "1":
                             environmentPhotos.remove(path);
                             environmentAdapter.setPhotos(environmentPhotos);
-                            runOnUiThread(() -> {
-                                environmentAdapter.notifyDataSetChanged();
-                            });
+                            runOnUiThread(() -> environmentAdapter.notifyDataSetChanged());
                             environmentPictureNum--;
                             break;
                         case "2":
                             //采样照片
                             samplingPhotos.remove(path);
                             samplingAdapter.setPhotos(samplingPhotos);
-                            runOnUiThread(() -> {
-                                samplingAdapter.notifyDataSetChanged();
-                            });
+                            runOnUiThread(() -> samplingAdapter.notifyDataSetChanged());
                             samplingPictureNum--;
                             break;
                         case "3":
                             //样品照片
                             samplePhotos.remove(path);
                             sampleAdapter.setPhotos(samplePhotos);
-                            runOnUiThread(() -> {
-                                sampleAdapter.notifyDataSetChanged();
-                            });
+                            runOnUiThread(() -> sampleAdapter.notifyDataSetChanged());
                             samplePictureNum--;
                             break;
                     }
@@ -679,6 +771,16 @@ public class SamplingFormActivity extends BaseActivity
                         videoAdapter.notifyDataSetChanged();
                         videoNum--;
                     }
+                }
+                break;
+
+            case METHOD:
+                //获取方法信息
+//                samplingMethod
+                if (data!=null){
+                    samplingMethod=data.getParcelableExtra("Method");
+                    showToast("选择的方法为:"+samplingMethod.getSampMethodName());
+                    sampling_method.setText(samplingMethod.getSampMethodName());
                 }
                 break;
         }
@@ -933,9 +1035,7 @@ public class SamplingFormActivity extends BaseActivity
                     pictureUploadDialog.setContentView(layout);
                     pictureUploadDialog.setCancelable(false);
                     pictureUploadDialog.setCanceledOnTouchOutside(true);
-                    pictureUploadDialog.setOnCancelListener(dialog -> {
-                        showToast("后台将继续上传信息");
-                    });
+                    pictureUploadDialog.setOnCancelListener(dialog -> showToast("后台将继续上传信息"));
                 }
                 pictureUploadDialog.show();
                 break;
@@ -947,9 +1047,7 @@ public class SamplingFormActivity extends BaseActivity
                     formUploadDialog.setContentView(layout);
                     formUploadDialog.setCancelable(false);
                     formUploadDialog.setCanceledOnTouchOutside(true);
-                    formUploadDialog.setOnCancelListener(dialog -> {
-                        showToast("后台将继续上传信息");
-                    });
+                    formUploadDialog.setOnCancelListener(dialog -> showToast("后台将继续上传信息"));
                 }
                 formUploadDialog.show();
                 break;
