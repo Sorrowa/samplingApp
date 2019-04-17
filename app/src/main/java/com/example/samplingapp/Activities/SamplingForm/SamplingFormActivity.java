@@ -49,6 +49,7 @@ import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 import com.example.samplingapp.mvp.ui.VideoActivity;
 import com.example.samplingapp.utils.BaseUtil;
+import com.example.samplingapp.utils.FileUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -396,6 +397,9 @@ public class SamplingFormActivity extends BaseActivity
                         , R.style.BottomFullDialog
                         , list
                         , item -> {
+                    if (item<0){
+                        return;
+                    }
                     transparentWay = item;
                     transparent_way.setText(list.get(item));
                 }
@@ -431,6 +435,9 @@ public class SamplingFormActivity extends BaseActivity
                         , R.style.BottomFullDialog
                         , list
                         , item -> {
+                    if (item<0){
+                        return;
+                    }
                     nowWeather = item;
                     Weather.setText(list.get(item));
                 }
@@ -581,6 +588,9 @@ public class SamplingFormActivity extends BaseActivity
                             , R.style.BottomFullDialog
                             , list
                             , item -> {
+                        if (item<0){
+                            return;
+                        }
                         nowStatus = item;
                         sampling_status.setText(list.get(item));
                     }
@@ -817,11 +827,9 @@ public class SamplingFormActivity extends BaseActivity
         //处理回调结果
         switch (resultCode) {
             case POINTGET:
-                Log.d("zzh","没执行？");
                 if (data != null && data.getParcelableExtra("pointData") != null) {
                     pointData = data.getParcelableExtra("pointData");
                     point_name.setText(pointData.getName());
-                    Log.d("zzh","2没执行？");
                     if (this.data.getActLatitude() != 0 && this.data.getActLatitude() != 0) {
                         getAndShowDistance();
                     }
@@ -921,20 +929,28 @@ public class SamplingFormActivity extends BaseActivity
         switch (requestCode) {
             case ENVIRONMENT:
                 if (data != null) {
-                    //todo:新建一个路径
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    environmentPhotos.add(picturePath);
+                    String newPath=getCacheDir().getPath()+"/enviroment"+environmentPictureNum+".png";
+                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                        showToast("请检查文件访问权限");
+                        break;
+                    }
+
+                    environmentPhotos.add(newPath);
                     environmentAdapter.setPhotos(environmentPhotos);
-                    runOnUiThread(() -> {
-                        environmentAdapter.notifyDataSetChanged();
-                    });
+                    runOnUiThread(() -> environmentAdapter.notifyDataSetChanged());
                     environmentPictureNum++;
                 }
                 break;
             case SAMPLING:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    samplingPhotos.add(picturePath);
+                    String newPath=getCacheDir().getPath()+"/sampling"+samplingPictureNum+".png";
+                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                        showToast("请检查文件访问权限");
+                        break;
+                    }
+                    samplingPhotos.add(newPath);
                     samplingAdapter.setPhotos(samplingPhotos);
                     runOnUiThread(() -> {
                         samplingAdapter.notifyDataSetChanged();
@@ -945,7 +961,12 @@ public class SamplingFormActivity extends BaseActivity
             case SAMPLE:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    samplePhotos.add(picturePath);
+                    String newPath=getCacheDir().getPath()+"/sample"+samplePictureNum+".png";
+                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                        showToast("请检查文件访问权限");
+                        break;
+                    }
+                    samplePhotos.add(newPath);
                     sampleAdapter.setPhotos(samplePhotos);
                     runOnUiThread(() -> {
                         sampleAdapter.notifyDataSetChanged();
@@ -957,6 +978,10 @@ public class SamplingFormActivity extends BaseActivity
             case REQUEST_CODE_PICK:
                 if (resultCode == RESULT_OK && data != null) {
                     String videoPath = GetPathFromUri.getPath(this, data.getData());
+                    if (FileUtil.getFileOrFilesSize(videoPath,FileUtil.SIZETYPE_MB)>=85){
+                        showToast("您的文件太大了!");
+                        return;
+                    }
                     sampleVideo.add(videoPath);
                     videoAdapter.setPaths(sampleVideo);
                     videoAdapter.notifyDataSetChanged();

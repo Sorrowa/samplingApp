@@ -177,7 +177,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
                 .setText("删除")
                 .setBackground(R.drawable.delete_item)
                 .setTextColor(Color.WHITE)
-                .setHeight(140)
+                .setHeight(150)
                 .setWidth(200)
                 .setWeight(1)
                 .setTextSize(14);
