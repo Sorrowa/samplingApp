@@ -246,6 +246,8 @@ public class SamplingFormActivity extends BaseActivity
 
     private boolean isSubmit = false;
 
+    private boolean canGoback=true;//判断是否可以退出当前活动
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,14 +276,16 @@ public class SamplingFormActivity extends BaseActivity
 
         if (status != null && status.equals("1")) {
             unEditableView();
-            canDelete=false;
+            canGoback=false;
         }
         if (status != null) {
             get_place.setVisibility(View.GONE);
             place.setClickable(false);
             location.setClickable(false);
         }
+        canGoback=false;
         if (status == null) {
+            canGoback=true;
             showToast("开始定位");
             presenter.beginLocation(getApplicationContext(), this);
         }
@@ -1107,6 +1111,10 @@ public class SamplingFormActivity extends BaseActivity
             finish();
             return;
         }
+        if (!canGoback){
+            showToast("文件还未完全下载，请勿退出");
+            return;
+        }
         AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(SamplingFormActivity.this);
         normalDialog.setTitle("提示");
@@ -1228,7 +1236,7 @@ public class SamplingFormActivity extends BaseActivity
     public void onSavedorSubmit() {
         showToast("表单上传成功");
         formUploadDialog.dismiss();
-        doBack();
+        finish();
     }
 
     @Override
@@ -1333,32 +1341,44 @@ public class SamplingFormActivity extends BaseActivity
                 case "4":
                     if (sampleManOnePath == null) {
                         sampleManOnePath = file.getPath();
-                        runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
-                                .load(sampleManOnePath)
-                                .into(sample_man_sign));
+                        runOnUiThread(() -> {
+                            if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                                return;
+                            Glide.with(SamplingFormActivity.this)
+                                    .load(sampleManOnePath)
+                                    .into(sample_man_sign);
+                        });
                         sampleManOneNum++;
                         break;
                     }
                     if (sampleManTwoPath == null) {
                         sampleManTwoPath = file.getPath();
-                        runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
-                                .load(sampleManTwoPath)
-                                .into(sample_man_sign_two));
+                        runOnUiThread(() -> {
+                            if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                                return;
+                            Glide.with(SamplingFormActivity.this)
+                                    .load(sampleManTwoPath)
+                                    .into(sample_man_sign_two);
+                        });
                         sampleManTwoNum++;
                         break;
                     }
                     break;
                 case "5":
                     monitorManSignPath = file.getPath();
-                    runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
-                            .load(monitorManSignPath)
-                            .into(monitor_man_sign));
+                    runOnUiThread(() -> {
+                        if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                            return;
+                        Glide.with(SamplingFormActivity.this)
+                                .load(monitorManSignPath)
+                                .into(monitor_man_sign);
+                    });
                     monitorManSignNum++;
                     break;
             }
             i++;
         }
-
+        canGoback=true;
         handler.post(() -> dismissLoadingDialog());
     }
 

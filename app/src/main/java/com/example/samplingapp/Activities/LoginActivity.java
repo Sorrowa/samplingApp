@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.network.InternetUtil;
 import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.MainActivity;
@@ -36,6 +37,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.keyword_see)
     ImageView keywordIfsee;//是否显示密码
     Boolean canYouSee=false;//默认不能显示密码
+    @BindView(R.id.server_input)
+    EditText serverIP;
 
     private LoginPresenter presenter;
 
@@ -87,6 +90,15 @@ public class LoginActivity extends BaseActivity {
      * presenter调用之前进行内容审核
      */
     private void getLogin() {
+
+        if (!serverIP.getText().toString().equals("http://")){
+            InternetUtil.SERVER_IP=serverIP.getText().toString()+"/";
+        }
+        if (!BaseUtil.isNetworkConnected(this)){
+            showToast("请检查您的网络!");
+            return;
+        }
+
         String account;
         String passWord;
         if ((account= String.valueOf(accountText.getText())).equals("")

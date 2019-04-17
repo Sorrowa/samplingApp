@@ -160,4 +160,6 @@
     <color name="across_block">#efefef</color>
 
     <color name="generate">#0f87ff</color>
+
+    <color name="common_gray">#999999</color>
 </resources>
