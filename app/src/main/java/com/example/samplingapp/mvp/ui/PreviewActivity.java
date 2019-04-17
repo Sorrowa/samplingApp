@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
 
@@ -39,6 +40,9 @@ public class PreviewActivity extends BaseActivity {
         ButterKnife.bind(this);
         path=getIntent().getStringExtra("path");//文件路径
         type=getIntent().getStringExtra("type");//删除照片的种类
+        if (!SamplingFormActivity.canDelete){
+            textDelete.setVisibility(View.GONE);
+        }
         initView();
 
     }

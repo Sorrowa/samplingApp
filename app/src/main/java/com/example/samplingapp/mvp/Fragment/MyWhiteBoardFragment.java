@@ -1,6 +1,7 @@
 package com.example.samplingapp.mvp.Fragment;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
 
@@ -22,7 +23,7 @@ public class MyWhiteBoardFragment extends WhiteBoardFragment {
 //        if (path!=null){
 //            setCurBackgroundByPath(path);
 //        }
-
+//        btn_save.setVisibility(View.INVISIBLE);
     }
 
     public void setPath(String path){

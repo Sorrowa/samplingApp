@@ -67,6 +67,8 @@ public class SamplingFormActivity extends BaseActivity
         implements OnDateSetListener, FormPresenter.LocationListener
         , FormPresenter.FileUploadListener, FormPresenter.SaveOrSubmitListener, FormPresenter.PreviousListener {
 
+    public static boolean canDelete=true;
+
     public static final int POINTGET = 0;
     //图片选择
     public static final int ENVIRONMENT = 10;
@@ -272,6 +274,7 @@ public class SamplingFormActivity extends BaseActivity
 
         if (status != null && status.equals("1")) {
             unEditableView();
+            canDelete=false;
         }
         if (status != null) {
             get_place.setVisibility(View.GONE);
@@ -1225,6 +1228,7 @@ public class SamplingFormActivity extends BaseActivity
     public void onSavedorSubmit() {
         showToast("表单上传成功");
         formUploadDialog.dismiss();
+        doBack();
     }
 
     @Override

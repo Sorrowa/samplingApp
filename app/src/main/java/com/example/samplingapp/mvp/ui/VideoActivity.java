@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
 
@@ -37,6 +39,9 @@ public class VideoActivity extends BaseActivity {
         if (path==null){
             showToast("出现未知错误");
             finish();
+        }
+        if (!SamplingFormActivity.canDelete){
+            text_delete.setVisibility(View.GONE);
         }
         initView();
     }
