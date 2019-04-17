@@ -63,6 +63,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
         super.onResume();
         beginGetData(null);
         BaseUtil.softInput(presenter.getView());
+        presenter.getView().showLoadingDialog();
     }
 
     /**
@@ -111,16 +112,13 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
 
     @Override
     public void onSuccess(List<ProjectData> data) {
-//        datas=new ArrayList<>();
-//        datas.addAll(data);
         presenter.getView().handleRunnable(() -> {
             adapater.setDatas(data);
             BaseUtil.softInput(presenter.getView());
             showChange();
+            presenter.getView().dismissLoadingDialog();
         });
-//        editText.clearFocus();
         BaseUtil.softInput(presenter.getView());
-//        refreash();
     }
 
     private void showChange(){
