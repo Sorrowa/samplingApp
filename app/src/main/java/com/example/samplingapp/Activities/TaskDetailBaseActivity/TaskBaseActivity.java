@@ -23,10 +23,7 @@ public abstract class TaskBaseActivity extends BaseActivity {
         dialog.setContentView(layout);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            }
+        dialog.setOnCancelListener(dialog1 -> {
         });
         dialog.show();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

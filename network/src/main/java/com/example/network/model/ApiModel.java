@@ -3,6 +3,7 @@ package com.example.network.model;
 import com.example.core.Entity.Data.FormSubmitData;
 import com.example.core.Entity.message.DeleteFormMessage;
 import com.example.core.Entity.message.FileMessage;
+import com.example.core.Entity.message.FormDetailMessage;
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
@@ -14,6 +15,7 @@ import com.example.network.InternetUtil;
 import com.example.network.RetrofitHelper;
 import com.example.network.RetrofitInterface.ApiDeleteFormInterface;
 import com.example.network.RetrofitInterface.ApiFormInterface;
+import com.example.network.RetrofitInterface.ApiGetFormDetailInterface;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
@@ -185,6 +187,22 @@ public class ApiModel {
         }
         ApiGetSampMethodList apiGetSampMethodList=retrofit.create(ApiGetSampMethodList.class);
         return apiGetSampMethodList.getMethodList(keyWord);
+    }
+
+    /**
+     * 获取表单详细信息
+     * @param formId
+     * @param Token
+     * @return
+     */
+    public static Call<FormDetailMessage> getForm(String formId,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetFormDetailInterface apiGetFormDetailInterface=retrofit
+                .create(ApiGetFormDetailInterface.class);
+        return apiGetFormDetailInterface.getFormDetail(formId);
     }
 
 //    /**

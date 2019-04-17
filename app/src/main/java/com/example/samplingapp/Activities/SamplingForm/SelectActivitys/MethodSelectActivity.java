@@ -16,7 +16,6 @@ import com.example.samplingapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -136,15 +135,16 @@ public class MethodSelectActivity extends BaseActivity implements MethodSelectPr
     @Override
     public void onClick(int position) {
         res=datas.get(position);
-        AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(MethodSelectActivity.this);
-        normalDialog.setTitle("提示");
-        normalDialog.setMessage("确定选择"+res.getSampMethodName()+"吗？");
-        normalDialog.setPositiveButton("确定",
-                (dialog, which) -> doBack());
-        normalDialog.setNegativeButton("取消",
-                (dialog, which) -> dialog.dismiss());
-        // 显示
-        normalDialog.show();
+        doBack();
+//        AlertDialog.Builder normalDialog =
+//                new AlertDialog.Builder(MethodSelectActivity.this);
+//        normalDialog.setTitle("提示");
+//        normalDialog.setMessage("确定选择"+res.getSampMethodName()+"吗？");
+//        normalDialog.setPositiveButton("确定",
+//                (dialog, which) -> doBack());
+//        normalDialog.setNegativeButton("取消",
+//                (dialog, which) -> dialog.dismiss());
+//        // 显示
+//        normalDialog.show();
     }
 }

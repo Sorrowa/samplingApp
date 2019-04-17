@@ -65,4 +65,10 @@ public class InternetUtil {
      * 获得方法列表
      */
     public static final String GETMETHODLIST="api/GetMethodList";
+
+    /**
+     * 获取表单信息详细
+     * 传递formId
+     */
+    public static final String GETFORMDETAIL="api/GetFormDetail";
 }

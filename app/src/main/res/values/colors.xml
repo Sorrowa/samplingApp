@@ -156,5 +156,8 @@
     <color name="sampling_static_color">#333333</color>
     <color name="transparent">#00000000</color>
 
+    <color name="across_road">#dddddd</color>
+    <color name="across_block">#efefef</color>
+
     <color name="generate">#0f87ff</color>
 </resources>

@@ -23,6 +23,7 @@ import com.example.samplingapp.Activities.TaskDetailBaseActivity.TaskBaseActivit
 import com.example.samplingapp.Adapter.RecycleViewAdapters.TaskDetailAdapter;
 import com.example.samplingapp.Presenter.TaskPresenter;
 import com.example.samplingapp.R;
+import com.yanzhenjie.recyclerview.OnItemClickListener;
 import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
 import com.yanzhenjie.recyclerview.SwipeMenu;
 import com.yanzhenjie.recyclerview.SwipeMenuCreator;
@@ -152,6 +153,13 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         if (adapter==null){
             r.setSwipeMenuCreator(mSwipeMenuCreator);
             r.setOnItemMenuClickListener(mOnItemMenuClickListener);
+            r.setOnItemClickListener((view, adapterPosition) -> {
+                Intent intent=new Intent(TaskDetailActivity.this
+                        ,SamplingFormActivity.class);
+                intent.putExtra("formId",data.get(adapterPosition).getId());
+                intent.putExtra("status",data.get(adapterPosition).getStatus());
+                startActivity(intent);
+            });
             adapter=new TaskDetailAdapter(data);
         }
         r.setAdapter(adapter);
@@ -164,19 +172,16 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
 
     //创建侧滑菜单
-    SwipeMenuCreator mSwipeMenuCreator=new SwipeMenuCreator() {
-        @Override
-        public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
-            SwipeMenuItem deleteItem=new SwipeMenuItem(TaskDetailActivity.this)
-                    .setText("删除")
-                    .setBackground(R.drawable.delete_item)
-                    .setTextColor(Color.WHITE)
-                    .setHeight(140)
-                    .setWidth(200)
-                    .setWeight(1)
-                    .setTextSize(14);
-            rightMenu.addMenuItem(deleteItem);
-        }
+    SwipeMenuCreator mSwipeMenuCreator= (leftMenu, rightMenu, position) -> {
+        SwipeMenuItem deleteItem=new SwipeMenuItem(TaskDetailActivity.this)
+                .setText("删除")
+                .setBackground(R.drawable.delete_item)
+                .setTextColor(Color.WHITE)
+                .setHeight(140)
+                .setWidth(200)
+                .setWeight(1)
+                .setTextSize(14);
+        rightMenu.addMenuItem(deleteItem);
     };
     //删除监听器
     OnItemMenuClickListener mOnItemMenuClickListener= (menuBridge, adapterPosition) -> {
@@ -215,6 +220,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
                     @Override
                     public void onFail(String info) {
+                        deleteDialog.dismiss();
                         showToast(info);
                     }
                 });

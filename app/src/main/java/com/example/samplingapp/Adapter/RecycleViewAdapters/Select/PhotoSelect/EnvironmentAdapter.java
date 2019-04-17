@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 
@@ -43,13 +44,19 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
         if(file.exists()){
             Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
             holder.imageView.setImageBitmap(bm);
+            holder.itemView.setOnClickListener(view -> {
+                Intent intent=new Intent(context, PreviewActivity.class);
+                intent.putExtra("path",photos.get(position));
+                intent.putExtra("type","1");
+                context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
+            });
         }
-        holder.itemView.setOnClickListener(view -> {
-            Intent intent=new Intent(context, PreviewActivity.class);
-            intent.putExtra("path",photos.get(position));
-            intent.putExtra("type","1");
-            context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
-        });
+//        holder.itemView.setOnClickListener(view -> {
+//            Intent intent=new Intent(context, PreviewActivity.class);
+//            intent.putExtra("path",photos.get(position));
+//            intent.putExtra("type","1");
+//            context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
+//        });
     }
 
     public void setPhotos(List<String> photos) {

@@ -6,8 +6,10 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.example.core.Entity.Data.FileData;
 import com.example.core.Entity.Data.FormData;
+import com.example.core.Entity.Data.FormDetailSubmitData;
 import com.example.core.Entity.Data.FormSubmitData;
 import com.example.core.Entity.message.FileMessage;
+import com.example.core.Entity.message.FormDetailMessage;
 import com.example.core.Entity.message.SaveOrSubmitFormMessage;
 import com.example.network.model.ApiModel;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
@@ -165,6 +167,45 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
                 listener.onFailSaveOrSubmit("上传成功");
             }
         });
+    }
+
+    /**
+     * 获取表单详细信息
+     * @param formId
+     * @param listener
+     */
+    public void getPreviousForm(String formId,PreviousListener listener){
+        Call<FormDetailMessage> call=ApiModel.getForm(formId
+                ,ShareUtil.getToken((App) (getView().getApplication())));
+        assert call!=null;
+        call.enqueue(new Callback<FormDetailMessage>() {
+            @Override
+            public void onResponse(Call<FormDetailMessage> call, Response<FormDetailMessage> response) {
+                FormDetailMessage message=response.body();
+                if (message==null){
+                    listener.onFailGetPrevious("发生未知错误");
+                    return;
+                }
+                if (!message.getSuccess()){
+                    listener.onFailGetPrevious(message.getMessage());
+                    return;
+                }
+                //成功！
+                listener.onGetPrevious(message.getData());
+
+            }
+
+            @Override
+            public void onFailure(Call<FormDetailMessage> call, Throwable t) {
+                listener.onFailGetPrevious("获取表单数据失败，请检查网路");
+            }
+        });
+    }
+
+
+    public interface PreviousListener{
+        void onGetPrevious(FormDetailSubmitData data);
+        void onFailGetPrevious(String msg);
     }
 
     public interface FileUploadListener {

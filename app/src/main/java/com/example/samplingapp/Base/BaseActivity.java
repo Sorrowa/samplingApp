@@ -149,7 +149,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             loadingDialog = new Dialog(this);
             loadingDialog.setContentView(layout);
             loadingDialog.setCancelable(false);
-            loadingDialog.setCanceledOnTouchOutside(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
             loadingDialog.setOnCancelListener(dialog -> showToast("后台将继续上传信息"));
         }
         loadingDialog.show();

@@ -69,7 +69,7 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
 
         ImageView imageView;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView=itemView.findViewById(R.id.item_photo);
         }

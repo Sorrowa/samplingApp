@@ -37,6 +37,7 @@ public class FormData {
     private double ActLatitude;
     private String Distance;
     private String SampDesc;
+    private String UserUnit;
 
     public String getId() {
         return Id;
@@ -165,5 +166,13 @@ public class FormData {
 
     public double getActLatitude() {
         return ActLatitude;
+    }
+
+    public String getUserUnit() {
+        return UserUnit;
+    }
+
+    public void setUserUnit(String userUnit) {
+        UserUnit = userUnit;
     }
 }

@@ -6,8 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".Activities.SamplingForm.SamplingFormActivity"
-    >
+    tools:context=".Activities.SamplingForm.SamplingFormActivity">
 
     <include layout="@layout/toolbar_generative" />
 
@@ -17,9 +16,9 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <!--采样人员-->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -43,11 +42,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
-                    android:gravity="center_vertical"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical|end"
                     android:hint="采样人员"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
-                    android:background="@color/transparent"/>
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
@@ -56,7 +55,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--当前位置-->
             <RelativeLayout
@@ -103,14 +102,14 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
 
             <!--采样点位-->
             <RelativeLayout
+                android:id="@+id/point_select"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:id="@+id/point_select">
+                android:layout_height="48dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -149,7 +148,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--气温-->
             <RelativeLayout
@@ -173,9 +172,9 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="39dp"
+                    android:layout_marginEnd="35dp"
                     android:background="#00000000"
-                    android:gravity="center_vertical"
+                    android:gravity="center_vertical|end"
                     android:hint="请输入"
                     android:textColor="@color/sampling_static_color"
                     android:textSize="14sp" />
@@ -198,7 +197,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--气压-->
             <RelativeLayout
@@ -222,9 +221,9 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="39dp"
+                    android:layout_marginEnd="35dp"
                     android:background="#00000000"
-                    android:gravity="center_vertical"
+                    android:gravity="center_vertical|end"
                     android:hint="请输入"
                     android:textColor="@color/sampling_static_color"
                     android:textSize="14sp" />
@@ -247,7 +246,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
 
             <!--天气-->
@@ -272,12 +271,12 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="28dp"
+                    android:layout_marginEnd="35dp"
+                    android:background="#00000000"
                     android:gravity="center_vertical"
                     android:hint="晴天"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
-                    android:background="#00000000"/>
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/weahter_arrows"
@@ -294,7 +293,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--采样方法-->
             <RelativeLayout
@@ -319,12 +318,12 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="28dp"
+                    android:layout_marginEnd="35dp"
+                    android:background="#00000000"
                     android:gravity="center_vertical"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
-                    android:background="#00000000"/>
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/sampling_method_arrows"
@@ -341,15 +340,16 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--采样状态-->
             <RelativeLayout
+                android:id="@+id/choose_status"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:id="@+id/choose_status">
+                android:layout_height="48dp">
 
                 <TextView
+                    android:id="@+id/status_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
@@ -358,8 +358,7 @@
                     android:gravity="center_vertical|end"
                     android:text="采样状态"
                     android:textColor="#333333"
-                    android:textSize="14sp"
-                    android:id="@+id/status_text"/>
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/get_point_status"
@@ -369,7 +368,6 @@
                     android:layout_toEndOf="@id/status_text"
                     android:src="@drawable/sampling_status" />
 
-                
 
                 <TextView
                     android:id="@+id/sampling_status"
@@ -377,12 +375,12 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="28dp"
-                    android:gravity="center_vertical"
+                    android:layout_marginEnd="35dp"
+                    android:background="#00000000"
+                    android:gravity="center_vertical|end"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
-                    android:background="#00000000"/>
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/sampling_status_arrows"
@@ -399,14 +397,14 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
 
             <!--运输方法-->
             <RelativeLayout
+                android:id="@+id/transparent_way_select"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:id="@+id/transparent_way_select">
+                android:layout_height="48dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -425,12 +423,12 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="28dp"
-                    android:gravity="center_vertical"
+                    android:layout_marginEnd="35dp"
+                    android:background="#00000000"
+                    android:gravity="center_vertical|end"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
-                    android:background="#00000000"/>
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/transparent_way_arrows"
@@ -448,13 +446,13 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
             <!--采样时间-->
             <RelativeLayout
+                android:id="@+id/time_pick"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:id="@+id/time_pick">
+                android:layout_height="48dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -490,10 +488,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:layout_height="8dp"
+                android:background="@color/across_block" />
 
             <!--现场照片-->
             <RelativeLayout
@@ -511,9 +507,11 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
+                <!--收缩照片-->
                 <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:id="@+id/shrink_picture"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -525,154 +523,165 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
-            <!--环境照片-->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/picture_domain"
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
+                <!--环境照片-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:text="环境照片(10张以内)"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/add_environment_photo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/add_picture" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/environment_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+                <!--采样照片-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:text="采样照片(20张以内)"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/add_sampling_photo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/add_picture" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sampling_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+                <!--样品照片-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:text="样品照片(20张以内)"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/add_sample_photo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/add_picture" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sample_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="环境照片(10张以内)"
-                    android:textColor="#333333"
-                    android:textSize="12sp" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/across_road" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/add_picture"
-                    android:id="@+id/add_environment_photo"/>
+                <!--采样视频-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:text="采样视频(20M以内)"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:id="@+id/environment_photo"/>
+                    <ImageView
+                        android:id="@+id/add_sample_video"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/add_video" />
 
-            <!--采样照片-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
+                </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="采样照片(20张以内)"
-                    android:textColor="#333333"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/add_sampling_photo"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/add_picture" />
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:id="@+id/sampling_photo"/>
-
-            <!--样品照片-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="样品照片(20张以内)"
-                    android:textColor="#333333"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/add_picture"
-                    android:id="@+id/add_sample_photo"/>
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:id="@+id/sample_photo"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sample_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_marginStart="10dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:background="@color/across_road" />-->
 
-            <!--采样视频-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="采样视频(20M以内)"
-                    android:textColor="#333333"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/add_video"
-                    android:id="@+id/add_sample_video"/>
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:id="@+id/sample_video"/>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#999999" />
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="@color/across_block" />
+            </LinearLayout>
             <!--备注-->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -695,20 +704,25 @@
                 android:id="@+id/samp_desc"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
-                android:padding="5dp"
                 android:layout_margin="13dp"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/input_bg"
                 android:gravity="top"
+                android:padding="5dp"
                 android:textColor="@color/black"
-                android:textSize="14sp"
-                android:background="@drawable/input_bg"/>
-            
+                android:textSize="14sp" />
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:background="@color/across_road" />-->
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:layout_height="8dp"
+                android:background="@color/across_block" />
 
             <!--签名-->
             <RelativeLayout
@@ -726,9 +740,11 @@
                     android:textColor="#333333"
                     android:textSize="14sp" />
 
+                <!--收缩照片-->
                 <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:id="@+id/shrink_sign"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
@@ -740,189 +756,196 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="#999999" />
+                android:background="@color/across_road" />
 
-            <!--采样人签名-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                android:gravity="center_vertical"
-                android:text="采样人"
-                android:textColor="#333333"
-                android:textSize="12sp" />
-
-           <RelativeLayout
-               android:layout_width="wrap_content"
-               android:layout_height="90dp">
-
-               <ImageView
-                   android:id="@+id/sample_man_sign"
-                   android:scaleType="fitXY"
-                   android:layout_width="match_parent"
-                   android:layout_height="90dp"
-                   android:padding="5dp"
-                   android:layout_margin="10dp"
-                   android:layout_marginTop="8dp"
-                   android:gravity="top"
-                   android:background="@drawable/input_bg"/>
-
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="请手写签名"
-                   android:layout_alignParentEnd="true"
-                   android:layout_alignParentBottom="true"
-                   android:layout_margin="14dp"
-                   android:textSize="12sp"
-                   android:textColor="@color/sampling_input_color"
-                   />
-           </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="90dp">
-
-                <ImageView
-                    android:id="@+id/sample_man_sign_two"
-                    android:scaleType="fitXY"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:padding="5dp"
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="top"
-                    android:background="@drawable/input_bg"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="请手写签名"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="14dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/sampling_input_color"
-                    />
-            </RelativeLayout>
-
-            <!--现场监督人-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                android:gravity="center_vertical"
-                android:text="现场监督人"
-                android:textColor="#333333"
-                android:textSize="12sp" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="90dp">
-
-                <ImageView
-                    android:id="@+id/monitor_man_sign"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:padding="5dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="0dp"
-                    android:gravity="top"
-                    android:background="@drawable/input_bg"
-                    android:scaleType="fitXY"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="请手写签名"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="14dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/sampling_input_color"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:background="@drawable/company_input_bg"
-                android:layout_marginTop="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                >
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/sign_domain">
+                <!--采样人签名-->
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
+                    android:layout_height="30dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
                     android:gravity="center_vertical"
-                    android:text="所属单位"
+                    android:text="采样人"
                     android:textColor="#333333"
                     android:textSize="12sp" />
 
-                <EditText
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:gravity="center_vertical|end"
-                    android:hint="请输入"
-                    android:textColor="@color/sampling_input_color"
-                    android:textSize="12sp"
-                    android:background="@color/transparent"
-                    android:id="@+id/company_info"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp">
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/sample_man_sign"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/input_bg"
+                        android:gravity="top"
+                        android:padding="5dp"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="14dp"
+                        android:text="请手写签名"
+                        android:textColor="@color/sampling_input_color"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp">
+
+                    <ImageView
+                        android:id="@+id/sample_man_sign_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/input_bg"
+                        android:gravity="top"
+                        android:padding="5dp"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="14dp"
+                        android:text="请手写签名"
+                        android:textColor="@color/sampling_input_color"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <!--现场监督人-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:text="现场监督人"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp">
+
+                    <ImageView
+                        android:id="@+id/monitor_man_sign"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="0dp"
+                        android:background="@drawable/input_bg"
+                        android:gravity="top"
+                        android:padding="5dp"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="14dp"
+                        android:text="请手写签名"
+                        android:textColor="@color/sampling_input_color"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/company_input_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:text="所属单位"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+
+                    <EditText
+                        android:id="@+id/company_info"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/transparent"
+                        android:gravity="center_vertical|end"
+                        android:hint="请输入"
+                        android:textColor="@color/sampling_input_color"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="100dp"/>
+                android:layout_height="100dp" />
 
         </LinearLayout>
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/shade_bt" />
+
     <RelativeLayout
+        android:id="@+id/save_sampling"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/save_sampling"
-        android:background="@drawable/input_bg"
         android:elevation="4dp">
 
         <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="@color/black" />-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/black" />-->
 
         <LinearLayout
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/save"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/save" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="保存"
-                android:textSize="14sp"
                 android:layout_centerInParent="true"
-                android:textColor="#0f87ff"/>
+                android:text="保存"
+                android:textColor="#0f87ff"
+                android:textSize="14sp" />
         </LinearLayout>
-        
+
     </RelativeLayout>
 </LinearLayout>

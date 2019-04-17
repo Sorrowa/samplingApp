@@ -23,12 +23,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.core.Entity.Data.FileData;
+import com.example.core.Entity.Data.FileDetailData;
 import com.example.core.Entity.Data.FormData;
+import com.example.core.Entity.Data.FormDetailData;
+import com.example.core.Entity.Data.FormDetailSubmitData;
 import com.example.core.Entity.Data.PointDetailData;
 import com.example.core.Entity.Data.SampMethodData;
 import com.example.core.Others.GetPathFromUri;
 import com.example.core.Others.Rom;
+import com.example.network.InternetUtil;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.MethodSelectActivity;
 import com.example.samplingapp.Activities.SamplingForm.SelectActivitys.SelectPointActivity;
 import com.example.samplingapp.Activities.SamplingForm.ShowDataActivitys.SamplingStatusActivity;
@@ -54,11 +59,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("NonAtomicOperationOnVolatileField")
 public class SamplingFormActivity extends BaseActivity
         implements OnDateSetListener, FormPresenter.LocationListener
-        , FormPresenter.FileUploadListener, FormPresenter.SaveOrSubmitListener {
+        , FormPresenter.FileUploadListener, FormPresenter.SaveOrSubmitListener, FormPresenter.PreviousListener {
 
     public static final int POINTGET = 0;
     //图片选择
@@ -75,7 +81,7 @@ public class SamplingFormActivity extends BaseActivity
     public static final int REQUEST_CODE_PICK = 30;
 
     //方法选择
-    public static final int METHOD=40;
+    public static final int METHOD = 40;
 
     private String projectId = null;
     private PointDetailData pointData = null;
@@ -94,6 +100,12 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.person_name)
     EditText person_name;
     String personName;
+    //位置获取
+//    R.id.get_place, R.id.location
+    @BindView(R.id.get_place)
+    ImageView get_place;
+    @BindView(R.id.location)
+    View location;
     //点位选择
     @BindView(R.id.point_select)
     View point_select;//点位选择
@@ -147,6 +159,10 @@ public class SamplingFormActivity extends BaseActivity
     TextView sampling_time_text;
     String time;
     //照片
+    @BindView(R.id.shrink_picture)
+    ImageView shrink_picture;
+    @BindView(R.id.picture_domain)
+    View picture_domain;
     //环境照片
     @BindView(R.id.add_environment_photo)
     ImageView add_environment_photo;
@@ -183,6 +199,10 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.samp_desc)
     EditText samp_desc;
     //签名
+    @BindView(R.id.shrink_sign)
+    ImageView shrink_sign;
+    @BindView(R.id.sign_domain)
+    View sign_domain;
     //一号采样签名
     @BindView(R.id.sample_man_sign)
     ImageView sample_man_sign;
@@ -202,18 +222,16 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.company_info)
     EditText company_info;
     //当前位置
-    @BindView(R.id.location)
-    View location;
     @BindView(R.id.place)
     TextView place;
-    @BindView(R.id.get_place)
-    ImageView getPlace;
     String nowLocation;
 
     //保存与提交
     //保存
     @BindView(R.id.save)
     View save;
+    @BindView(R.id.save_sampling)
+    View save_sampling;
 
     private Dialog pictureUploadDialog;
     private Dialog formUploadDialog;
@@ -223,20 +241,112 @@ public class SamplingFormActivity extends BaseActivity
 
     List<FileData> files = new ArrayList<>();
 
+    private boolean isSubmit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sampling_form);
         ButterKnife.bind(this);
-        data = new FormData();
-        projectId = getIntent().getStringExtra("projectId");
 
+        data = new FormData();//存储表单信息
         presenter = new FormPresenter();
         presenter.attachView(this);
 
+        //0:待提交 1:已提交
+        //待提交可以修改，已提交无法修改界面
+        Intent intent = getIntent();
+        String status = intent.getStringExtra("status");
+        String formId = intent.getStringExtra("formId");
+        if (formId != null && status != null) {
+            //获取已经存储的表单数据
+            presenter.getPreviousForm(formId, this);
+            showLoadingDialog();
+        }
+
+        projectId = getIntent().getStringExtra("projectId");
+
+
         initView();
-        showToast("开始定位");
-        presenter.beginLocation(getApplicationContext(), this);
+
+        if (status != null && status.equals("1")) {
+            unEditableView();
+        }
+        if (status != null) {
+            get_place.setVisibility(View.GONE);
+            place.setClickable(false);
+            location.setClickable(false);
+        }
+        if (status == null) {
+            showToast("开始定位");
+            presenter.beginLocation(getApplicationContext(), this);
+        }
+    }
+
+    /**
+     * 将view全部变为不可修改模式
+     */
+    private void unEditableView() {
+
+        isSaved = true;//返回时不会弹出提示信息
+
+        rightItem.setVisibility(View.GONE);
+
+        person_name.setFocusable(false);
+        person_name.setFocusableInTouchMode(false);
+
+        location.setClickable(false);
+
+        get_place.setClickable(false);
+
+        point_select.setClickable(false);
+
+        Climate.setFocusable(false);
+        Climate.setFocusableInTouchMode(false);
+
+        Pressure.setFocusable(false);
+        Pressure.setFocusableInTouchMode(false);
+
+        Weather.setClickable(false);
+        getWeatherList.setClickable(false);
+
+        sampling_method_select.setClickable(false);
+        sampling_method_arrows.setClickable(false);
+
+        choose_status.setClickable(false);
+        getPointStatus.setClickable(false);
+        sampling_status.setClickable(false);
+
+        transparent_way_select.setClickable(false);
+        transparent_way_arrows.setClickable(false);
+        transparent_way.setClickable(false);
+
+        time_pick.setClickable(false);
+        sampling_time_text.setClickable(false);
+
+        add_environment_photo.setClickable(false);
+        add_environment_photo.setVisibility(View.GONE);
+
+        add_sampling_photo.setClickable(false);
+        add_sampling_photo.setVisibility(View.GONE);
+
+        add_sample_photo.setClickable(false);
+        add_sample_photo.setVisibility(View.GONE);
+
+        add_sample_video.setClickable(false);
+        add_sample_video.setVisibility(View.GONE);
+
+        samp_desc.setFocusable(false);
+        samp_desc.setFocusableInTouchMode(false);
+
+        sample_man_sign.setClickable(false);
+        sample_man_sign_two.setClickable(false);
+        monitor_man_sign.setClickable(false);
+
+        company_info.setFocusable(false);
+        company_info.setFocusableInTouchMode(false);
+
+        save_sampling.setVisibility(View.GONE);
     }
 
     private void initView() {
@@ -258,19 +368,10 @@ public class SamplingFormActivity extends BaseActivity
      * 初始化采样方法选择
      */
     private void initSampleMethod() {
-//        //采样方法
-//        @BindView(R.id.sampling_method)
-//        TextView sampling_method;
-//        @BindView(R.id.sampling_method_arrows)
-//        ImageView sampling_method_arrows;
-//        String samplingMethod;
-//        @BindView(R.id.sampling_method_select)
-//        View sampling_method_select;//选择采样方法
-        //todo:跳转到采样方法选择界面
         sampling_method.setOnClickListener(view -> {
-            Intent intent=new Intent(SamplingFormActivity.this
+            Intent intent = new Intent(SamplingFormActivity.this
                     , MethodSelectActivity.class);
-            startActivityForResult(intent,METHOD);
+            startActivityForResult(intent, METHOD);
         });
     }
 
@@ -295,7 +396,7 @@ public class SamplingFormActivity extends BaseActivity
                         , R.style.BottomFullDialog
                         , list
                         , item -> {
-                    transparentWay=item;
+                    transparentWay = item;
                     transparent_way.setText(list.get(item));
                 }
                         , transparentWay);
@@ -344,60 +445,63 @@ public class SamplingFormActivity extends BaseActivity
      */
     private void initSave() {
         save.setOnClickListener(view
-                -> {
+                -> saveBehavior(false));
+    }
 
-            if (!isEnough()) {
-                return;
-            }
+    private void saveBehavior(boolean isSubmit) {
+        if (!isEnough()) {
+            return;
+        }
 
-            showDialog("1");
-            environmentPictureNum = environmentPhotos.size();
-            samplingPictureNum = samplingPhotos.size();
-            videoNum = sampleVideo.size();
-            samplePictureNum = samplePhotos.size();
+        this.isSubmit = isSubmit;
 
-            if (environmentPictureNum <= 0
-                    && samplingPictureNum <= 0
-                    && samplePictureNum <= 0
-                    && videoNum <= 0
-                    && sampleManOneNum <= 0
-                    && sampleManTwoNum <= 0
-                    && monitorManSignNum <= 0) {
-                //如果没有图片上传
-                runOnUiThread(() -> pictureUploadDialog.dismiss());
-                saveAllData();
-            }
+        showDialog("1");
+        environmentPictureNum = environmentPhotos.size();
+        samplingPictureNum = samplingPhotos.size();
+        videoNum = sampleVideo.size();
+        samplePictureNum = samplePhotos.size();
 
-            if (environmentPictureNum > 0) {
-                for (String path : environmentPhotos) {
-                    presenter.uploadFile(path, this, FormPresenter.ENVIRONMENT);
-                }
+        if (environmentPictureNum <= 0
+                && samplingPictureNum <= 0
+                && samplePictureNum <= 0
+                && videoNum <= 0
+                && sampleManOneNum <= 0
+                && sampleManTwoNum <= 0
+                && monitorManSignNum <= 0) {
+            //如果没有图片上传
+            runOnUiThread(() -> pictureUploadDialog.dismiss());
+            saveAllData(this.isSubmit);
+        }
+
+        if (environmentPictureNum > 0) {
+            for (String path : environmentPhotos) {
+                presenter.uploadFile(path, this, FormPresenter.ENVIRONMENT);
             }
-            if (samplingPictureNum > 0) {
-                for (String path : samplingPhotos) {
-                    presenter.uploadFile(path, this, FormPresenter.SAMPLING);
-                }
+        }
+        if (samplingPictureNum > 0) {
+            for (String path : samplingPhotos) {
+                presenter.uploadFile(path, this, FormPresenter.SAMPLING);
             }
-            if (samplePictureNum > 0) {
-                for (String path : samplePhotos) {
-                    presenter.uploadFile(path, this, FormPresenter.SAMPLE);
-                }
+        }
+        if (samplePictureNum > 0) {
+            for (String path : samplePhotos) {
+                presenter.uploadFile(path, this, FormPresenter.SAMPLE);
             }
-            if (videoNum > 0) {
-                for (String path : sampleVideo) {
-                    presenter.uploadFile(path, this, FormPresenter.VIDEO);
-                }
+        }
+        if (videoNum > 0) {
+            for (String path : sampleVideo) {
+                presenter.uploadFile(path, this, FormPresenter.VIDEO);
             }
-            if (sampleManOneNum > 0) {
-                presenter.uploadFile(sampleManOnePath, this, FormPresenter.SAMPLEMAN);
-            }
-            if (sampleManTwoNum > 0) {
-                presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMAN);
-            }
-            if (monitorManSignNum > 0) {
-                presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
-            }
-        });
+        }
+        if (sampleManOneNum > 0) {
+            presenter.uploadFile(sampleManOnePath, this, FormPresenter.SAMPLEMAN);
+        }
+        if (sampleManTwoNum > 0) {
+            presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMAN);
+        }
+        if (monitorManSignNum > 0) {
+            presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
+        }
     }
 
     /**
@@ -503,38 +607,29 @@ public class SamplingFormActivity extends BaseActivity
      * 提交和保存调用这个方法
      * 将所有的内容保存到data中去
      */
-    private void saveAllData() {
-//        personName = person_name.getText().toString();
-//        pointName = (String) point_name.getText();
+    private void saveAllData(boolean isSubmit) {
         //只能传入数据
         showDialog("2");//显示dialog
-        data.setPointSampPlan(pointData.getPointSampPlan());
-//        if (pointData==null){
-//            showToast("还未选择点位!");
-//            formUploadDialog.dismiss();
-//            return;
-//        }
-        data.setProjectPointId(pointData.getProjectPointId());
+        if (pointData != null && pointData.getPointSampPlan() != null && pointData.getProjectPointId() != null) {
+            data.setPointSampPlan(pointData.getPointSampPlan());
+            data.setProjectPointId(pointData.getProjectPointId());
+        }
         data.setActSampTime(sampling_time_text.getText().toString());
         data.setActSamper(person_name.getText().toString());
-//        data.setPointSatus(sampling_status.getText().toString());
         if (sampling_status.getText().toString().equals("正常"))
             data.setPointSatus("0");
         else
             data.setPointSatus("1");
-        if (samplingMethod!=null)
+        if (samplingMethod != null)
             data.setSampMethod(samplingMethod.getSampMethod());
         data.setWeather(Weather.getText().toString());
         data.setTempature(Climate.getText().toString() + " ℃");
-        //GTempature:不明意义，暂时不写
         data.setGTempature(Climate.getText().toString() + " ℃");
         data.setPressure(Pressure.getText().toString() + " MPa");
         data.setTransMethod(transparent_way.getText().toString());
         data.setSampDesc(samp_desc.getText().toString());//备注
-        //定位信息在定位结束之后直接加入data
-        //所属单位信息不存在？？
-
-        presenter.saveForm(data, files, this, false);
+        data.setUserUnit(company_info.getText().toString());//所属单位
+        presenter.saveForm(data, files, this, isSubmit);
         isSaved = true;
     }
 
@@ -556,7 +651,21 @@ public class SamplingFormActivity extends BaseActivity
         rightItem.setImageDrawable(getDrawable(R.drawable.submit));
         leftItem.setOnClickListener(view -> doBack());
         //todo:提交的逻辑
-
+        rightItem.setOnClickListener(view -> {
+            AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(SamplingFormActivity.this);
+            normalDialog.setTitle("提示");
+            normalDialog.setMessage("提交之后将不能更改，确认提交吗？");
+            normalDialog.setPositiveButton("确认",
+                    (dialog, which) -> {
+                        saveBehavior(true);
+                        dialog.dismiss();
+                    });
+            normalDialog.setNegativeButton("取消",
+                    (dialog, which) -> dialog.dismiss());
+            // 显示
+            normalDialog.show();
+        });
     }
 
 
@@ -564,6 +673,18 @@ public class SamplingFormActivity extends BaseActivity
      * 初始化图片选择器
      */
     private void initPictureSelect() {
+
+        //收起View
+        shrink_picture.setOnClickListener(view -> {
+            if (picture_domain.getVisibility()==View.GONE){
+                picture_domain.setVisibility(View.VISIBLE);
+                shrink_picture.setImageDrawable(getDrawable(R.drawable.down_arrow));
+            }else {
+                picture_domain.setVisibility(View.GONE);
+                shrink_picture.setImageDrawable(getDrawable(R.drawable.right_arrows));
+            }
+        });
+
         initEnvironment();//初始化环境
         initSampling();//初始化采样照片
         initSample();//初始化样品照片
@@ -638,6 +759,17 @@ public class SamplingFormActivity extends BaseActivity
      * 签名信息初始化
      */
     private void initSign() {
+
+        shrink_sign.setOnClickListener(view -> {
+            if (sign_domain.getVisibility()==View.GONE){
+                sign_domain.setVisibility(View.VISIBLE);
+                shrink_sign.setImageDrawable(getDrawable(R.drawable.down_arrow));
+            }else {
+                sign_domain.setVisibility(View.GONE);
+                shrink_sign.setImageDrawable(getDrawable(R.drawable.right_arrows));
+            }
+        });
+
         initSampleManSign();
         initSampleManSignTow();
         initMonitor();
@@ -685,9 +817,11 @@ public class SamplingFormActivity extends BaseActivity
         //处理回调结果
         switch (resultCode) {
             case POINTGET:
+                Log.d("zzh","没执行？");
                 if (data != null && data.getParcelableExtra("pointData") != null) {
                     pointData = data.getParcelableExtra("pointData");
                     point_name.setText(pointData.getName());
+                    Log.d("zzh","2没执行？");
                     if (this.data.getActLatitude() != 0 && this.data.getActLatitude() != 0) {
                         getAndShowDistance();
                     }
@@ -777,9 +911,9 @@ public class SamplingFormActivity extends BaseActivity
             case METHOD:
                 //获取方法信息
 //                samplingMethod
-                if (data!=null){
-                    samplingMethod=data.getParcelableExtra("Method");
-                    showToast("选择的方法为:"+samplingMethod.getSampMethodName());
+                if (data != null && data.getParcelableExtra("Method") != null) {
+                    samplingMethod = data.getParcelableExtra("Method");
+                    showToast("选择的方法为:" + samplingMethod.getSampMethodName());
                     sampling_method.setText(samplingMethod.getSampMethodName());
                 }
                 break;
@@ -787,6 +921,7 @@ public class SamplingFormActivity extends BaseActivity
         switch (requestCode) {
             case ENVIRONMENT:
                 if (data != null) {
+                    //todo:新建一个路径
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
                     environmentPhotos.add(picturePath);
                     environmentAdapter.setPhotos(environmentPhotos);
@@ -840,7 +975,11 @@ public class SamplingFormActivity extends BaseActivity
                 , Double.parseDouble(pointData.getLongitude())
                 , this.data.getActLatitude()
                 , this.data.getActLongitude())));
-        place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber(Double.parseDouble(this.data.getDistance())));
+        if (nowLocation!=null){
+            place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber(Double.parseDouble(this.data.getDistance())));
+        }else{
+            presenter.beginLocation(this,this);
+        }
     }
 
 
@@ -998,7 +1137,7 @@ public class SamplingFormActivity extends BaseActivity
                 //如果所有的图片都上传了，那么开始生成表单逻辑并上传表单
                 showToast("图片上传完毕");
                 runOnUiThread(() -> pictureUploadDialog.dismiss());
-                saveAllData();
+                saveAllData(isSubmit);
             }
         } else {
             showToast("发生错误");
@@ -1067,5 +1206,135 @@ public class SamplingFormActivity extends BaseActivity
     public void onFailSaveOrSubmit(String msg) {
         showToast(msg);
         formUploadDialog.dismiss();
+    }
+
+    /**
+     * 获取以保存的表单信息
+     *
+     * @param data
+     */
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onGetPrevious(FormDetailSubmitData data) {
+        FormDetailData detailData = data.getDetail();
+
+        projectId = detailData.getProjectId();
+
+        this.data.setProjectPointId(detailData.getProjectPointId());
+        this.data.setPointSampPlan(detailData.getPointSampPlan());
+        this.data.setId(detailData.getId());
+        this.data.setDistance(detailData.getDistance());
+        this.data.setActLatitude(Double.parseDouble(detailData.getActLatitude()));
+        this.data.setActLongitude(Double.parseDouble(detailData.getActLongitude()));
+        this.data.setSampMethod(detailData.getSampMethod());
+        this.data.setProjectPointId(detailData.getProjectPointId());
+        this.data.setSampDesc(detailData.getSampDesc());
+
+
+        samp_desc.setText(this.data.getSampDesc());
+        person_name.setText(detailData.getActSamper());
+        point_name.setText(detailData.getPointName());
+        place.setText("N" + BaseUtil
+                .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
+                + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
+                + "\n距离为:" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getDistance())));
+        Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1));
+        Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3));
+        Weather.setText(detailData.getWeather());
+        sampling_method.setText(detailData.getMethodName());
+        if (detailData.getStatus().equals("0")) {
+            sampling_status.setText("正常");
+        } else {
+            sampling_status.setText("异常");
+        }
+        transparent_way.setText(detailData.getTransMethod());
+        sampling_time_text.setText(detailData.getActSampTime());
+        time = detailData.getActSampTime();
+        company_info.setText(detailData.getUserUnit());
+        pointData = new PointDetailData();
+//        injectFiles(data.getFiles());
+
+        new Thread() {
+            @Override
+            public void run() {
+                injectFiles(data.getFiles());
+            }
+        }.start();
+
+    }
+
+    /**
+     * 文件注入
+     *
+     * @param files
+     */
+    private void injectFiles(List<FileDetailData> files) {
+        String Ip = BaseUtil.removeLastChar(InternetUtil.SERVER_IP);
+        int i = 0;
+        for (FileDetailData detailData : files) {
+            File file = BaseUtil.saveUrlAs(BaseUtil.to_Chanese(Ip + detailData.getFilePath())
+                    , Objects.requireNonNull(this.getExternalCacheDir()).getAbsolutePath()
+                    , "GET"
+                    , detailData.getFileName());
+//            File file=BaseUtil.downloadPicture(Ip + detailData.getFilePath()
+//                    ,Objects.requireNonNull(this.getExternalCacheDir()).getAbsolutePath()+"/"
+//                    ,detailData.getFileName());
+            switch (detailData.getFileType()) {
+                case "0":
+                    environmentPhotos.add(file.getPath());
+                    environmentAdapter.setPhotos(environmentPhotos);
+                    handler.post(() -> environmentAdapter.notifyDataSetChanged());
+                    break;
+                case "1":
+                    samplingPhotos.add(file.getPath());
+                    samplingAdapter.setPhotos(samplingPhotos);
+                    handler.post(() -> samplingAdapter.notifyDataSetChanged());
+                    break;
+                case "2":
+                    samplePhotos.add(file.getPath());
+                    sampleAdapter.setPhotos(samplePhotos);
+                    handler.post(() -> sampleAdapter.notifyDataSetChanged());
+                    break;
+                case "3":
+                    //采样视频
+                    sampleVideo.add(file.getPath());
+                    videoAdapter.setPaths(sampleVideo);
+                    handler.post(() -> videoAdapter.notifyDataSetChanged());
+                    break;
+                case "4":
+                    if (sampleManOnePath == null) {
+                        sampleManOnePath = file.getPath();
+                        runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
+                                .load(sampleManOnePath)
+                                .into(sample_man_sign));
+                        sampleManOneNum++;
+                        break;
+                    }
+                    if (sampleManTwoPath == null) {
+                        sampleManTwoPath = file.getPath();
+                        runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
+                                .load(sampleManTwoPath)
+                                .into(sample_man_sign_two));
+                        sampleManTwoNum++;
+                        break;
+                    }
+                    break;
+                case "5":
+                    monitorManSignPath = file.getPath();
+                    runOnUiThread(() -> Glide.with(SamplingFormActivity.this)
+                            .load(monitorManSignPath)
+                            .into(monitor_man_sign));
+                    monitorManSignNum++;
+                    break;
+            }
+            i++;
+        }
+
+        handler.post(() -> dismissLoadingDialog());
+    }
+
+    @Override
+    public void onFailGetPrevious(String msg) {
+        showToast(msg);
     }
 }

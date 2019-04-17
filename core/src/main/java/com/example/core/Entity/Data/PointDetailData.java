@@ -36,6 +36,10 @@ public class PointDetailData implements Parcelable {
         PointSampPlan=in.readString();
     }
 
+    public PointDetailData(){
+
+    }
+
     public static final Creator<PointDetailData> CREATOR = new Creator<PointDetailData>() {
         @Override
         public PointDetailData createFromParcel(Parcel in) {
