@@ -87,7 +87,7 @@ public class SamplingFormActivity extends BaseActivity
 
     //视频选择
     public static final int REQUEST_CODE_PICK = 30;
-    public static final int REQUEST_CODE_SHOOT=31;
+    public static final int REQUEST_CODE_SHOOT = 31;
 
     //方法选择
     public static final int METHOD = 40;
@@ -563,7 +563,7 @@ public class SamplingFormActivity extends BaseActivity
             }
 
             //todo:弹出选择框
-            BottomSelectDialog bottomSelectDialog=new BottomSelectDialog
+            BottomSelectDialog bottomSelectDialog = new BottomSelectDialog
                     (SamplingFormActivity.this
                             , R.style.BottomSelectDialog
                             , new BottomSelectDialog.OnClickListener() {
@@ -768,8 +768,8 @@ public class SamplingFormActivity extends BaseActivity
                 return;
             }
             PictureSelector
-                    .create(SamplingFormActivity.this,SAMPLING)
-                    .selectPicture(true,500,500,0,0);
+                    .create(SamplingFormActivity.this, SAMPLING)
+                    .selectPicture(true, 500, 500, 0, 0);
 
         });
     }
@@ -1028,16 +1028,16 @@ public class SamplingFormActivity extends BaseActivity
             case REQUEST_CODE_SHOOT:
                 // 图片、视频、音频选择结果回调
                 List<LocalMedia> selectList = com.luck.picture.lib.PictureSelector.obtainMultipleResult(data);
-                if (selectList.size()<=0)
+                if (selectList.size() <= 0)
                     break;
-                LocalMedia localMedia=selectList.get(0);
+                LocalMedia localMedia = selectList.get(0);
 //                if (FileUtil.getFileOrFilesSize(videoPath, FileUtil.SIZETYPE_MB) >= 85) {
 //                    showToast("您的文件太大了!");
 //                    return;
 //                }
-                String videoPath=localMedia.getPath();
+                String videoPath = localMedia.getPath();
                 //todo:获得路径之后进行一轮压缩
-                String desPath=getCacheDir().getPath() + "/video" + videoNum + ".mp4";
+//                String desPath = getCacheDir().getPath() + "/video" + videoNum + ".mp4";
 //                VideoCompress.compressVideoLow(videoPath, desPath, new VideoCompress.CompressListener() {
 //                    @Override
 //                    public void onStart() {
@@ -1066,6 +1066,12 @@ public class SamplingFormActivity extends BaseActivity
 //                        //Progress
 //                    }
 //                });
+
+                sampleVideo.add(videoPath);
+                videoAdapter.setPaths(sampleVideo);
+                videoAdapter.notifyDataSetChanged();
+                videoNum++;
+                dismissCompressDialog();
                 break;
         }
     }
