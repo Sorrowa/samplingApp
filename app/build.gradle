@@ -36,10 +36,8 @@ android {
 
 dependencies {
     implementation project(':network')
-    implementation (project(':core')){
-        exclude module: 'org.aspectj.internal.lang.annotation.ajcDeclarePrecedence'
-    }
-//    implementation project(':videocompressor')
+    implementation project(':core')
+    implementation project(':videocompressor')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
@@ -73,8 +71,7 @@ dependencies {
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //预览图片
     implementation 'com.github.chrisbanes:PhotoView:1.3.0'
-    //文件压缩
-    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.1'
+
     //滚轮view
     implementation 'com.weigan:loopView:0.1.2'
     // For developers using AndroidX in their applications

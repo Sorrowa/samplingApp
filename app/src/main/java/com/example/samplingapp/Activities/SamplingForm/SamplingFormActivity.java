@@ -57,6 +57,7 @@ import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
+import com.vincent.videocompressor.VideoCompress;
 import com.wildma.pictureselector.PictureSelector;
 
 
@@ -575,6 +576,7 @@ public class SamplingFormActivity extends BaseActivity
                                     .compress(true)
                                     .synOrAsy(true)
                                     .videoQuality(2)
+                                    .recordVideoSecond(50)
                                     .forResult(REQUEST_CODE_SHOOT);
                         }
 
@@ -1037,40 +1039,35 @@ public class SamplingFormActivity extends BaseActivity
 //                }
                 String videoPath = localMedia.getPath();
                 //todo:获得路径之后进行一轮压缩
-//                String desPath = getCacheDir().getPath() + "/video" + videoNum + ".mp4";
-//                VideoCompress.compressVideoLow(videoPath, desPath, new VideoCompress.CompressListener() {
-//                    @Override
-//                    public void onStart() {
-//                        //Start Compress
-//                        showCompressDialog();
-//                    }
-//
-//                    @Override
-//                    public void onSuccess() {
-//                        //Finish successfully
-//                        sampleVideo.add(desPath);
-//                        videoAdapter.setPaths(sampleVideo);
-//                        videoAdapter.notifyDataSetChanged();
-//                        videoNum++;
-//                        dismissCompressDialog();
-//                    }
-//
-//                    @Override
-//                    public void onFail() {
-//                        //Failed
-//                        showToast("文件压缩出现错误");
-//                    }
-//
-//                    @Override
-//                    public void onProgress(float percent) {
-//                        //Progress
-//                    }
-//                });
+                String desPath = getCacheDir().getPath() + "/video" + videoNum + ".mp4";
+                VideoCompress.compressVideoLow(videoPath, desPath, new VideoCompress.CompressListener() {
+                    @Override
+                    public void onStart() {
+                        //Start Compress
+                        showCompressDialog();
+                    }
 
-                sampleVideo.add(videoPath);
-                videoAdapter.setPaths(sampleVideo);
-                videoAdapter.notifyDataSetChanged();
-                videoNum++;
+                    @Override
+                    public void onSuccess() {
+                        //Finish successfully
+                        sampleVideo.add(desPath);
+                        videoAdapter.setPaths(sampleVideo);
+                        videoAdapter.notifyDataSetChanged();
+                        videoNum++;
+                        dismissCompressDialog();
+                    }
+
+                    @Override
+                    public void onFail() {
+                        //Failed
+                        showToast("文件压缩出现错误");
+                    }
+
+                    @Override
+                    public void onProgress(float percent) {
+                        //Progress
+                    }
+                });
                 break;
         }
     }

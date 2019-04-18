@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 
+
 import com.coremedia.iso.BoxParser;
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.IsoTypeWriter;
@@ -140,7 +141,7 @@ public class MP4Builder {
             track2SampleSizes.put(track, sizes);
         }
 
-        Box moov = createMovieBox(currentMp4Movie);
+        MovieBox moov = createMovieBox(currentMp4Movie);
         moov.getBox(fc);
         fos.flush();
 
