@@ -45,6 +45,7 @@ import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.Presenter.Form.FormPresenter;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.Dialog.BottomFullDialog;
+import com.example.samplingapp.mvp.ui.Dialog.BottomSelectDialog;
 import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 import com.example.samplingapp.mvp.ui.VideoActivity;
@@ -53,7 +54,11 @@ import com.example.samplingapp.utils.FileUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.PictureFileUtils;
 import com.wildma.pictureselector.PictureSelector;
+
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -67,7 +72,7 @@ public class SamplingFormActivity extends BaseActivity
         implements OnDateSetListener, FormPresenter.LocationListener
         , FormPresenter.FileUploadListener, FormPresenter.SaveOrSubmitListener, FormPresenter.PreviousListener {
 
-    public static boolean canDelete=true;
+    public static boolean canDelete = true;
 
     public static final int POINTGET = 0;
     //图片选择
@@ -82,6 +87,7 @@ public class SamplingFormActivity extends BaseActivity
 
     //视频选择
     public static final int REQUEST_CODE_PICK = 30;
+    public static final int REQUEST_CODE_SHOOT=31;
 
     //方法选择
     public static final int METHOD = 40;
@@ -246,7 +252,7 @@ public class SamplingFormActivity extends BaseActivity
 
     private boolean isSubmit = false;
 
-    private boolean canGoback=true;//判断是否可以退出当前活动
+    private boolean canGoback = true;//判断是否可以退出当前活动
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,16 +282,16 @@ public class SamplingFormActivity extends BaseActivity
 
         if (status != null && status.equals("1")) {
             unEditableView();
-            canGoback=false;
+            canGoback = false;
         }
         if (status != null) {
             get_place.setVisibility(View.GONE);
             place.setClickable(false);
             location.setClickable(false);
         }
-        canGoback=false;
+        canGoback = false;
         if (status == null) {
-            canGoback=true;
+            canGoback = true;
             showToast("开始定位");
             presenter.beginLocation(getApplicationContext(), this);
         }
@@ -404,7 +410,7 @@ public class SamplingFormActivity extends BaseActivity
                         , R.style.BottomFullDialog
                         , list
                         , item -> {
-                    if (item<0){
+                    if (item < 0) {
                         return;
                     }
                     transparentWay = item;
@@ -442,7 +448,7 @@ public class SamplingFormActivity extends BaseActivity
                         , R.style.BottomFullDialog
                         , list
                         , item -> {
-                    if (item<0){
+                    if (item < 0) {
                         return;
                     }
                     nowWeather = item;
@@ -550,22 +556,44 @@ public class SamplingFormActivity extends BaseActivity
         sample_video.setAdapter(videoAdapter);
         add_sample_video.setOnClickListener(view -> {
 
+
             if (sampleVideo.size() > 1) {
                 showToast("超出视频可接受上限！");
                 return;
             }
 
-            if (Rom.isMiui()) {//是否是小米设备,是的话用到弹窗选取入口的方法去选取视频
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*");
-                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
-            } else {//直接跳到系统相册去选取视频
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("video/*");
-                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
-            }
+            //todo:弹出选择框
+            BottomSelectDialog bottomSelectDialog=new BottomSelectDialog
+                    (SamplingFormActivity.this
+                            , R.style.BottomSelectDialog
+                            , new BottomSelectDialog.OnClickListener() {
+                        @Override
+                        public void shoot() {
+                            //代码冲突，所以放到BottomSelect中去
+                            com.luck.picture.lib.PictureSelector.create(SamplingFormActivity.this)
+                                    .openCamera(PictureMimeType.ofVideo())
+                                    .compress(true)
+                                    .synOrAsy(true)
+                                    .videoQuality(1)
+                                    .forResult(REQUEST_CODE_SHOOT);
+                        }
+
+                        @Override
+                        public void select() {
+                            if (Rom.isMiui()) {//是否是小米设备,是的话用到弹窗选取入口的方法去选取视频
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*");
+                                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
+                            } else {//直接跳到系统相册去选取视频
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                intent.setType("video/*");
+                                startActivityForResult(Intent.createChooser(intent, "选择要导入的视频"), REQUEST_CODE_PICK);
+                            }
+                        }
+                    });
+            bottomSelectDialog.show();
         });
     }
 
@@ -595,7 +623,7 @@ public class SamplingFormActivity extends BaseActivity
                             , R.style.BottomFullDialog
                             , list
                             , item -> {
-                        if (item<0){
+                        if (item < 0) {
                             return;
                         }
                         nowStatus = item;
@@ -693,10 +721,10 @@ public class SamplingFormActivity extends BaseActivity
 
         //收起View
         shrink_picture.setOnClickListener(view -> {
-            if (picture_domain.getVisibility()==View.GONE){
+            if (picture_domain.getVisibility() == View.GONE) {
                 picture_domain.setVisibility(View.VISIBLE);
                 shrink_picture.setImageDrawable(getDrawable(R.drawable.down_arrow));
-            }else {
+            } else {
                 picture_domain.setVisibility(View.GONE);
                 shrink_picture.setImageDrawable(getDrawable(R.drawable.right_arrows));
             }
@@ -740,8 +768,9 @@ public class SamplingFormActivity extends BaseActivity
                 return;
             }
             PictureSelector
-                    .create(SamplingFormActivity.this, SAMPLING)
-                    .selectPicture(true, 600, 600, 1, 1);
+                    .create(SamplingFormActivity.this,SAMPLING)
+                    .selectPicture(true,500,500,0,0);
+
         });
     }
 
@@ -778,10 +807,10 @@ public class SamplingFormActivity extends BaseActivity
     private void initSign() {
 
         shrink_sign.setOnClickListener(view -> {
-            if (sign_domain.getVisibility()==View.GONE){
+            if (sign_domain.getVisibility() == View.GONE) {
                 sign_domain.setVisibility(View.VISIBLE);
                 shrink_sign.setImageDrawable(getDrawable(R.drawable.down_arrow));
-            }else {
+            } else {
                 sign_domain.setVisibility(View.GONE);
                 shrink_sign.setImageDrawable(getDrawable(R.drawable.right_arrows));
             }
@@ -937,8 +966,8 @@ public class SamplingFormActivity extends BaseActivity
             case ENVIRONMENT:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath=getCacheDir().getPath()+"/enviroment"+environmentPictureNum+".png";
-                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                    String newPath = getCacheDir().getPath() + "/enviroment" + environmentPictureNum + ".png";
+                    if (!BaseUtil.copyFile(picturePath, newPath)) {
                         showToast("请检查文件访问权限");
                         break;
                     }
@@ -952,8 +981,8 @@ public class SamplingFormActivity extends BaseActivity
             case SAMPLING:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath=getCacheDir().getPath()+"/sampling"+samplingPictureNum+".png";
-                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                    String newPath = getCacheDir().getPath() + "/sampling" + samplingPictureNum + ".png";
+                    if (!BaseUtil.copyFile(picturePath, newPath)) {
                         showToast("请检查文件访问权限");
                         break;
                     }
@@ -968,8 +997,8 @@ public class SamplingFormActivity extends BaseActivity
             case SAMPLE:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath=getCacheDir().getPath()+"/sample"+samplePictureNum+".png";
-                    if (!BaseUtil.copyFile(picturePath,newPath)){
+                    String newPath = getCacheDir().getPath() + "/sample" + samplePictureNum + ".png";
+                    if (!BaseUtil.copyFile(picturePath, newPath)) {
                         showToast("请检查文件访问权限");
                         break;
                     }
@@ -985,7 +1014,7 @@ public class SamplingFormActivity extends BaseActivity
             case REQUEST_CODE_PICK:
                 if (resultCode == RESULT_OK && data != null) {
                     String videoPath = GetPathFromUri.getPath(this, data.getData());
-                    if (FileUtil.getFileOrFilesSize(videoPath,FileUtil.SIZETYPE_MB)>=85){
+                    if (FileUtil.getFileOrFilesSize(videoPath, FileUtil.SIZETYPE_MB) >= 120) {
                         showToast("您的文件太大了!");
                         return;
                     }
@@ -994,6 +1023,49 @@ public class SamplingFormActivity extends BaseActivity
                     videoAdapter.notifyDataSetChanged();
                     videoNum++;
                 }
+                break;
+
+            case REQUEST_CODE_SHOOT:
+                // 图片、视频、音频选择结果回调
+                List<LocalMedia> selectList = com.luck.picture.lib.PictureSelector.obtainMultipleResult(data);
+                if (selectList.size()<=0)
+                    break;
+                LocalMedia localMedia=selectList.get(0);
+//                if (FileUtil.getFileOrFilesSize(videoPath, FileUtil.SIZETYPE_MB) >= 85) {
+//                    showToast("您的文件太大了!");
+//                    return;
+//                }
+                String videoPath=localMedia.getPath();
+                //todo:获得路径之后进行一轮压缩
+                String desPath=getCacheDir().getPath() + "/video" + videoNum + ".mp4";
+//                VideoCompress.compressVideoLow(videoPath, desPath, new VideoCompress.CompressListener() {
+//                    @Override
+//                    public void onStart() {
+//                        //Start Compress
+//                        showCompressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onSuccess() {
+//                        //Finish successfully
+//                        sampleVideo.add(desPath);
+//                        videoAdapter.setPaths(sampleVideo);
+//                        videoAdapter.notifyDataSetChanged();
+//                        videoNum++;
+//                        dismissCompressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onFail() {
+//                        //Failed
+//                        showToast("文件压缩出现错误");
+//                    }
+//
+//                    @Override
+//                    public void onProgress(float percent) {
+//                        //Progress
+//                    }
+//                });
                 break;
         }
     }
@@ -1007,10 +1079,10 @@ public class SamplingFormActivity extends BaseActivity
                 , Double.parseDouble(pointData.getLongitude())
                 , this.data.getActLatitude()
                 , this.data.getActLongitude())));
-        if (nowLocation!=null){
+        if (nowLocation != null) {
             place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber(Double.parseDouble(this.data.getDistance())));
-        }else{
-            presenter.beginLocation(this,this);
+        } else {
+            presenter.beginLocation(this, this);
         }
     }
 
@@ -1067,6 +1139,7 @@ public class SamplingFormActivity extends BaseActivity
         presenter.detachView();
         presenter = null;
         super.onDestroy();
+        PictureFileUtils.deleteCacheDirFile(SamplingFormActivity.this);
     }
 
     /**
@@ -1111,7 +1184,7 @@ public class SamplingFormActivity extends BaseActivity
             finish();
             return;
         }
-        if (!canGoback){
+        if (!canGoback) {
             showToast("文件还未完全下载，请勿退出");
             return;
         }
@@ -1342,7 +1415,7 @@ public class SamplingFormActivity extends BaseActivity
                     if (sampleManOnePath == null) {
                         sampleManOnePath = file.getPath();
                         runOnUiThread(() -> {
-                            if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                            if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
                             Glide.with(SamplingFormActivity.this)
                                     .load(sampleManOnePath)
@@ -1354,7 +1427,7 @@ public class SamplingFormActivity extends BaseActivity
                     if (sampleManTwoPath == null) {
                         sampleManTwoPath = file.getPath();
                         runOnUiThread(() -> {
-                            if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                            if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
                             Glide.with(SamplingFormActivity.this)
                                     .load(sampleManTwoPath)
@@ -1367,7 +1440,7 @@ public class SamplingFormActivity extends BaseActivity
                 case "5":
                     monitorManSignPath = file.getPath();
                     runOnUiThread(() -> {
-                        if (SamplingFormActivity.this.isDestroyed()||SamplingFormActivity.this.isFinishing())
+                        if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                             return;
                         Glide.with(SamplingFormActivity.this)
                                 .load(monitorManSignPath)
@@ -1378,7 +1451,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             i++;
         }
-        canGoback=true;
+        canGoback = true;
         handler.post(() -> dismissLoadingDialog());
     }
 

@@ -26,6 +26,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
     public Handler handler;
 
     Dialog loadingDialog;
+    Dialog compressDialog;
 
     String[] permmisons = new String[]{Manifest.permission.CAMERA
             , Manifest.permission.READ_EXTERNAL_STORAGE
@@ -157,5 +158,26 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
 
     public void dismissLoadingDialog(){
         loadingDialog.dismiss();
+    }
+
+
+    /**
+     * 显示加载中的图标
+     */
+    public void showCompressDialog() {
+        if (compressDialog == null) {
+            View layout = getLayoutInflater().inflate(R.layout.dialog_compress
+                    , null);
+            compressDialog = new Dialog(this);
+            compressDialog.setContentView(layout);
+            compressDialog.setCancelable(false);
+            compressDialog.setCanceledOnTouchOutside(false);
+            compressDialog.setOnCancelListener(dialog -> showToast("后台将继续处理"));
+        }
+        compressDialog.show();
+    }
+
+    public void dismissCompressDialog(){
+        compressDialog.dismiss();
     }
 }
