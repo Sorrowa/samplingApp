@@ -574,7 +574,7 @@ public class SamplingFormActivity extends BaseActivity
                                     .openCamera(PictureMimeType.ofVideo())
                                     .compress(true)
                                     .synOrAsy(true)
-                                    .videoQuality(1)
+                                    .videoQuality(2)
                                     .forResult(REQUEST_CODE_SHOOT);
                         }
 
@@ -1071,7 +1071,6 @@ public class SamplingFormActivity extends BaseActivity
                 videoAdapter.setPaths(sampleVideo);
                 videoAdapter.notifyDataSetChanged();
                 videoNum++;
-                dismissCompressDialog();
                 break;
         }
     }
