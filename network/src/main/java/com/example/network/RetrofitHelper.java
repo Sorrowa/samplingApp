@@ -29,6 +29,14 @@ public class RetrofitHelper {
     }
 
     /**
+     * 测试用方法
+     */
+    public static void reset(){
+        ServerRetrofit=null;
+        TokenRetrofit=null;
+    }
+
+    /**
      * 登录之后设置Token
      * @param Token
      */

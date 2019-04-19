@@ -563,7 +563,6 @@ public class SamplingFormActivity extends BaseActivity
                 return;
             }
 
-            //todo:弹出选择框
             BottomSelectDialog bottomSelectDialog = new BottomSelectDialog
                     (SamplingFormActivity.this
                             , R.style.BottomSelectDialog
@@ -575,8 +574,8 @@ public class SamplingFormActivity extends BaseActivity
                                     .openCamera(PictureMimeType.ofVideo())
                                     .compress(true)
                                     .synOrAsy(true)
-                                    .videoQuality(2)
-                                    .recordVideoSecond(50)
+                                    .videoQuality(1)
+                                    .recordVideoSecond(60)
                                     .forResult(REQUEST_CODE_SHOOT);
                         }
 

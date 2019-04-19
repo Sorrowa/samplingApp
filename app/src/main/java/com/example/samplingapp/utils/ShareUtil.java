@@ -93,4 +93,41 @@ public class ShareUtil {
         return new User(getData(app,PACKAGENAME,"account")
                 ,getData(app,PACKAGENAME,"orgName"));
     }
+
+    /**
+     * 保存首页输入的Ip
+     * @param app
+     * @param Ip
+     */
+    public static void saveIp(App app,String Ip){
+        setDataInsteadUser(app,PACKAGENAME,"ServerIp",Ip);
+    }
+
+    public static String getIp(App app){
+        return getDataInsteadUser(app,PACKAGENAME,"ServerIp");
+    }
+
+    /**
+     * 存储全局数据（用户无关）
+     */
+    private static void setDataInsteadUser(App app,String identification,String key,String content){
+        SharedPreferences preferences = app.getSharedPreferences(identification
+                , Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, content);
+        editor.apply();
+    }
+
+    /**
+     * 返回全局存储数据
+     * @param app
+     * @param identification
+     * @param key
+     * @return
+     */
+    private static String getDataInsteadUser(App app, String identification, String key){
+        SharedPreferences preferences = app.getSharedPreferences(identification
+                , Context.MODE_PRIVATE);
+        return preferences.getString(key, "http://192.168.1.124:129/");
+    }
 }

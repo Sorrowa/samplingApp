@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.network.InternetUtil;
+import com.example.network.RetrofitHelper;
 import com.example.samplingapp.Base.App;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.MainActivity;
@@ -92,7 +93,17 @@ public class LoginActivity extends BaseActivity {
     private void getLogin() {
 
         if (!serverIP.getText().toString().equals("http://")){
+            //存储Ip，防止之后重新退出app导致数据重置
             InternetUtil.SERVER_IP=serverIP.getText().toString()+"/";
+            //重置Retrofit
+            RetrofitHelper.reset();
+            ShareUtil.saveIp(app,InternetUtil.SERVER_IP);
+        }else {
+            //存储Ip，防止之后重新退出app导致数据重置
+            InternetUtil.SERVER_IP = "http://192.168.1.124:129/";
+            //重置Retrofit
+            RetrofitHelper.reset();
+            ShareUtil.saveIp(app, InternetUtil.SERVER_IP);
         }
         if (!BaseUtil.isNetworkConnected(this)){
             showToast("请检查您的网络!");

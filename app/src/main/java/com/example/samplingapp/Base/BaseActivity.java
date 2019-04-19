@@ -12,7 +12,9 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.network.InternetUtil;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.ShareUtil;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -22,7 +24,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class BaseActivity extends AppCompatActivity implements BaseView {
 
-    App app;
+    public App app;
     public Handler handler;
 
     Dialog loadingDialog;
@@ -46,6 +48,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         if (app == null) {
             app = (App) getApplication();
         }
+        InternetUtil.SERVER_IP= ShareUtil.getIp(app);
         addActivity();
 
         //沉浸式标题栏设置
