@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -28,6 +29,8 @@ public class VideoActivity extends BaseActivity {
     TextView text_delete;
     @BindView(R.id.video_view)
     VideoView video_view;
+    @BindView(R.id.image_play)
+    ImageView image_play;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +67,22 @@ public class VideoActivity extends BaseActivity {
         video_view.setOnPreparedListener(mediaPlayer -> mediaPlayer.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START)
                 video_view.setBackgroundColor(Color.TRANSPARENT);
-            video_view.start();
+//            video_view.start();
             return true;
         }));
+        video_view.setOnClickListener(view -> {
+            if (!video_view.isPlaying()){
+                image_play.setVisibility(View.GONE);
+                video_view.start();
+            }
+        });
+
+        image_play.setOnClickListener(view -> {
+            if (!video_view.isPlaying()){
+                image_play.setVisibility(View.GONE);
+                video_view.start();
+            }
+        });
+
     }
 }
