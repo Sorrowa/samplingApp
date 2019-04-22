@@ -3,6 +3,7 @@ package com.example.samplingapp.Base;
 import android.app.Application;
 import android.app.Activity;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.example.core.Entity.User;
 import com.example.samplingapp.utils.ShareUtil;
 
@@ -17,7 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         activities=new ArrayList<>();
-
+        SDKInitializer.initialize(this);
     }
 
     /**

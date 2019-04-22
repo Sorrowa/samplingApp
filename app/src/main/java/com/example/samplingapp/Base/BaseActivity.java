@@ -36,7 +36,16 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             , Manifest.permission.INTERNET
             , Manifest.permission.ACCESS_FINE_LOCATION
             , Manifest.permission.ACCESS_COARSE_LOCATION
-            , Manifest.permission.ACCESS_WIFI_STATE};
+            , Manifest.permission.ACCESS_WIFI_STATE
+            , Manifest.permission.READ_SYNC_SETTINGS
+            , Manifest.permission.WAKE_LOCK
+            , Manifest.permission.RECORD_AUDIO
+            , Manifest.permission.ACCESS_NETWORK_STATE
+            , Manifest.permission.READ_PHONE_STATE
+            , Manifest.permission.MODIFY_AUDIO_SETTINGS
+            , Manifest.permission.WRITE_SETTINGS
+            , Manifest.permission.CHANGE_WIFI_STATE
+            , Manifest.permission.CHANGE_WIFI_MULTICAST_STATE};
 
 //    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
 //    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
@@ -48,7 +57,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         if (app == null) {
             app = (App) getApplication();
         }
-        InternetUtil.SERVER_IP= ShareUtil.getIp(app);
+        InternetUtil.SERVER_IP = ShareUtil.getIp(app);
         addActivity();
 
         //沉浸式标题栏设置
@@ -72,11 +81,11 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
      * 统一获取权限
      */
     private void getRight() {
-        if (!EasyPermissions.hasPermissions(this,permmisons)){
+        if (!EasyPermissions.hasPermissions(this, permmisons)) {
             EasyPermissions.requestPermissions(this
-                    ,"请允许以下权限，否则app将不能使用"
-                    ,996
-                    ,permmisons);
+                    , "请允许以下权限，否则app将不能使用"
+                    , 996
+                    , permmisons);
         }
     }
 
@@ -130,16 +139,16 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(996
-                ,permmisons
-                ,grantResults
-                ,this);
+                , permmisons
+                , grantResults
+                , this);
     }
 
     /**
      * 权限请求回调
      */
     @AfterPermissionGranted(996)
-    public void afterGetPermission(){
+    public void afterGetPermission() {
         getRight();
     }
 
@@ -159,7 +168,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         loadingDialog.show();
     }
 
-    public void dismissLoadingDialog(){
+    public void dismissLoadingDialog() {
         loadingDialog.dismiss();
     }
 
@@ -180,7 +189,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
         compressDialog.show();
     }
 
-    public void dismissCompressDialog(){
+    public void dismissCompressDialog() {
         compressDialog.dismiss();
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".utils.Location.BNaviMainActivity"
+    android:orientation="vertical">
+
+    
+    <com.baidu.mapapi.map.MapView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/baidu_map">
+
+    </com.baidu.mapapi.map.MapView>
+    <include layout="@layout/toolbar_generative"/>
+    <TextView
+        android:id="@+id/begin_nav"
+        android:layout_width="270dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="14dp"
+        android:textSize="14sp"
+        android:layout_marginStart="35dp"
+        android:text="开始导航"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/login_button_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>

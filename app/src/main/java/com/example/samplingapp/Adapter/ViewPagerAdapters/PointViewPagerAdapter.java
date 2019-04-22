@@ -1,5 +1,6 @@
 package com.example.samplingapp.Adapter.ViewPagerAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
             case 0:
                 pointData1.addAll(pointData);
                 if (adapters.size()<=0||adapters.get(0)==null){
-                    adapters.add(new PointListAdapter(pointData1));
+                    adapters.add(new PointListAdapter(pointData1, (Activity) context));
                 }
                 recyclerView.setAdapter(adapters.get(0));
                 break;
@@ -69,7 +70,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
                     }
                 }
                 if (adapters.size()<=1||adapters.get(1)==null){
-                    adapters.add(new PointListAdapter(pointData1));
+                    adapters.add(new PointListAdapter(pointData1, (Activity) context));
                 }
                 recyclerView.setAdapter(adapters.get(1));
                 break;
@@ -80,7 +81,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
                     }
                 }
                 if (adapters.size()<=2||adapters.get(2)==null){
-                    adapters.add(new PointListAdapter(pointData1));
+                    adapters.add(new PointListAdapter(pointData1, (Activity) context));
                 }
                 recyclerView.setAdapter(adapters.get(2));
                 break;

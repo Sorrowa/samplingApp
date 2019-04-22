@@ -11,6 +11,7 @@ import butterknife.OnClick;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +19,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -152,6 +156,8 @@ public class SamplingFormActivity extends BaseActivity
     TextView sampling_status;
     @BindView(R.id.sampling_status_arrows)
     ImageView getPointStatus;
+    @BindView(R.id.get_point_status)
+    ImageView get_point_status;
     String samplingStatus;
     private int nowStatus = 0;
     //运输方法
@@ -377,6 +383,79 @@ public class SamplingFormActivity extends BaseActivity
         initTransport();
         initSampleMethod();
         initSave();
+
+        initEdit();
+    }
+
+    private void initEdit() {
+        person_name.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                person_name.clearFocus();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    InputMethodManager imm = null;
+                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                } else {
+                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (manager != null)
+                        manager.hideSoftInputFromWindow(person_name.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return true;
+            }
+            return false;
+        });
+        Climate.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                Climate.clearFocus();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    InputMethodManager imm = null;
+                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                } else {
+                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (manager != null)
+                        manager.hideSoftInputFromWindow(Climate.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return true;
+            }
+            return false;
+        });
+        Pressure.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                Pressure.clearFocus();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    InputMethodManager imm = null;
+                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                } else {
+                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (manager != null)
+                        manager.hideSoftInputFromWindow(Pressure.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return true;
+            }
+            return false;
+        });
+        company_info.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                company_info.clearFocus();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    InputMethodManager imm = null;
+                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                } else {
+                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (manager != null)
+                        manager.hideSoftInputFromWindow(company_info.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
@@ -474,14 +553,28 @@ public class SamplingFormActivity extends BaseActivity
             return;
         }
 
-        this.isSubmit = isSubmit;
-
-        showDialog("1");
         environmentPictureNum = environmentPhotos.size();
         samplingPictureNum = samplingPhotos.size();
         videoNum = sampleVideo.size();
         samplePictureNum = samplePhotos.size();
 
+        if (isSubmit && !CanSubmit()) {
+            return;
+        }
+
+        if ( isSubmit && (environmentPictureNum <= 0
+                || samplingPictureNum <= 0
+                || samplePictureNum <= 0
+                || videoNum <= 0
+                || sampleManOneNum <= 0
+                || sampleManTwoNum <= 0
+                || monitorManSignNum <= 0)) {
+            //如果没有图片上传
+            showToast("每种图片都需要提交");
+            return;
+        }
+        showDialog("1");
+        this.isSubmit = isSubmit;
         if (environmentPictureNum <= 0
                 && samplingPictureNum <= 0
                 && samplePictureNum <= 0
@@ -523,6 +616,23 @@ public class SamplingFormActivity extends BaseActivity
         if (monitorManSignNum > 0) {
             presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
         }
+    }
+
+    private boolean CanSubmit() {
+        if (person_name.getText().toString().equals("")
+                || Climate.getText().toString().equals("")
+                || Pressure.getText().toString().equals("")
+                || sampling_method.getText().equals("请选择")
+                || sampling_status.getText().equals("请选择")
+                || transparent_way.getText().equals("请选择")
+                || samp_desc.getText().toString().equals("")
+                || company_info.getText().toString().equals("")
+                || Weather.getText().equals("")) {
+            showToast("表单没有填写完全!");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -604,7 +714,7 @@ public class SamplingFormActivity extends BaseActivity
      */
     private void initgetPointStatus() {
         //必须要先选择点位，不然不能得到点位ID
-        getPointStatus.setOnClickListener(view -> {
+        get_point_status.setOnClickListener(view -> {
             if (pointData == null) {
                 showToast("请先选择点位!");
                 return;
@@ -614,6 +724,16 @@ public class SamplingFormActivity extends BaseActivity
                     , pointData.getProjectPointId());
             startActivity(intent);
         });
+//        getPointStatus.setOnClickListener(view -> {
+//            if (pointData == null) {
+//                showToast("请先选择点位!");
+//                return;
+//            }
+//            Intent intent = new Intent(SamplingFormActivity.this, SamplingStatusActivity.class);
+//            intent.putExtra("pointId"
+//                    , pointData.getProjectPointId());
+//            startActivity(intent);
+//        });
         //todo:点击事件处理
         List<String> list = new ArrayList<>();
         list.add("正常");
@@ -1363,6 +1483,7 @@ public class SamplingFormActivity extends BaseActivity
         time = detailData.getActSampTime();
         company_info.setText(detailData.getUserUnit());
         pointData = new PointDetailData();
+        pointData.setProjectPointId(detailData.getProjectPointId());
 //        injectFiles(data.getFiles());
 
         new Thread() {
