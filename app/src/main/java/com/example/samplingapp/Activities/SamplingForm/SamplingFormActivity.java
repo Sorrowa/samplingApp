@@ -126,6 +126,9 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.point_name)
     TextView point_name;
     String pointName;
+    //水温
+    @BindView(R.id.water_temp)
+    EditText water_temp;
     //气温
     @BindView(R.id.climate)
     EditText Climate;
@@ -321,6 +324,9 @@ public class SamplingFormActivity extends BaseActivity
         get_place.setClickable(false);
 
         point_select.setClickable(false);
+
+        water_temp.setFocusable(false);
+        water_temp.setFocusableInTouchMode(false);
 
         Climate.setFocusable(false);
         Climate.setFocusableInTouchMode(false);
@@ -789,7 +795,7 @@ public class SamplingFormActivity extends BaseActivity
         if (samplingMethod != null)
             data.setSampMethod(samplingMethod.getSampMethod());
         data.setWeather(Weather.getText().toString());
-        data.setTempature(Climate.getText().toString() + " ℃");
+        data.setTempature(water_temp.getText().toString() + " ℃");
         data.setGTempature(Climate.getText().toString() + " ℃");
         data.setPressure(Pressure.getText().toString() + " MPa");
         data.setTransMethod(transparent_way.getText().toString());
@@ -1470,6 +1476,7 @@ public class SamplingFormActivity extends BaseActivity
                 + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
                 + "\n距离为:" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getDistance())));
         Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1));
+        water_temp.setText(detailData.getTempature().substring(0, detailData.getGTempature().length() - 1));
         Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3));
         Weather.setText(detailData.getWeather());
         sampling_method.setText(detailData.getMethodName());

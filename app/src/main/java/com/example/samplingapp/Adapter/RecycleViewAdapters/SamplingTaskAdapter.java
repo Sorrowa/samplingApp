@@ -42,10 +42,8 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.taskDate.setText(
-                datas.get(position).getBeginTime()
-                        +"--"
-                        +datas.get(position).getEndTime());
+        holder.taskDateStart.setText(datas.get(position).getBeginTime());
+        holder.taskDateEnd.setText(datas.get(position).getEndTime());
         holder.taskName.setText(datas.get(position).getProjectName());
         holder.pointPercentage.setText("点位："
                 +datas.get(position).getSampCount()+"/"
@@ -72,12 +70,14 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
 
         TextView taskName;
         TextView pointPercentage;
-        TextView taskDate;
+        TextView taskDateStart;
+        TextView taskDateEnd;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             taskName=itemView.findViewById(R.id.task_name);
             pointPercentage=itemView.findViewById(R.id.task_point);
-            taskDate=itemView.findViewById(R.id.task_date);
+            taskDateStart=itemView.findViewById(R.id.task_date_start);
+            taskDateEnd=itemView.findViewById(R.id.task_date_end);
         }
     }
 

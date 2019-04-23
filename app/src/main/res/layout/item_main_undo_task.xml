@@ -34,13 +34,25 @@
         />
 
     <TextView
-        android:id="@+id/task_date"
+        android:id="@+id/task_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_above="@id/right_arrow"
+        android:text="2018/03/20"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="10dp"
+        android:textSize="12dp"/>
+
+    <TextView
+        android:id="@+id/task_date_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
         android:layout_below="@id/right_arrow"
-        android:text="2018/03/03--2018/03/20"
+        android:text="2018/03/20"
         android:layout_marginTop="2dp"
         android:layout_marginStart="10dp"
         android:textSize="12dp"/>
