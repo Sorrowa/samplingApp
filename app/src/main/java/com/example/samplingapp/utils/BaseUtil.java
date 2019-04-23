@@ -142,7 +142,12 @@ public class BaseUtil {
 
     public static Bitmap getVideoThumb(String path) {
         MediaMetadataRetriever media = new MediaMetadataRetriever();
-        media.setDataSource(path);
+        try {
+            media.setDataSource(path);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
         return media.getFrameAtTime();
     }
 

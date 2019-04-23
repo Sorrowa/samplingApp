@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="14dp"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:text="采样点位"
         android:gravity="center"
         android:background="@drawable/point_bg"/>
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="14dp"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:text="新增采样单"
         android:textColor="@color/white"
         android:gravity="center"

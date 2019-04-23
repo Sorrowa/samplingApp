@@ -1,5 +1,6 @@
 package com.example.samplingapp.Adapter.RecycleViewAdapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,6 +69,11 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Vi
             pointDate.setText(data.getActSampTime());
             personName.setText(data.getActSamper());
             pointState.setText(data.getStatusName());
+            if (data.getPointSatus().equals("1")){
+//                pointName.setTextColor(context.getResources().getColor(R.color.red));
+                pointState.setTextColor(context.getResources().getColor(R.color.red));
+                pointState.setText(data.getStatusName()+"(异常)");
+            }
         }
     }
 }

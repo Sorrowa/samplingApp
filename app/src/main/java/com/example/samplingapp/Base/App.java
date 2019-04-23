@@ -2,6 +2,8 @@ package com.example.samplingapp.Base;
 
 import android.app.Application;
 import android.app.Activity;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.example.core.Entity.User;
@@ -50,6 +52,28 @@ public class App extends Application {
             activities.remove(activity);
             activity.finish();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //非默认值
+        if (newConfig.fontScale != 1){
+            getResources();
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res =super.getResources();
+        //非默认值
+        if (res.getConfiguration().fontScale != 1) {
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();//设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
+        return res;
     }
 
     //todo:数据库处理

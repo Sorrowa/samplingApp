@@ -47,7 +47,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             if (bm!=null){
                 holder.item_video.setImageBitmap(bm);
             }else{
-                Log.e("zzh","视频图片加载失败");
+//                context.showToast("视频文件加载失败");
             }
         }
 

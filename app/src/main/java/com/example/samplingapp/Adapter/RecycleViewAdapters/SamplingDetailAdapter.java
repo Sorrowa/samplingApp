@@ -41,7 +41,7 @@ public class SamplingDetailAdapter extends RecyclerView.Adapter<SamplingDetailAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.num.setText(datas.get(position).getSampCode());
-        holder.name.setText(datas.get(position).getMonNames());
+        holder.name.setText(datas.get(position).getMonNames()+"("+datas.get(position).getSampTypeName()+")");
     }
 
     @Override

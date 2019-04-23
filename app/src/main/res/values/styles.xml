@@ -13,7 +13,7 @@
         <item name="tabIndicatorColor">#0f87ff</item>
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabSelectedTextColor">#0f87ff</item>
-        <item name="android:textSize">15sp</item>
+        <!--<item name="android:textSize">15dp</item>-->
     </style>
 
     <style name="BottomFullDialog" parent="@style/Theme.AppCompat.Dialog">

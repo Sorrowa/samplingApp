@@ -33,7 +33,7 @@
                     android:gravity="center_vertical|end"
                     android:text="采样人员"
                     android:textColor="#333333"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     />
 
                 <EditText
@@ -47,7 +47,7 @@
                     android:gravity="center_vertical|end"
                     android:hint="采样人员"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     android:maxLength="20"/>
 
             </RelativeLayout>
@@ -75,7 +75,7 @@
                     android:gravity="center_vertical"
                     android:text="当前位置"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/get_place"
@@ -95,7 +95,7 @@
                     android:gravity="center_vertical|end"
                     android:text="经纬度显示"
                     android:textColor="#999999"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
             </RelativeLayout>
 
@@ -122,7 +122,7 @@
                     android:gravity="center_vertical"
                     android:text="采样点位"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/point_name"
@@ -134,7 +134,7 @@
                     android:gravity="center_vertical"
                     android:text="请选择"
                     android:textColor="#999999"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:layout_width="10dp"
@@ -166,7 +166,7 @@
                     android:gravity="center_vertical"
                     android:text="气温"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/climate"
@@ -179,7 +179,7 @@
                     android:gravity="center_vertical|end"
                     android:hint="请输入"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     android:maxLength="20"/>
 
                 <TextView
@@ -191,7 +191,7 @@
                     android:gravity="center_vertical"
                     android:text="℃"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
             </RelativeLayout>
 
@@ -216,7 +216,7 @@
                     android:gravity="center_vertical"
                     android:text="气压"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/pressure"
@@ -229,7 +229,7 @@
                     android:gravity="center_vertical|end"
                     android:hint="请输入"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     android:maxLength="20"/>
 
                 <TextView
@@ -241,7 +241,7 @@
                     android:gravity="center_vertical"
                     android:text="MPa"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
             </RelativeLayout>
 
@@ -267,7 +267,7 @@
                     android:gravity="center_vertical"
                     android:text="天气"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/weahter"
@@ -280,7 +280,7 @@
                     android:gravity="center_vertical"
                     android:hint="晴天"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/weahter_arrows"
@@ -314,7 +314,7 @@
                     android:gravity="center_vertical"
                     android:text="采样方法"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/sampling_method"
@@ -327,7 +327,7 @@
                     android:gravity="center_vertical"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/sampling_method_arrows"
@@ -362,7 +362,7 @@
                     android:gravity="center_vertical|end"
                     android:text="采样状态"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/get_point_status"
@@ -384,7 +384,7 @@
                     android:gravity="center_vertical|end"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/sampling_status_arrows"
@@ -419,7 +419,7 @@
                     android:gravity="center_vertical"
                     android:text="运输方法"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/transparent_way"
@@ -432,7 +432,7 @@
                     android:gravity="center_vertical|end"
                     android:hint="请选择"
                     android:textColor="@color/sampling_static_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/transparent_way_arrows"
@@ -467,7 +467,7 @@
                     android:gravity="center_vertical"
                     android:text="采样时间"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/sampling_time_text"
@@ -479,7 +479,7 @@
                     android:gravity="center_vertical"
                     android:text="请选择时间"
                     android:textColor="@color/sampling_input_color"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:layout_width="10dp"
@@ -509,7 +509,7 @@
                     android:gravity="center_vertical"
                     android:text="现场照片"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <!--收缩照片-->
                 <ImageView
@@ -549,7 +549,7 @@
                         android:gravity="center_vertical"
                         android:text="环境照片(10张以内)"
                         android:textColor="#333333"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/add_environment_photo"
@@ -581,7 +581,7 @@
                         android:gravity="center_vertical"
                         android:text="采样照片(20张以内)"
                         android:textColor="#333333"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/add_sampling_photo"
@@ -613,7 +613,7 @@
                         android:gravity="center_vertical"
                         android:text="样品照片(20张以内)"
                         android:textColor="#333333"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/add_sample_photo"
@@ -654,7 +654,7 @@
                         android:gravity="center_vertical"
                         android:text="采样视频(20M以内)"
                         android:textColor="#333333"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/add_sample_video"
@@ -700,7 +700,7 @@
                     android:gravity="center_vertical"
                     android:text="备注"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
             </RelativeLayout>
 
@@ -714,8 +714,9 @@
                 android:gravity="top"
                 android:padding="5dp"
                 android:textColor="@color/black"
-                android:textSize="14sp"
-                android:maxLength="180"/>
+                android:textSize="14dp"
+                android:maxLength="140"
+                android:hint="140字以内"/>
 
             <!--<View-->
             <!--android:layout_width="match_parent"-->
@@ -743,7 +744,7 @@
                     android:gravity="center_vertical"
                     android:text="签名"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <!--收缩照片-->
                 <ImageView
@@ -777,7 +778,7 @@
                     android:gravity="center_vertical"
                     android:text="采样人"
                     android:textColor="#333333"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -802,7 +803,7 @@
                         android:layout_margin="14dp"
                         android:text="请手写签名"
                         android:textColor="@color/sampling_input_color"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -828,7 +829,7 @@
                         android:layout_margin="14dp"
                         android:text="请手写签名"
                         android:textColor="@color/sampling_input_color"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
 
                 <!--现场监督人-->
@@ -840,7 +841,7 @@
                     android:gravity="center_vertical"
                     android:text="现场监督人"
                     android:textColor="#333333"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -867,7 +868,7 @@
                         android:layout_margin="14dp"
                         android:text="请手写签名"
                         android:textColor="@color/sampling_input_color"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -888,7 +889,7 @@
                         android:gravity="center_vertical"
                         android:text="所属单位"
                         android:textColor="#333333"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <EditText
                         android:id="@+id/company_info"
@@ -901,8 +902,9 @@
                         android:gravity="center_vertical|end"
                         android:hint="请输入"
                         android:textColor="@color/sampling_input_color"
-                        android:textSize="12sp"
-                        android:maxLength="40"/>
+                        android:textSize="12dp"
+                        android:maxLength="20"
+                        android:singleLine="true"/>
 
                 </RelativeLayout>
 
@@ -950,7 +952,7 @@
                 android:layout_centerInParent="true"
                 android:text="保存"
                 android:textColor="#0f87ff"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
     </RelativeLayout>

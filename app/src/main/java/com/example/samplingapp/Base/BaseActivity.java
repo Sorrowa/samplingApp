@@ -16,19 +16,23 @@ import com.example.network.InternetUtil;
 import com.example.samplingapp.R;
 import com.example.samplingapp.utils.ShareUtil;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class BaseActivity extends AppCompatActivity implements BaseView {
+public class BaseActivity extends AppCompatActivity implements BaseView , EasyPermissions.PermissionCallbacks{
 
     public App app;
     public Handler handler;
 
     Dialog loadingDialog;
     Dialog compressDialog;
+
+    private static boolean isOK = false;
 
     String[] permmisons = new String[]{Manifest.permission.CAMERA
             , Manifest.permission.READ_EXTERNAL_STORAGE
@@ -37,13 +41,13 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             , Manifest.permission.ACCESS_FINE_LOCATION
             , Manifest.permission.ACCESS_COARSE_LOCATION
             , Manifest.permission.ACCESS_WIFI_STATE
-            , Manifest.permission.READ_SYNC_SETTINGS
+//            , Manifest.permission.READ_SYNC_SETTINGS
             , Manifest.permission.WAKE_LOCK
             , Manifest.permission.RECORD_AUDIO
             , Manifest.permission.ACCESS_NETWORK_STATE
             , Manifest.permission.READ_PHONE_STATE
             , Manifest.permission.MODIFY_AUDIO_SETTINGS
-            , Manifest.permission.WRITE_SETTINGS
+//            , Manifest.permission.WRITE_SETTINGS
             , Manifest.permission.CHANGE_WIFI_STATE
             , Manifest.permission.CHANGE_WIFI_MULTICAST_STATE};
 
@@ -74,7 +78,10 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
             actionBar.hide();
         }
 
-        getRight();
+        if (Build.VERSION.SDK_INT >= 23 &&
+                !isOK) {
+            getRight();
+        }
     }
 
     /**
@@ -144,13 +151,14 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
                 , this);
     }
 
-    /**
-     * 权限请求回调
-     */
-    @AfterPermissionGranted(996)
-    public void afterGetPermission() {
-        getRight();
-    }
+//    /**
+//     * 权限请求回调
+//     */
+//    @AfterPermissionGranted(996)
+//    public void afterGetPermission() {
+//        showToast("权限请求结束");
+//        getRight();
+//    }
 
     /**
      * 显示加载中的图标
@@ -191,5 +199,15 @@ public class BaseActivity extends AppCompatActivity implements BaseView {
 
     public void dismissCompressDialog() {
         compressDialog.dismiss();
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        isOK=true;
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        showToast("您可能无法使用部分功能");
     }
 }

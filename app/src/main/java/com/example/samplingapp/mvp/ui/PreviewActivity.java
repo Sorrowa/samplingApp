@@ -40,6 +40,7 @@ public class PreviewActivity extends BaseActivity {
         ButterKnife.bind(this);
         path=getIntent().getStringExtra("path");//文件路径
         type=getIntent().getStringExtra("type");//删除照片的种类
+        textDelete.setVisibility(View.GONE);
         if (!SamplingFormActivity.canDelete){
             textDelete.setVisibility(View.GONE);
         }

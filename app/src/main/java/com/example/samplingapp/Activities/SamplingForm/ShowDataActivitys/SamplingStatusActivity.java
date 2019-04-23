@@ -20,7 +20,7 @@ import com.example.samplingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*样品信息*/
 public class SamplingStatusActivity extends BaseActivity implements SamplingStatusPresenter.StatusListener {
 
     @BindView(R.id.center_title)

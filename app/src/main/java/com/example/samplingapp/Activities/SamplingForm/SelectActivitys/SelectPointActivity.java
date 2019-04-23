@@ -117,6 +117,10 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
     public void onClick(PointDetailData data) {
         showToast("选择点位为："+data.getName());
         nowData=data;
+        Intent intent=new Intent();
+        intent.putExtra("pointData",nowData);
+        setResult(SamplingFormActivity.POINTGET,intent);
+        finish();
     }
 
     /**

@@ -12,6 +12,7 @@ public class PointData implements Parcelable {
 //            "ActSamper": "张三,李四,王五",
 //            "ActSampTime": "2019-03-22 09:54:00",
 //            "PointId": "00ccdfe8-cdb2-4ea8-a12f-23359220f19d"
+//    "PointSatus": 1
 
     private String Id;
     private String PointName;
@@ -20,6 +21,7 @@ public class PointData implements Parcelable {
     private String ActSamper;
     private String ActSampTime;
     private String PointId;
+    private String PointSatus;
 
 
     private PointData(Parcel in){
@@ -114,5 +116,13 @@ public class PointData implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getPointSatus() {
+        return PointSatus;
+    }
+
+    public void setPointSatus(String pointSatus) {
+        PointSatus = pointSatus;
     }
 }

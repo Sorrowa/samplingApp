@@ -860,7 +860,7 @@ public class SamplingFormActivity extends BaseActivity
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.HORIZONTAL);
         sample_photo.setLayoutManager(manager);
-        sampleAdapter = new SampleAdapter(this, samplingPhotos);
+        sampleAdapter = new SampleAdapter(this, samplePhotos);
         sample_photo.setAdapter(sampleAdapter);
 
         add_sample_photo.setOnClickListener(view -> {
@@ -1000,21 +1000,21 @@ public class SamplingFormActivity extends BaseActivity
                     switch (type) {
                         case "1":
                             environmentPhotos.remove(path);
-                            environmentAdapter.setPhotos(environmentPhotos);
+//                            environmentAdapter.setPhotos(environmentPhotos);
                             runOnUiThread(() -> environmentAdapter.notifyDataSetChanged());
                             environmentPictureNum--;
                             break;
                         case "2":
                             //采样照片
                             samplingPhotos.remove(path);
-                            samplingAdapter.setPhotos(samplingPhotos);
+//                            samplingAdapter.setPhotos(samplingPhotos);
                             runOnUiThread(() -> samplingAdapter.notifyDataSetChanged());
                             samplingPictureNum--;
                             break;
                         case "3":
                             //样品照片
                             samplePhotos.remove(path);
-                            sampleAdapter.setPhotos(samplePhotos);
+//                            sampleAdapter.setPhotos(samplePhotos);
                             runOnUiThread(() -> sampleAdapter.notifyDataSetChanged());
                             samplePictureNum--;
                             break;
@@ -1094,7 +1094,7 @@ public class SamplingFormActivity extends BaseActivity
                     }
 
                     environmentPhotos.add(newPath);
-                    environmentAdapter.setPhotos(environmentPhotos);
+//                    environmentAdapter.setPhotos(environmentPhotos);
                     runOnUiThread(() -> environmentAdapter.notifyDataSetChanged());
                     environmentPictureNum++;
                 }
@@ -1108,7 +1108,7 @@ public class SamplingFormActivity extends BaseActivity
                         break;
                     }
                     samplingPhotos.add(newPath);
-                    samplingAdapter.setPhotos(samplingPhotos);
+//                    samplingAdapter.setPhotos(samplingPhotos);
                     runOnUiThread(() -> {
                         samplingAdapter.notifyDataSetChanged();
                     });
@@ -1124,7 +1124,7 @@ public class SamplingFormActivity extends BaseActivity
                         break;
                     }
                     samplePhotos.add(newPath);
-                    sampleAdapter.setPhotos(samplePhotos);
+//                    sampleAdapter.setPhotos(samplePhotos);
                     runOnUiThread(() -> {
                         sampleAdapter.notifyDataSetChanged();
                     });
@@ -1476,6 +1476,7 @@ public class SamplingFormActivity extends BaseActivity
         if (detailData.getStatus().equals("0")) {
             sampling_status.setText("正常");
         } else {
+            get_point_status.setVisibility(View.GONE);
             sampling_status.setText("异常");
         }
         transparent_way.setText(detailData.getTransMethod());
@@ -1514,17 +1515,17 @@ public class SamplingFormActivity extends BaseActivity
             switch (detailData.getFileType()) {
                 case "0":
                     environmentPhotos.add(file.getPath());
-                    environmentAdapter.setPhotos(environmentPhotos);
+//                    environmentAdapter.setPhotos(environmentPhotos);
                     handler.post(() -> environmentAdapter.notifyDataSetChanged());
                     break;
                 case "1":
                     samplingPhotos.add(file.getPath());
-                    samplingAdapter.setPhotos(samplingPhotos);
+//                    samplingAdapter.setPhotos(samplingPhotos);
                     handler.post(() -> samplingAdapter.notifyDataSetChanged());
                     break;
                 case "2":
                     samplePhotos.add(file.getPath());
-                    sampleAdapter.setPhotos(samplePhotos);
+//                    sampleAdapter.setPhotos(samplePhotos);
                     handler.post(() -> sampleAdapter.notifyDataSetChanged());
                     break;
                 case "3":

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bigkoo.alertview.AlertView;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 
@@ -23,11 +24,11 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
 
 
     private Activity context;
-    private List<String> photos=new ArrayList<>();
+    private List<String> photos;
 
     public SamplingAdapter(Activity context, List<String> photos){
         this.context=context;
-        this.photos.addAll(photos);
+        this.photos=photos;
     }
 
     @NonNull
@@ -46,18 +47,44 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
             Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
             holder.imageView.setImageBitmap(bm);
         }
-        holder.itemView.setOnClickListener(view -> {
+        holder.imageView.setOnClickListener(view -> {
             Intent intent=new Intent(context, PreviewActivity.class);
             intent.putExtra("path",photos.get(position));
             intent.putExtra("type","2");
             context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
         });
+        holder.imageView.setLongClickable(true);
+        holder.imageView.setOnLongClickListener(view -> {
+            showDialog(position);
+            return false;//消费掉点击事件
+        });
     }
 
-    public void setPhotos(List<String> photos) {
-        this.photos.clear();
-        this.photos.addAll(photos);
+    /**
+     * 显示删除框
+     * @param ps
+     */
+    private void showDialog(int ps) {
+        new AlertView("提示", "是否删除第" + (ps + 1) + "项"
+                , "取消"
+                , new String[]{"确定"}
+                , null
+                , context,
+                AlertView.Style.Alert
+                , (o, position) -> {
+            if (position==0){
+                //删除当前项
+                photos.remove(ps);
+                notifyDataSetChanged();
+            }
+        })
+                .show();
     }
+
+//    public void setPhotos(List<String> photos) {
+//        this.photos.clear();
+//        this.photos.addAll(photos);
+//    }
 
     @Override
     public int getItemCount() {

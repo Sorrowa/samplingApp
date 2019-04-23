@@ -157,13 +157,10 @@ public class BNaviMainActivity extends BaseActivity {
     private void routePlanWithBikeParam() {
         BikeNavigateHelper.getInstance().routePlanWithRouteNode(bikeParam, new IBRoutePlanListener() {
             @Override
-            public void onRoutePlanStart() {
-                Log.d("zzh", "骑行导航算路开始");
-            }
+            public void onRoutePlanStart() {}
 
             @Override
             public void onRoutePlanSuccess() {
-                Log.d("zzh", "骑行导航算路成功");
                 Intent intent = new Intent();
                 intent.setClass(BNaviMainActivity.this, BNaviGuideActivity.class);
                 startActivity(intent);
@@ -171,8 +168,7 @@ public class BNaviMainActivity extends BaseActivity {
 
             @Override
             public void onRoutePlanFail(BikeRoutePlanError error) {
-
-                Log.d("zzh", "失败码为:"+error.toString());
+                showToast("距离太远，无法导航");
             }
 
         });

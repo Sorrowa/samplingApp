@@ -1,15 +1,18 @@
 package com.example.samplingapp.utils.Location;
 
-import com.example.samplingapp.Base.BaseActivity;
 import com.baidu.mapapi.bikenavi.BikeNavigateHelper;
 import com.baidu.mapapi.bikenavi.adapter.IBRouteGuidanceListener;
 import com.baidu.mapapi.bikenavi.model.BikeRouteDetailInfo;
 import com.baidu.mapapi.bikenavi.params.BikeNaviLaunchParam;
 import com.baidu.mapapi.walknavi.model.RouteGuideKind;
+import com.example.samplingapp.Base.BaseActivity;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class BNaviGuideActivity extends BaseActivity {
     private final static String TAG = BNaviGuideActivity.class.getSimpleName();
