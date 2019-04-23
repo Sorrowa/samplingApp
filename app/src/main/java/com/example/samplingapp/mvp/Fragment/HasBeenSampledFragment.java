@@ -84,6 +84,8 @@ public class HasBeenSampledFragment extends Fragment implements MainPresenter.Pr
             if (actionId == EditorInfo.IME_ACTION_SEND
                     || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 editText.clearFocus();
+                presenter.getHaveDoneProject(editText.getText().toString(),this);
+                //收起软键盘
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     InputMethodManager imm = null;
                     imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

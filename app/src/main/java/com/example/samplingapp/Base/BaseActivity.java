@@ -177,7 +177,9 @@ public class BaseActivity extends AppCompatActivity implements BaseView , EasyPe
     }
 
     public void dismissLoadingDialog() {
-        loadingDialog.dismiss();
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
+        }
     }
 
 

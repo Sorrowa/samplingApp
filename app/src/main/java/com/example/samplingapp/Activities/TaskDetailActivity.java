@@ -1,5 +1,6 @@
 package com.example.samplingapp.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.example.core.Entity.Data.ProjectData;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.Activities.SamplingForm.SamplingPointActivity;
 import com.example.samplingapp.Activities.TaskDetailBaseActivity.TaskBaseActivity;
+import com.example.samplingapp.Activities.TaskDetial.TaskSearchActivity;
 import com.example.samplingapp.Adapter.RecycleViewAdapters.TaskDetailAdapter;
 import com.example.samplingapp.Presenter.TaskPresenter;
 import com.example.samplingapp.R;
@@ -37,6 +39,9 @@ import java.util.List;
  * 任务详情界面
  */
 public class TaskDetailActivity extends TaskBaseActivity implements TaskPresenter.listener {
+
+
+    public static final int SEARCH=0;
 
     private static ProjectData data;
 
@@ -106,7 +111,11 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         title.setText("任务详情");
         rightItem.setImageDrawable(getDrawable(R.drawable.search));
         //显示搜索dialog
-        rightItem.setOnClickListener(view -> showSearchDialog(listener));
+        rightItem.setOnClickListener(view -> {
+            Intent intent=new Intent(TaskDetailActivity.this
+                    , TaskSearchActivity.class);
+            startActivityForResult(intent,SEARCH);
+        });
 
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         leftItem.setOnClickListener(view -> finish());
@@ -133,10 +142,12 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     public void onSuccess(List<PointData> data, boolean isOk) {
         if (isOk){
+            dismissLoadingDialog();
             pointDatas.clear();
             pointDatas.addAll(data);
             runOnUiThread(() -> adapter.notifyDataSetChanged());
         }else{
+            dismissLoadingDialog();
             showToast("获取点位数据失败");
         }
     }
@@ -238,5 +249,21 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
             deleteDialog.setOnCancelListener(dialog -> showToast("后台将继续删除信息"));
         }
         deleteDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case SEARCH:
+                if (data!=null){
+                    presenter.getPointList(type
+                            ,TaskDetailActivity.data.getId()
+                            ,data.getStringExtra("res")
+                            ,this);
+                    showLoadingDialog();
+                }
+                break;
+        }
     }
 }
