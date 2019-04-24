@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.AlertView;
 import com.example.core.Entity.Data.PointData;
 import com.example.core.Entity.Data.ProjectData;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
@@ -41,11 +42,11 @@ import java.util.List;
 public class TaskDetailActivity extends TaskBaseActivity implements TaskPresenter.listener {
 
 
-    public static final int SEARCH=0;
+    public static final int SEARCH = 0;
 
     private static ProjectData data;
 
-    private String keyword="";
+    private String keyword = "";
 
     @BindView(R.id.left_item)
     ImageView leftItem;
@@ -67,7 +68,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     private TaskDetailAdapter adapter;
 
     //点位信息
-    private ArrayList<PointData> pointDatas=new ArrayList<>();
+    private ArrayList<PointData> pointDatas = new ArrayList<>();
 
     private Dialog deleteDialog;
 
@@ -75,17 +76,17 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
-        data=getIntent().getParcelableExtra("task");
-        type=getIntent().getStringExtra("type");
+        data = getIntent().getParcelableExtra("task");
+        type = getIntent().getStringExtra("type");
         ButterKnife.bind(this);
-        presenter=new TaskPresenter();
+        presenter = new TaskPresenter();
         presenter.attachView(this);
         initView();
         initRecycleView(pointDatas);
         //开始网络请求
-        presenter.getPointList(type,data.getId(),searchRes,this);
+        presenter.getPointList(type, data.getId(), searchRes, this);
         //dialog显示回调接口
-        listener= () -> presenter.getPointList(type,data.getId(),searchRes,this);
+        listener = () -> presenter.getPointList(type, data.getId(), searchRes, this);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     protected void onRestart() {
         super.onRestart();
-        presenter.getPointList(type,data.getId(),keyword,this);
+        presenter.getPointList(type, data.getId(), keyword, this);
     }
 
     private void doWithType() {
@@ -114,41 +115,40 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         rightItem.setImageDrawable(getDrawable(R.drawable.search));
         //显示搜索dialog
         rightItem.setOnClickListener(view -> {
-            Intent intent=new Intent(TaskDetailActivity.this
+            Intent intent = new Intent(TaskDetailActivity.this
                     , TaskSearchActivity.class);
-            startActivityForResult(intent,SEARCH);
+            startActivityForResult(intent, SEARCH);
         });
 
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         leftItem.setOnClickListener(view -> finish());
-        pointPercent.setText("采样点位："+data.getSampCount()+"/"+data.getTotalPoint());
+        pointPercent.setText("采样点位：" + data.getSampCount() + "/" + data.getTotalPoint());
 
         //跳转到点位详细信息界面
         pointPercent.setOnClickListener(view -> {
-            Intent intent=new Intent(TaskDetailActivity.this
+            Intent intent = new Intent(TaskDetailActivity.this
                     , SamplingPointActivity.class);
-            intent.putExtra("projectId",data.getId());
+            intent.putExtra("projectId", data.getId());
             startActivity(intent);
         });
 
         addNewSampling.setOnClickListener(view -> {
-            Intent intent=new Intent(TaskDetailActivity.this
-                    ,SamplingFormActivity.class);
-            intent.putExtra("projectId",data.getId());
+            Intent intent = new Intent(TaskDetailActivity.this
+                    , SamplingFormActivity.class);
+            intent.putExtra("projectId", data.getId());
             startActivity(intent);
         });
     }
 
 
-
     @Override
     public void onSuccess(List<PointData> data, boolean isOk) {
-        if (isOk){
+        if (isOk) {
             dismissLoadingDialog();
             pointDatas.clear();
             pointDatas.addAll(data);
             runOnUiThread(() -> adapter.notifyDataSetChanged());
-        }else{
+        } else {
             dismissLoadingDialog();
             showToast("获取点位数据失败");
         }
@@ -156,6 +156,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
     /**
      * 将数据注入RecycleView
+     *
      * @param data 数据
      */
     private void initRecycleView(List<PointData> data) {
@@ -163,18 +164,18 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         manager.setOrientation(RecyclerView.VERTICAL);
         r.setLayoutManager(manager);
         //菜单删除
-        if (adapter==null){
+        if (adapter == null) {
             r.setSwipeMenuCreator(mSwipeMenuCreator);
             r.setOnItemMenuClickListener(mOnItemMenuClickListener);
             r.setOnItemClickListener((view, adapterPosition) -> {
-                Intent intent=new Intent(TaskDetailActivity.this
-                        ,SamplingFormActivity.class);
-                intent.putExtra("formId",data.get(adapterPosition).getId());
-                intent.putExtra("status",data.get(adapterPosition).getStatus());
-                intent.putExtra("word_status",data.get(adapterPosition).getStatusName());
+                Intent intent = new Intent(TaskDetailActivity.this
+                        , SamplingFormActivity.class);
+                intent.putExtra("formId", data.get(adapterPosition).getId());
+                intent.putExtra("status", data.get(adapterPosition).getStatus());
+                intent.putExtra("word_status", data.get(adapterPosition).getStatusName());
                 startActivity(intent);
             });
-            adapter=new TaskDetailAdapter(data);
+            adapter = new TaskDetailAdapter(data);
         }
         r.setAdapter(adapter);
     }
@@ -186,8 +187,8 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
 
     //创建侧滑菜单
-    SwipeMenuCreator mSwipeMenuCreator= (leftMenu, rightMenu, position) -> {
-        SwipeMenuItem deleteItem=new SwipeMenuItem(TaskDetailActivity.this)
+    SwipeMenuCreator mSwipeMenuCreator = (leftMenu, rightMenu, position) -> {
+        SwipeMenuItem deleteItem = new SwipeMenuItem(TaskDetailActivity.this)
                 .setText("删除")
                 .setBackground(R.drawable.delete_item)
                 .setTextColor(Color.WHITE)
@@ -198,25 +199,26 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         rightMenu.addMenuItem(deleteItem);
     };
     //删除监听器
-    OnItemMenuClickListener mOnItemMenuClickListener= (menuBridge, adapterPosition) -> {
+    OnItemMenuClickListener mOnItemMenuClickListener = (menuBridge, adapterPosition) -> {
         menuBridge.closeMenu();
         //因为只有一个点击项，所以直接删除
-
-        AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(TaskDetailActivity.this);
-        normalDialog.setTitle("提示");
-        normalDialog.setMessage("您确定要删除此条信息吗");
-        normalDialog.setPositiveButton("确定",
-                (dialog, which) -> deleteItem(adapterPosition));
-        normalDialog.setNegativeButton("取消",
-                (dialog, which) -> dialog.dismiss());
-        // 显示
-        normalDialog.show();
+        //仿苹果
+        new AlertView("提示", "您确定要删除此条信息吗？"
+                , "取消"
+                , new String[]{"确定"}
+                , null
+                , TaskDetailActivity.this,
+                AlertView.Style.Alert
+                , (o, position) -> {
+            if (position == 0)
+                deleteItem(adapterPosition);
+        }).show();
 
     };
 
     /**
      * 删除对应位置的信息
+     *
      * @param adapterPosition
      */
     private void deleteItem(int adapterPosition) {
@@ -242,7 +244,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
     private void showDeleteDialog() {
 
-        if (deleteDialog== null) {
+        if (deleteDialog == null) {
             View layout = getLayoutInflater().inflate(R.layout.dialog_form_delete
                     , null);
             deleteDialog = new Dialog(TaskDetailActivity.this);
@@ -257,14 +259,14 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
+        switch (resultCode) {
             case SEARCH:
-                if (data!=null){
-                    keyword=data.getStringExtra("res");
+                if (data != null) {
+                    keyword = data.getStringExtra("res");
                     presenter.getPointList(type
-                            ,TaskDetailActivity.data.getId()
-                            ,keyword
-                            ,this);
+                            , TaskDetailActivity.data.getId()
+                            , keyword
+                            , this);
                     showLoadingDialog();
                 }
                 break;

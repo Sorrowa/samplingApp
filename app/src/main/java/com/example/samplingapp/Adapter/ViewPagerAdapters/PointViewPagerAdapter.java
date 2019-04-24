@@ -122,6 +122,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
                     case 0:
                         pointData1.addAll(pointData);
                         adapter.setPointData(pointData1);
+                        name[0]=name[0]+"("+pointData1.size()+")";
                         break;
                     case 1:
                         for (PointDetailData detailData:pointData){
@@ -129,6 +130,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
                                 pointData1.add(detailData);
                             }
                         }
+                        name[1]=name[1]+"("+pointData1.size()+")";
                         adapter.setPointData(pointData1);
                         break;
                     case 2:
@@ -137,6 +139,7 @@ public class PointViewPagerAdapter extends PagerAdapter {
                                 pointData1.add(detailData);
                             }
                         }
+                        name[2]=name[2]+"("+pointData1.size()+")";
                         adapter.setPointData(pointData1);
                         break;
                 }

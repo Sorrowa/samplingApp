@@ -88,6 +88,7 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
     private void initViewPager() {
         adapter = new PointViewPagerAdapter(this
                 , new String[]{"全部", "未采样", "已采样"}, data);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }
 

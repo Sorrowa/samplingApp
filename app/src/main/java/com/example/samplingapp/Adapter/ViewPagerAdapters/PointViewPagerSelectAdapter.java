@@ -2,6 +2,7 @@ package com.example.samplingapp.Adapter.ViewPagerAdapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -124,6 +125,7 @@ public class PointViewPagerSelectAdapter extends PagerAdapter implements PointLi
                 switch (i){
                     case 0:
                         pointData1.addAll(pointData);
+                        name[0]=name[0]+"("+pointData.size()+")";
                         adapter.setPointData(pointData1);
                         break;
                     case 1:
@@ -132,6 +134,7 @@ public class PointViewPagerSelectAdapter extends PagerAdapter implements PointLi
                                 pointData1.add(detailData);
                             }
                         }
+                        name[1]=name[1]+"("+pointData1.size()+")";
                         adapter.setPointData(pointData1);
                         break;
                     case 2:
@@ -140,6 +143,7 @@ public class PointViewPagerSelectAdapter extends PagerAdapter implements PointLi
                                 pointData1.add(detailData);
                             }
                         }
+                        name[2]=name[2]+"("+pointData1.size()+")";
                         adapter.setPointData(pointData1);
                         break;
                 }

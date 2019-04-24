@@ -87,6 +87,7 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
                 ,new String[]{"全部", "未采样", "已采样"}
                 ,pointDatas
                 ,this);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }
 
