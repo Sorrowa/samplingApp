@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bigkoo.alertview.AlertView;
 import com.example.core.Entity.Data.FileData;
 import com.example.core.Entity.Data.FileDetailData;
 import com.example.core.Entity.Data.FormData;
@@ -76,6 +76,8 @@ import java.util.Objects;
 public class SamplingFormActivity extends BaseActivity
         implements OnDateSetListener, FormPresenter.LocationListener
         , FormPresenter.FileUploadListener, FormPresenter.SaveOrSubmitListener, FormPresenter.PreviousListener {
+
+    public static String status = "0";
 
     public static boolean canDelete = true;
 
@@ -264,6 +266,8 @@ public class SamplingFormActivity extends BaseActivity
 
     private boolean canGoback = true;//判断是否可以退出当前活动
 
+    private String word_status = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -279,23 +283,28 @@ public class SamplingFormActivity extends BaseActivity
         Intent intent = getIntent();
         String status = intent.getStringExtra("status");
         String formId = intent.getStringExtra("formId");
+        projectId = intent.getStringExtra("projectId");
+        word_status = intent.getStringExtra("word_status");
         if (formId != null && status != null) {
             //获取已经存储的表单数据
             presenter.getPreviousForm(formId, this);
             showLoadingDialog();
+            SamplingFormActivity.status = status;
         }
-
-        projectId = getIntent().getStringExtra("projectId");
-
 
         initView();
 
+        /**
+         * 判断是否为已提交表单（1：已采样）
+         * 如果是已采样表单那么不可编辑，去掉定位按钮
+         */
         if (status != null && status.equals("1")) {
             unEditableView();
             canGoback = false;
+            get_place.setVisibility(View.GONE);
         }
         if (status != null) {
-            get_place.setVisibility(View.GONE);
+//            get_place.setVisibility(View.GONE);
             place.setClickable(false);
             location.setClickable(false);
         }
@@ -379,7 +388,7 @@ public class SamplingFormActivity extends BaseActivity
     private void initView() {
         initToolBar();
         initPointSelect();
-        initTimePicker(0);
+        initTimePicker();
         //查看样品信息
         initgetPointStatus();
         initPictureSelect();
@@ -551,7 +560,12 @@ public class SamplingFormActivity extends BaseActivity
      */
     private void initSave() {
         save.setOnClickListener(view
-                -> saveBehavior(false));
+                -> {
+            if (canGoback)
+                saveBehavior(false);
+            else
+                showToast("请等待数据完整下载");
+        });
     }
 
     private void saveBehavior(boolean isSubmit) {
@@ -568,7 +582,7 @@ public class SamplingFormActivity extends BaseActivity
             return;
         }
 
-        if ( isSubmit && (environmentPictureNum <= 0
+        if (isSubmit && (environmentPictureNum <= 0
                 || samplingPictureNum <= 0
                 || samplePictureNum <= 0
                 || videoNum <= 0
@@ -763,7 +777,7 @@ public class SamplingFormActivity extends BaseActivity
         });
     }
 
-    private void initTimePicker(int i) {
+    private void initTimePicker() {
         time_pick.setOnClickListener(view -> {
             TimePickerDialog dialogMonthDayHourMin = new TimePickerDialog.Builder()
                     .setType(Type.YEAR_MONTH_DAY)
@@ -824,19 +838,21 @@ public class SamplingFormActivity extends BaseActivity
         leftItem.setOnClickListener(view -> doBack());
         //todo:提交的逻辑
         rightItem.setOnClickListener(view -> {
-            AlertDialog.Builder normalDialog =
-                    new AlertDialog.Builder(SamplingFormActivity.this);
-            normalDialog.setTitle("提示");
-            normalDialog.setMessage("提交之后将不能更改，确认提交吗？");
-            normalDialog.setPositiveButton("确认",
-                    (dialog, which) -> {
+            //仿苹果
+            new AlertView("提示", "提交之后将不能更改，确认提交吗？"
+                    , "取消"
+                    , new String[]{"确定"}
+                    , null
+                    , SamplingFormActivity.this,
+                    AlertView.Style.Alert
+                    , (o, position) -> {
+                if (position == 0) {
+                    if (canGoback) {
                         saveBehavior(true);
-                        dialog.dismiss();
-                    });
-            normalDialog.setNegativeButton("取消",
-                    (dialog, which) -> dialog.dismiss());
-            // 显示
-            normalDialog.show();
+                    } else
+                        showToast("请等待表单信息完整下载");
+                }
+            }).show();
         });
     }
 
@@ -1158,12 +1174,7 @@ public class SamplingFormActivity extends BaseActivity
                 if (selectList.size() <= 0)
                     break;
                 LocalMedia localMedia = selectList.get(0);
-//                if (FileUtil.getFileOrFilesSize(videoPath, FileUtil.SIZETYPE_MB) >= 85) {
-//                    showToast("您的文件太大了!");
-//                    return;
-//                }
                 String videoPath = localMedia.getPath();
-                //todo:获得路径之后进行一轮压缩
                 String desPath = getCacheDir().getPath() + "/video" + videoNum + ".mp4";
                 VideoCompress.compressVideoLow(videoPath, desPath, new VideoCompress.CompressListener() {
                     @Override
@@ -1282,7 +1293,8 @@ public class SamplingFormActivity extends BaseActivity
         nowLocation = "N" + BaseUtil.FomatNumber(latitude) + "; E" + BaseUtil.FomatNumber(longitude);
         data.setActLatitude(latitude);
         data.setActLongitude(longitude);
-        if (pointData != null) {
+        if (pointData != null && pointData.getLatitude() != null
+                && pointData.getLongitude() != null) {
             getAndShowDistance();
         }
     }
@@ -1311,20 +1323,18 @@ public class SamplingFormActivity extends BaseActivity
             finish();
             return;
         }
-        if (!canGoback) {
-            showToast("文件还未完全下载，请勿退出");
-            return;
-        }
-        AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(SamplingFormActivity.this);
-        normalDialog.setTitle("提示");
-        normalDialog.setMessage("如果未保存，数据将会丢失");
-        normalDialog.setPositiveButton("退出",
-                (dialog, which) -> finish());
-        normalDialog.setNegativeButton("取消",
-                (dialog, which) -> dialog.dismiss());
-        // 显示
-        normalDialog.show();
+        //仿苹果
+        new AlertView("提示", "如果未保存，数据将会丢失"
+                , "取消"
+                , new String[]{"退出"}
+                , null
+                , SamplingFormActivity.this,
+                AlertView.Style.Alert
+                , (o, position) -> {
+            if (position == 0) {
+                finish();
+            }
+        }).show();
     }
 
     /**
@@ -1424,7 +1434,9 @@ public class SamplingFormActivity extends BaseActivity
                     formUploadDialog.setCanceledOnTouchOutside(true);
                     formUploadDialog.setOnCancelListener(dialog -> showToast("后台将继续上传信息"));
                 }
-                formUploadDialog.show();
+                if (!this.isDestroyed() || !this.isFinishing()) {
+                    formUploadDialog.show();
+                }
                 break;
         }
     }
@@ -1457,6 +1469,13 @@ public class SamplingFormActivity extends BaseActivity
 
         projectId = detailData.getProjectId();
 
+        if (word_status.equals("重采")) {
+            this.data.setId(detailData.getId());
+            dismissLoadingDialog();
+            canGoback = true;
+            return;
+        }
+
         this.data.setProjectPointId(detailData.getProjectPointId());
         this.data.setPointSampPlan(detailData.getPointSampPlan());
         this.data.setId(detailData.getId());
@@ -1471,10 +1490,16 @@ public class SamplingFormActivity extends BaseActivity
         samp_desc.setText(this.data.getSampDesc());
         person_name.setText(detailData.getActSamper());
         point_name.setText(detailData.getPointName());
-        place.setText("N" + BaseUtil
-                .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
-                + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
-                + "\n距离为:" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getDistance())));
+        if (detailData.getDistance() != null) {
+            place.setText("N" + BaseUtil
+                    .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
+                    + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
+                    + "\n距离为:" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getDistance())));
+        } else {
+            place.setText("N" + BaseUtil
+                    .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
+                    + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude())));
+        }
         Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1));
         water_temp.setText(detailData.getTempature().substring(0, detailData.getGTempature().length() - 1));
         Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3));
@@ -1516,9 +1541,6 @@ public class SamplingFormActivity extends BaseActivity
                     , Objects.requireNonNull(this.getExternalCacheDir()).getAbsolutePath()
                     , "GET"
                     , detailData.getFileName());
-//            File file=BaseUtil.downloadPicture(Ip + detailData.getFilePath()
-//                    ,Objects.requireNonNull(this.getExternalCacheDir()).getAbsolutePath()+"/"
-//                    ,detailData.getFileName());
             switch (detailData.getFileType()) {
                 case "0":
                     environmentPhotos.add(file.getPath());
@@ -1547,9 +1569,8 @@ public class SamplingFormActivity extends BaseActivity
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            Glide.with(SamplingFormActivity.this)
-                                    .load(sampleManOnePath)
-                                    .into(sample_man_sign);
+                            Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
+                            sample_man_sign.setImageBitmap(bm);
                         });
                         sampleManOneNum++;
                         break;
@@ -1559,9 +1580,8 @@ public class SamplingFormActivity extends BaseActivity
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            Glide.with(SamplingFormActivity.this)
-                                    .load(sampleManTwoPath)
-                                    .into(sample_man_sign_two);
+                            Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
+                            sample_man_sign_two.setImageBitmap(bm);
                         });
                         sampleManTwoNum++;
                         break;
@@ -1572,9 +1592,8 @@ public class SamplingFormActivity extends BaseActivity
                     runOnUiThread(() -> {
                         if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                             return;
-                        Glide.with(SamplingFormActivity.this)
-                                .load(monitorManSignPath)
-                                .into(monitor_man_sign);
+                        Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
+                        monitor_man_sign.setImageBitmap(bm);
                     });
                     monitorManSignNum++;
                     break;

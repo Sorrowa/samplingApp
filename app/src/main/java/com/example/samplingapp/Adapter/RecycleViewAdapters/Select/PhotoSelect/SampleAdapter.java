@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bigkoo.alertview.AlertView;
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 
@@ -53,10 +54,12 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
             context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
         });
         holder.imageView.setLongClickable(true);
-        holder.imageView.setOnLongClickListener(view -> {
-            showDialog(position);
-            return false;//消费掉点击事件
-        });
+        if (!SamplingFormActivity.status.equals("1")) {
+            holder.imageView.setOnLongClickListener(view -> {
+                showDialog(position);
+                return true;//消费掉点击事件
+            });
+        }
     }
 
     /**

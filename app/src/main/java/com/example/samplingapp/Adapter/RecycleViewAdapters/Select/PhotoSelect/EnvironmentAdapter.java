@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.bigkoo.alertview.AlertView;
+import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 
@@ -44,10 +45,12 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
             Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
             holder.imageView.setImageBitmap(bm);
             holder.imageView.setLongClickable(true);
-            holder.imageView.setOnLongClickListener(view -> {
-                showDialog(position);
-                return true;//消费掉点击事件
-            });
+            if (!SamplingFormActivity.status.equals("1")) {
+                holder.imageView.setOnLongClickListener(view -> {
+                    showDialog(position);
+                    return true;//消费掉点击事件
+                });
+            }
             holder.imageView.setOnClickListener(view -> {
                 Intent intent=new Intent(context, PreviewActivity.class);
                 intent.putExtra("path",photos.get(position));

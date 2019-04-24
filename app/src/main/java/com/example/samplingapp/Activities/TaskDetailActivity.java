@@ -45,6 +45,8 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
     private static ProjectData data;
 
+    private String keyword="";
+
     @BindView(R.id.left_item)
     ImageView leftItem;
     @BindView(R.id.right_item)
@@ -96,7 +98,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     @Override
     protected void onRestart() {
         super.onRestart();
-        presenter.getPointList(type,data.getId(),null,this);
+        presenter.getPointList(type,data.getId(),keyword,this);
     }
 
     private void doWithType() {
@@ -169,6 +171,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
                         ,SamplingFormActivity.class);
                 intent.putExtra("formId",data.get(adapterPosition).getId());
                 intent.putExtra("status",data.get(adapterPosition).getStatus());
+                intent.putExtra("word_status",data.get(adapterPosition).getStatusName());
                 startActivity(intent);
             });
             adapter=new TaskDetailAdapter(data);
@@ -257,9 +260,10 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         switch (resultCode){
             case SEARCH:
                 if (data!=null){
+                    keyword=data.getStringExtra("res");
                     presenter.getPointList(type
                             ,TaskDetailActivity.data.getId()
-                            ,data.getStringExtra("res")
+                            ,keyword
                             ,this);
                     showLoadingDialog();
                 }

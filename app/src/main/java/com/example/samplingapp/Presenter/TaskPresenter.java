@@ -17,20 +17,20 @@ import retrofit2.Response;
 
 public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
 
-    public void getPointList(String type , String projectId,String keyWord,listener listener){
-        Call<PointListMessage> call=ApiModel.getPointList(type
-                ,projectId
-                ,keyWord
+    public void getPointList(String type, String projectId, String keyWord, listener listener) {
+        Call<PointListMessage> call = ApiModel.getPointList(type
+                , projectId
+                , keyWord
                 , ShareUtil.getToken((App) getView().getApplication()));
         assert call != null;
         call.enqueue(new Callback<PointListMessage>() {
             @Override
             public void onResponse(Call<PointListMessage> call, Response<PointListMessage> response) {
-                if (response.body() != null&&response.body().getSuccess()){
-                    List<PointData> data=response.body().getData();
-                    listener.onSuccess(data,true);
-                }else {
-                    listener.onSuccess(null,false);
+                if (response.body() != null && response.body().getSuccess()) {
+                    List<PointData> data = response.body().getData();
+                    listener.onSuccess(data, true);
+                } else {
+                    listener.onSuccess(null, false);
                 }
 
             }
@@ -44,22 +44,23 @@ public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
 
     /**
      * 删除表单
+     *
      * @param id
      * @param deleteListener
      */
-    public void deleteForm(String id,deleteListener deleteListener){
-        Call<DeleteFormMessage> messageCall=ApiModel.deleteForm(id
-                ,ShareUtil.getToken((App) getView().getApplication()));
+    public void deleteForm(String id, deleteListener deleteListener) {
+        Call<DeleteFormMessage> messageCall = ApiModel.deleteForm(id
+                , ShareUtil.getToken((App) getView().getApplication()));
         assert messageCall != null;
         messageCall.enqueue(new Callback<DeleteFormMessage>() {
             @Override
             public void onResponse(Call<DeleteFormMessage> call, Response<DeleteFormMessage> response) {
-                DeleteFormMessage message=response.body();
-                if (message!=null&&message.getSuccess()){
+                DeleteFormMessage message = response.body();
+                if (message != null && message.getSuccess()) {
                     deleteListener.onSuccess();
-                }else if (message!=null){
+                } else if (message != null) {
                     deleteListener.onFail(message.getMessage());
-                }else{
+                } else {
                     deleteListener.onFail("发生未知错误");
                 }
             }
@@ -72,14 +73,15 @@ public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
     }
 
 
+    public interface listener {
+        void onSuccess(List<PointData> data, boolean isOk);
 
-    public interface listener{
-        void onSuccess(List<PointData> data,boolean isOk);
         void onFail();
     }
 
-    public interface deleteListener{
+    public interface deleteListener {
         void onSuccess();
+
         void onFail(String info);
     }
 }

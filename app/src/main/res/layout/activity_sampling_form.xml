@@ -765,8 +765,8 @@
                 android:padding="5dp"
                 android:textColor="@color/black"
                 android:textSize="14dp"
-                android:maxLength="140"
-                android:hint="140字以内"/>
+                android:maxLength="200"
+                android:hint="200字以内"/>
 
             <!--<View-->
             <!--android:layout_width="match_parent"-->
@@ -943,7 +943,7 @@
 
                     <EditText
                         android:id="@+id/company_info"
-                        android:layout_width="80dp"
+                        android:layout_width="250dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
