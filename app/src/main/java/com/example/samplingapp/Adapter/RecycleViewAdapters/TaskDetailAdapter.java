@@ -2,6 +2,7 @@ package com.example.samplingapp.Adapter.RecycleViewAdapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,7 +72,8 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Vi
             pointState.setText(data.getStatusName());
             if (data.getPointSatus().equals("1")){
                 pointState.setTextColor(context.getResources().getColor(R.color.red));
-            }
+            }else
+                pointState.setTextColor(Color.parseColor("#3778e6"));
         }
     }
 }

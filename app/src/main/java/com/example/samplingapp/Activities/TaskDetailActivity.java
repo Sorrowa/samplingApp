@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * 任务详情界面
  */
-public class TaskDetailActivity extends TaskBaseActivity implements TaskPresenter.listener {
+public class TaskDetailActivity extends TaskBaseActivity implements TaskPresenter.listener, TaskPresenter.countListener {
 
 
     public static final int SEARCH = 0;
@@ -85,6 +85,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         initRecycleView(pointDatas);
         //开始网络请求
         presenter.getPointList(type, data.getId(), searchRes, this);
+        presenter.getPointCount(data.getId(), this);
         //dialog显示回调接口
         listener = () -> presenter.getPointList(type, data.getId(), searchRes, this);
     }
@@ -100,6 +101,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
     protected void onRestart() {
         super.onRestart();
         presenter.getPointList(type, data.getId(), keyword, this);
+        presenter.getPointCount(data.getId(), this);
     }
 
     private void doWithType() {
@@ -122,7 +124,7 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
 
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         leftItem.setOnClickListener(view -> finish());
-        pointPercent.setText("采样点位：" + data.getSampCount() + "/" + data.getTotalPoint());
+//        pointPercent.setText("采样点位：" + data.getSampCount() + "/" + data.getTotalPoint());
 
         //跳转到点位详细信息界面
         pointPercent.setOnClickListener(view -> {
@@ -223,6 +225,11 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
      */
     private void deleteItem(int adapterPosition) {
 
+        if (pointDatas.get(adapterPosition).getStatusName().equals("打回")){
+            showToast("该表单不可删除");
+            return;
+        }
+
         showDeleteDialog();
 
         presenter.deleteForm(pointDatas.get(adapterPosition).getId()
@@ -271,5 +278,17 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
                 }
                 break;
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onSuccess(String count) {
+        //todo:点位统计数据
+        runOnUiThread(() -> pointPercent.setText("采样点位：" + count));
+    }
+
+    @Override
+    public void onFailCount(String info) {
+        showToast(info);
     }
 }

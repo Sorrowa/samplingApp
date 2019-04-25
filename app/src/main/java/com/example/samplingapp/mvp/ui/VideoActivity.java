@@ -47,6 +47,8 @@ public class VideoActivity extends BaseActivity {
             text_delete.setVisibility(View.GONE);
         }
         initView();
+
+        text_delete.setVisibility(View.GONE);
     }
 
     private void initView() {

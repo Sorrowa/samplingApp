@@ -160,6 +160,15 @@ public class BaseUtil {
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
         return decimalFormat.format(num);
     }
+    /**
+     * 保留小数点后二位
+     *
+     * @return
+     */
+    public static String FomatNumber2(double num) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(num);
+    }
 
 
     /**
@@ -315,6 +324,29 @@ public class BaseUtil {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    /**
+     * 统一bitmap尺寸
+     * @param bm
+     * @param newWidth
+     * @param newHeight
+     * @return
+     */
+    public static Bitmap zoomImg(Bitmap bm, int newWidth, int newHeight) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
     }
 
 }

@@ -5,6 +5,7 @@ import com.example.core.Entity.message.DeleteFormMessage;
 import com.example.core.Entity.message.FileMessage;
 import com.example.core.Entity.message.FormDetailMessage;
 import com.example.core.Entity.message.LoginMessage;
+import com.example.core.Entity.message.PointCountMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.core.Entity.message.ProjectMessage;
@@ -16,6 +17,7 @@ import com.example.network.RetrofitHelper;
 import com.example.network.RetrofitInterface.ApiDeleteFormInterface;
 import com.example.network.RetrofitInterface.ApiFormInterface;
 import com.example.network.RetrofitInterface.ApiGetFormDetailInterface;
+import com.example.network.RetrofitInterface.ApiGetPointCount;
 import com.example.network.RetrofitInterface.ApiGetPointInterface;
 import com.example.network.RetrofitInterface.ApiGetPointListInterface;
 import com.example.network.RetrofitInterface.ApiGetProjectInterface;
@@ -203,6 +205,21 @@ public class ApiModel {
         ApiGetFormDetailInterface apiGetFormDetailInterface=retrofit
                 .create(ApiGetFormDetailInterface.class);
         return apiGetFormDetailInterface.getFormDetail(formId);
+    }
+
+    /**
+     * 获取点位统计数据
+     * @param projectId
+     * @param Token
+     * @return
+     */
+    public static Call<PointCountMessage> getPointCount(String projectId,String Token){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(Token);
+        if (retrofit==null){
+            return null;
+        }
+        ApiGetPointCount apiGetPointCount=retrofit.create(ApiGetPointCount.class);
+        return apiGetPointCount.getPointCount(projectId);
     }
 
 //    /**

@@ -57,6 +57,7 @@ import com.example.samplingapp.utils.FileUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
+import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
@@ -85,7 +86,8 @@ public class SamplingFormActivity extends BaseActivity
     public static final int ENVIRONMENT = 10;
     public static final int SAMPLING = 11;
     public static final int SAMPLE = 12;
-
+    public static final int ENVIRONMENT_SELECT=13;
+    public static final int SAMPLING_SELECT=14;
     //签名
     public static final int SAMPLEMANONE = 21;
     public static final int SAMPLEMANTWO = 22;
@@ -113,7 +115,7 @@ public class SamplingFormActivity extends BaseActivity
     ImageView rightItem;
     //采样人员
     @BindView(R.id.person_name)
-    EditText person_name;
+    TextView person_name;
     String personName;
     //位置获取
 //    R.id.get_place, R.id.location
@@ -324,8 +326,9 @@ public class SamplingFormActivity extends BaseActivity
 
         rightItem.setVisibility(View.GONE);
 
-        person_name.setFocusable(false);
-        person_name.setFocusableInTouchMode(false);
+        //修改为从后端带出
+//        person_name.setFocusable(false);
+//        person_name.setFocusableInTouchMode(false);
 
         location.setClickable(false);
 
@@ -402,23 +405,6 @@ public class SamplingFormActivity extends BaseActivity
     }
 
     private void initEdit() {
-        person_name.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND
-                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                person_name.clearFocus();
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    InputMethodManager imm = null;
-                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                } else {
-                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
-                    if (manager != null)
-                        manager.hideSoftInputFromWindow(person_name.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-                return true;
-            }
-            return false;
-        });
         Climate.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND
                     || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
@@ -576,6 +562,12 @@ public class SamplingFormActivity extends BaseActivity
         samplingPictureNum = samplingPhotos.size();
         videoNum = sampleVideo.size();
         samplePictureNum = samplePhotos.size();
+        if (sampleManOnePath!=null)
+            sampleManOneNum=1;
+        if (sampleManTwoPath!=null)
+            sampleManTwoNum=1;
+        if (monitorManSignPath!=null)
+            monitorManSignNum=1;
 
         if (isSubmit && !CanSubmit()) {
             return;
@@ -835,7 +827,6 @@ public class SamplingFormActivity extends BaseActivity
         leftItem.setImageDrawable(getDrawable(R.drawable.go_back));
         rightItem.setImageDrawable(getDrawable(R.drawable.submit));
         leftItem.setOnClickListener(view -> doBack());
-        //todo:提交的逻辑
         rightItem.setOnClickListener(view -> {
             //仿苹果
             new AlertView("提示", "提交之后将不能更改，确认提交吗？"
@@ -911,7 +902,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             PictureSelector
                     .create(SamplingFormActivity.this, SAMPLING)
-                    .selectPicture(true, 500, 500, 0, 0);
+                    .selectPicture(true, 600, 600, 1, 1);
 
         });
     }
@@ -939,6 +930,7 @@ public class SamplingFormActivity extends BaseActivity
             PictureSelector
                     .create(SamplingFormActivity.this, ENVIRONMENT)
                     .selectPicture(true, 600, 600, 1, 1);
+
         });
 
     }
@@ -1007,6 +999,7 @@ public class SamplingFormActivity extends BaseActivity
             case POINTGET:
                 if (data != null && data.getParcelableExtra("pointData") != null) {
                     pointData = data.getParcelableExtra("pointData");
+                    person_name.setText(pointData.getSamper());
                     point_name.setText(pointData.getName());
                     if (this.data.getActLatitude() != 0 && this.data.getActLatitude() != 0) {
                         getAndShowDistance();
@@ -1044,6 +1037,8 @@ public class SamplingFormActivity extends BaseActivity
                 break;
             case SAMPLEMANONE:
                 if (data != null) {
+                    if (data.getStringExtra("path").equals("0"))
+                        break;
                     sampleManOnePath = data.getStringExtra("path");
                     File file = new File(sampleManOnePath);
                     if (file.exists()) {
@@ -1056,6 +1051,8 @@ public class SamplingFormActivity extends BaseActivity
                 break;
             case SAMPLEMANTWO:
                 if (data != null) {
+                    if (data.getStringExtra("path").equals("0"))
+                        break;
                     sampleManTwoPath = data.getStringExtra("path");
                     File file = new File(sampleManTwoPath);
                     if (file.exists()) {
@@ -1068,6 +1065,8 @@ public class SamplingFormActivity extends BaseActivity
                 break;
             case MONITOR:
                 if (data != null) {
+                    if (data.getStringExtra("path").equals("0"))
+                        break;
                     monitorManSignPath = data.getStringExtra("path");
                     File file = new File(monitorManSignPath);
                     if (file.exists()) {
@@ -1087,7 +1086,7 @@ public class SamplingFormActivity extends BaseActivity
                     File file = new File(path);
                     if (file.exists()) {
                         sampleVideo.remove(path);
-                        videoAdapter.setPaths(sampleVideo);
+//                        videoAdapter.setPaths(sampleVideo);
                         videoAdapter.notifyDataSetChanged();
                         videoNum--;
                     }
@@ -1108,13 +1107,23 @@ public class SamplingFormActivity extends BaseActivity
             case ENVIRONMENT:
                 if (data != null) {
                     String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath = getCacheDir().getPath() + "/enviroment" + environmentPictureNum + ".png";
+                    String newPath = getCacheDir().getPath() + "/environment" + environmentPictureNum + ".png";
                     if (!BaseUtil.copyFile(picturePath, newPath)) {
                         showToast("请检查文件访问权限");
                         break;
                     }
-
                     environmentPhotos.add(newPath);
+//                    sampleAdapter.setPhotos(samplePhotos);
+                    runOnUiThread(() -> {
+                        environmentAdapter.notifyDataSetChanged();
+                    });
+                    environmentPictureNum++;
+                }
+                break;
+            case ENVIRONMENT_SELECT:
+                if (data!=null){
+                    String filePath = GetPathFromUri.getPath(this, data.getData());
+                    environmentPhotos.add(filePath);
 //                    environmentAdapter.setPhotos(environmentPhotos);
                     runOnUiThread(() -> environmentAdapter.notifyDataSetChanged());
                     environmentPictureNum++;
@@ -1129,10 +1138,19 @@ public class SamplingFormActivity extends BaseActivity
                         break;
                     }
                     samplingPhotos.add(newPath);
-//                    samplingAdapter.setPhotos(samplingPhotos);
+//                    sampleAdapter.setPhotos(samplePhotos);
                     runOnUiThread(() -> {
                         samplingAdapter.notifyDataSetChanged();
                     });
+                    samplingPictureNum++;
+                }
+                break;
+            case SAMPLING_SELECT:
+                if (data!=null){
+                    String filePath = GetPathFromUri.getPath(this, data.getData());
+                    samplingPhotos.add(filePath);
+//                    environmentAdapter.setPhotos(environmentPhotos);
+                    runOnUiThread(() -> samplingAdapter.notifyDataSetChanged());
                     samplingPictureNum++;
                 }
                 break;
@@ -1161,14 +1179,14 @@ public class SamplingFormActivity extends BaseActivity
                         return;
                     }
                     sampleVideo.add(videoPath);
-                    videoAdapter.setPaths(sampleVideo);
+//                    videoAdapter.setPaths(sampleVideo);
                     videoAdapter.notifyDataSetChanged();
                     videoNum++;
                 }
                 break;
 
             case REQUEST_CODE_SHOOT:
-                // 图片、视频、音频选择结果回调
+                // 视频选择结果回调
                 List<LocalMedia> selectList = com.luck.picture.lib.PictureSelector.obtainMultipleResult(data);
                 if (selectList.size() <= 0)
                     break;
@@ -1186,7 +1204,7 @@ public class SamplingFormActivity extends BaseActivity
                     public void onSuccess() {
                         //Finish successfully
                         sampleVideo.add(desPath);
-                        videoAdapter.setPaths(sampleVideo);
+//                        videoAdapter.setPaths(sampleVideo);
                         videoAdapter.notifyDataSetChanged();
                         videoNum++;
                         dismissCompressDialog();
@@ -1212,12 +1230,12 @@ public class SamplingFormActivity extends BaseActivity
      */
     @SuppressLint("SetTextI18n")
     private void getAndShowDistance() {
-        this.data.setDistance(String.valueOf(BaseUtil.getDistance(Double.parseDouble(pointData.getLatitude())
+        this.data.setDistance(String.valueOf(BaseUtil.FomatNumber2(BaseUtil.getDistance(Double.parseDouble(pointData.getLatitude())
                 , Double.parseDouble(pointData.getLongitude())
                 , this.data.getActLatitude()
-                , this.data.getActLongitude())));
+                , this.data.getActLongitude()))));//计算距离之后，保留一位小数
         if (nowLocation != null) {
-            place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber(Double.parseDouble(this.data.getDistance())));
+            place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(this.data.getDistance())));
         } else {
             presenter.beginLocation(this, this);
         }
@@ -1380,7 +1398,7 @@ public class SamplingFormActivity extends BaseActivity
                     && sampleManTwoNum <= 0
                     && monitorManSignNum <= 0) {
                 //如果所有的图片都上传了，那么开始生成表单逻辑并上传表单
-                showToast("图片上传完毕");
+//                showToast("图片上传完毕");
                 runOnUiThread(() -> pictureUploadDialog.dismiss());
                 saveAllData(isSubmit);
             }
@@ -1445,9 +1463,9 @@ public class SamplingFormActivity extends BaseActivity
      */
     @Override
     public void onSavedorSubmit() {
-        showToast("表单上传成功");
+//        showToast("表单上传成功");
         formUploadDialog.dismiss();
-        finish();
+        app.removeActivity_(SamplingFormActivity.this);
     }
 
     @Override
@@ -1478,7 +1496,10 @@ public class SamplingFormActivity extends BaseActivity
         this.data.setProjectPointId(detailData.getProjectPointId());
         this.data.setPointSampPlan(detailData.getPointSampPlan());
         this.data.setId(detailData.getId());
-        this.data.setDistance(detailData.getDistance());
+        if (detailData.getDistance() == null) {
+            this.data.setDistance("0");
+        } else
+            this.data.setDistance(detailData.getDistance());
         this.data.setActLatitude(Double.parseDouble(detailData.getActLatitude()));
         this.data.setActLongitude(Double.parseDouble(detailData.getActLongitude()));
         this.data.setSampMethod(detailData.getSampMethod());
@@ -1493,18 +1514,18 @@ public class SamplingFormActivity extends BaseActivity
             place.setText("N" + BaseUtil
                     .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
                     + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
-                    + "\n距离为:" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getDistance())));
+                    + "\n距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(detailData.getDistance())));
         } else {
             place.setText("N" + BaseUtil
                     .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
                     + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude())));
         }
         Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1));
-        water_temp.setText(detailData.getTempature().substring(0, detailData.getGTempature().length() - 1));
+        water_temp.setText(detailData.getTempature().substring(0, detailData.getTempature().length() - 1));
         Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3));
         Weather.setText(detailData.getWeather());
         sampling_method.setText(detailData.getMethodName());
-        if (detailData.getStatus().equals("0")) {
+        if (detailData.getPointSatus().equals("0")) {
             sampling_status.setText("正常");
         } else {
             get_point_status.setVisibility(View.GONE);
@@ -1518,12 +1539,25 @@ public class SamplingFormActivity extends BaseActivity
         pointData.setProjectPointId(detailData.getProjectPointId());
 //        injectFiles(data.getFiles());
 
+        dismissLoadingDialog();
+        showToast("后台继续获取信息");
+
+//        placeHolderPicture(data.getFiles());
+
         new Thread() {
             @Override
             public void run() {
                 injectFiles(data.getFiles());
             }
         }.start();
+
+    }
+
+    /**
+     * 填充内容
+     * @param files
+     */
+    private void placeHolderPicture(List<FileDetailData> files) {
 
     }
 
@@ -1559,28 +1593,28 @@ public class SamplingFormActivity extends BaseActivity
                 case "3":
                     //采样视频
                     sampleVideo.add(file.getPath());
-                    videoAdapter.setPaths(sampleVideo);
+//                    videoAdapter.setPaths(sampleVideo);
                     handler.post(() -> videoAdapter.notifyDataSetChanged());
                     break;
                 case "4":
                     if (sampleManOnePath == null) {
                         sampleManOnePath = file.getPath();
+                        Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
-                            sample_man_sign.setImageBitmap(bm);
+                            sample_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                         });
                         sampleManOneNum++;
                         break;
                     }
                     if (sampleManTwoPath == null) {
                         sampleManTwoPath = file.getPath();
+                        Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
-                            sample_man_sign_two.setImageBitmap(bm);
+                            sample_man_sign_two.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                         });
                         sampleManTwoNum++;
                         break;
@@ -1588,11 +1622,11 @@ public class SamplingFormActivity extends BaseActivity
                     break;
                 case "5":
                     monitorManSignPath = file.getPath();
+                    Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
                     runOnUiThread(() -> {
                         if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                             return;
-                        Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
-                        monitor_man_sign.setImageBitmap(bm);
+                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
                     });
                     monitorManSignNum++;
                     break;
@@ -1600,7 +1634,7 @@ public class SamplingFormActivity extends BaseActivity
             i++;
         }
         canGoback = true;
-        handler.post(() -> dismissLoadingDialog());
+//        handler.post(() -> dismissLoadingDialog());
     }
 
     @Override

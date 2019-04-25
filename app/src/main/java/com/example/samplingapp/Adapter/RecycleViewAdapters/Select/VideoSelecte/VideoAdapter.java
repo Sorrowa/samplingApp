@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bigkoo.alertview.AlertView;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.VideoActivity;
@@ -23,11 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
 
-    private List<String> paths=new ArrayList<>();
+    private List<String> paths;
     private SamplingFormActivity context;
 
     public VideoAdapter(List<String> paths, SamplingFormActivity context){
-        this.paths.addAll(paths);
+        this.paths=paths;
         this.context=context;
     }
 
@@ -51,7 +52,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             }
         }
 
-        holder.itemView.setOnClickListener(view -> {
+        if (!SamplingFormActivity.status.equals("1")) {
+            holder.item_video.setOnLongClickListener(view -> {
+                showDialog(position);
+                return true;//消费掉点击事件
+            });
+        }
+
+        holder.item_video.setOnClickListener(view -> {
             Intent intent=new Intent(context, VideoActivity.class);
             intent.putExtra("path",paths.get(position));
             context.startActivityForResult(intent,VideoActivity.VIDEO_ACTIVITY);
@@ -59,15 +67,36 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     }
 
+    /**
+     * 显示删除框
+     * @param ps
+     */
+    private void showDialog(int ps) {
+        new AlertView("提示", "是否删除第" + (ps + 1) + "项"
+                , "取消"
+                , new String[]{"确定"}
+                , null
+                , context,
+                AlertView.Style.Alert
+                , (o, position) -> {
+            if (position==0){
+                //删除当前项
+                paths.remove(ps);
+                notifyDataSetChanged();
+            }
+        })
+                .show();
+    }
+
     @Override
     public int getItemCount() {
         return paths.size();
     }
 
-    public void setPaths(List<String> paths) {
-        this.paths.clear();
-        this.paths.addAll(paths);
-    }
+//    public void setPaths(List<String> paths) {
+//        this.paths.clear();
+//        this.paths.addAll(paths);
+//    }
 
     class ViewHolder extends RecyclerView.ViewHolder{
 

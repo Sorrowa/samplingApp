@@ -46,7 +46,7 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
         holder.taskDateEnd.setText(datas.get(position).getEndTime());
         holder.taskName.setText(datas.get(position).getProjectName());
         holder.pointPercentage.setText("点位："
-                +datas.get(position).getSampCount()+"/"
+                +datas.get(position).getQuaCount()+"/"
                 +datas.get(position).getTotalPoint());
         holder.itemView.setOnClickListener(view -> {
             Intent intent=new Intent(context, TaskDetailActivity.class);

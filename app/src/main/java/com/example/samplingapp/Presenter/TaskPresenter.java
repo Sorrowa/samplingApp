@@ -2,6 +2,7 @@ package com.example.samplingapp.Presenter;
 
 import com.example.core.Entity.Data.PointData;
 import com.example.core.Entity.message.DeleteFormMessage;
+import com.example.core.Entity.message.PointCountMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.network.model.ApiModel;
 import com.example.samplingapp.Activities.TaskDetailActivity;
@@ -72,6 +73,35 @@ public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
         });
     }
 
+    /**
+     * 获取点位采集数据
+     * @param projectId
+     * @param listener
+     */
+    public void getPointCount(String projectId, countListener listener) {
+        Call<PointCountMessage> call = ApiModel.getPointCount(projectId
+                , ShareUtil.getToken((App) getView().getApplication()));
+        assert call != null;
+        call.enqueue(new Callback<PointCountMessage>() {
+            @Override
+            public void onResponse(Call<PointCountMessage> call, Response<PointCountMessage> response) {
+                PointCountMessage message = response.body();
+                if (message != null && message.getSuccess()) {
+                    listener.onSuccess(message.getData());
+                } else if (message != null) {
+                    listener.onFailCount(message.getMessage());
+                } else {
+                    listener.onFailCount("发生未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PointCountMessage> call, Throwable t) {
+                listener.onFailCount("请检查网络");
+            }
+        });
+    }
+
 
     public interface listener {
         void onSuccess(List<PointData> data, boolean isOk);
@@ -83,5 +113,11 @@ public class TaskPresenter extends BasePresenter<TaskDetailActivity> {
         void onSuccess();
 
         void onFail(String info);
+    }
+
+    public interface countListener {
+        void onSuccess(String count);
+
+        void onFailCount(String info);
     }
 }

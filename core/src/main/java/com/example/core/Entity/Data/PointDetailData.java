@@ -24,6 +24,7 @@ public class PointDetailData implements Parcelable {
     private String Status;
     private String StatusName;
     private String PointSampPlan;
+    private String Samper;
 
     private PointDetailData(Parcel in){
         Id=in.readString();
@@ -34,6 +35,7 @@ public class PointDetailData implements Parcelable {
         Status=in.readString();
         StatusName=in.readString();
         PointSampPlan=in.readString();
+        Samper=in.readString();
     }
 
     public PointDetailData(){
@@ -62,6 +64,7 @@ public class PointDetailData implements Parcelable {
         parcel.writeString(Status);
         parcel.writeString(StatusName);
         parcel.writeString(PointSampPlan);
+        parcel.writeString(Samper);
     }
 
     public String getId() {
@@ -131,5 +134,13 @@ public class PointDetailData implements Parcelable {
 
     public void setPointSampPlan(String pointSampPlan) {
         PointSampPlan = pointSampPlan;
+    }
+
+    public String getSamper() {
+        return Samper;
+    }
+
+    public void setSamper(String samper) {
+        Samper = samper;
     }
 }

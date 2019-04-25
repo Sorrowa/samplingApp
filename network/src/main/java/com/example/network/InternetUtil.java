@@ -71,4 +71,9 @@ public class InternetUtil {
      * 传递formId
      */
     public static final String GETFORMDETAIL="api/GetFormDetail";
+
+    /**
+     * 获取点位统计信息
+     */
+    public static final String GETPOINTCOUNT="api/GetPointCount";
 }

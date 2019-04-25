@@ -35,7 +35,7 @@ public class FormData {
     private String TransMethod;
     private double ActLongitude;
     private double ActLatitude;
-    private String Distance;
+    private String Distance="0";
     private String SampDesc;
     private String UserUnit;
 

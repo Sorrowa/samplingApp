@@ -3,14 +3,12 @@ package com.example.samplingapp.mvp.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.AlertView;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
-import com.example.samplingapp.mvp.Fragment.MyWhiteBoardFragment;
 import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
 
 import java.io.File;
@@ -27,7 +25,7 @@ public class DrawActivity extends BaseActivity {
 
 
     FragmentManager fragmentManager;
-    MyWhiteBoardFragment whihteFragment;
+    WhiteBoardFragment whihteFragment;
 
     @BindView(R.id.left_item)
     ImageView back;
@@ -66,7 +64,7 @@ public class DrawActivity extends BaseActivity {
 
     private void initFragment() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        whihteFragment = new MyWhiteBoardFragment();
+        whihteFragment = new WhiteBoardFragment();
         transaction.replace(R.id.fragment, whihteFragment, null)
                 .commit();
     }
@@ -86,24 +84,41 @@ public class DrawActivity extends BaseActivity {
 
     private void doBack() {
         if (!isSaved){
-            showSavingDialog();
             file=whihteFragment.saveInOI(String.valueOf(getApplication().getFilesDir()),String.valueOf(type));
             isSaved=true;
-            dialog.dismiss();
         }
-        Intent intent=new Intent();
-        intent.putExtra("path",file.getAbsolutePath());
-        setResult(type,intent);
-        finish();
+        new AlertView("提示", "是否保存？"
+                , "取消"
+                , new String[]{"确定"}
+                , null
+                , DrawActivity.this,
+                AlertView.Style.Alert
+                , (o, position) -> {
+            if (position == 0) {
+                Intent intent=new Intent();
+                intent.putExtra("path",file.getAbsolutePath());
+                setResult(type,intent);
+            }else{
+                Intent intent=new Intent();
+                intent.putExtra("path","0");
+                setResult(type,intent);
+            }
+            finish();
+        }).show();
+
+//        Intent intent=new Intent();
+//        intent.putExtra("path",file.getAbsolutePath());
+//        setResult(type,intent);
+//        finish();
     }
 
-    private void showSavingDialog(){
-        View layout = getLayoutInflater().inflate(R.layout.dialog_save, null);
-        dialog=new Dialog(this);
-        dialog.setContentView(layout);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnCancelListener(dialog1 -> {});
-        dialog.show();
-    }
+//    private void showSavingDialog(){
+//        View layout = getLayoutInflater().inflate(R.layout.dialog_save, null);
+//        dialog=new Dialog(this);
+//        dialog.setContentView(layout);
+//        dialog.setCancelable(false);
+//        dialog.setCanceledOnTouchOutside(false);
+//        dialog.setOnCancelListener(dialog1 -> {});
+//        dialog.show();
+//    }
 }
