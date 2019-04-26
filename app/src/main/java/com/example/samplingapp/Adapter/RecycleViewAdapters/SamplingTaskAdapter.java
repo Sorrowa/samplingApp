@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.core.Entity.Data.ProjectData;
 import com.example.samplingapp.Activities.TaskDetailActivity;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.BaseUtil;
 
 
 import java.util.List;
@@ -42,8 +43,8 @@ public class SamplingTaskAdapter extends RecyclerView.Adapter<SamplingTaskAdapte
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.taskDateStart.setText(datas.get(position).getBeginTime());
-        holder.taskDateEnd.setText(datas.get(position).getEndTime());
+        holder.taskDateStart.setText(BaseUtil.timeRemoveSFM(datas.get(position).getBeginTime()));
+        holder.taskDateEnd.setText(BaseUtil.timeRemoveSFM(datas.get(position).getEndTime()));
         holder.taskName.setText(datas.get(position).getProjectName());
         holder.pointPercentage.setText("点位："
                 +datas.get(position).getQuaCount()+"/"

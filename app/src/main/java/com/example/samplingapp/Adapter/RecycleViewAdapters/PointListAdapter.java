@@ -3,6 +3,8 @@ package com.example.samplingapp.Adapter.RecycleViewAdapters;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +55,10 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.pointName.setText(pointData.get(position).getName());
         holder.pointState.setText(pointData.get(position).getStatusName());
-        if (pointData.get(position).getStatus().equals("1")) {
+        if (pointData.get(position).getStatus().equals("0")) {
             //默认是未采样，所以只判断一边
-            holder.stateImg.setImageDrawable(context.getDrawable(R.drawable.point_has));
+            holder.pointState.setTypeface(Typeface.MONOSPACE);
+            holder.pointState.setTextColor(Color.parseColor("#ff8a00"));
         }
         holder.stateImg.setOnClickListener(view -> {
             showLoadingDialog();

@@ -13,6 +13,7 @@ import com.bigkoo.alertview.AlertView;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
+import com.example.samplingapp.utils.GlideUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,11 +43,15 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull SampleAdapter.ViewHolder holder, int position) {
-        File file = new File(photos.get(position));
-        if(file.exists()){
-            Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
-            holder.imageView.setImageBitmap(bm);
-        }
+//        File file = new File(photos.get(position));
+//        if(file.exists()){
+//            Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
+//            holder.imageView.setImageBitmap(bm);
+//        }
+        GlideUtil.loadImageViewSize(context,photos.get(position)
+                ,200
+                ,200
+                ,holder.imageView);
         holder.imageView.setOnClickListener(view -> {
             Intent intent=new Intent(context, PreviewActivity.class);
             intent.putExtra("path",photos.get(position));

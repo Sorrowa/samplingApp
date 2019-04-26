@@ -1,5 +1,6 @@
 package com.example.samplingapp.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,6 +27,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -347,6 +351,24 @@ public class BaseUtil {
         // 得到新的图片
         Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
         return newbm;
+    }
+
+    /**
+     * 去掉日期的时分秒
+     * @param oldDate
+     * @return
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static String timeRemoveSFM(String oldDate){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date=sdf.parse(oldDate);
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return sdf.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -53,7 +53,9 @@ import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 import com.example.samplingapp.mvp.ui.VideoActivity;
 import com.example.samplingapp.utils.BaseUtil;
+import com.example.samplingapp.utils.BitmapUtil;
 import com.example.samplingapp.utils.FileUtil;
+import com.example.samplingapp.utils.GlideUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -86,8 +88,8 @@ public class SamplingFormActivity extends BaseActivity
     public static final int ENVIRONMENT = 10;
     public static final int SAMPLING = 11;
     public static final int SAMPLE = 12;
-    public static final int ENVIRONMENT_SELECT=13;
-    public static final int SAMPLING_SELECT=14;
+    public static final int ENVIRONMENT_SELECT = 13;
+    public static final int SAMPLING_SELECT = 14;
     //签名
     public static final int SAMPLEMANONE = 21;
     public static final int SAMPLEMANTWO = 22;
@@ -268,6 +270,8 @@ public class SamplingFormActivity extends BaseActivity
     private boolean canGoback = true;//判断是否可以退出当前活动
 
     private String word_status = null;
+
+    private boolean isSaving = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -547,7 +551,12 @@ public class SamplingFormActivity extends BaseActivity
         save.setOnClickListener(view
                 -> {
             if (canGoback)
-                saveBehavior(false);
+                if (!isSaving) {
+                    isSaving = true;
+                    saveBehavior(false);
+                } else {
+                    showToast("正在提交，请勿点击保存");
+                }
             else
                 showToast("请等待数据完整下载");
         });
@@ -562,12 +571,12 @@ public class SamplingFormActivity extends BaseActivity
         samplingPictureNum = samplingPhotos.size();
         videoNum = sampleVideo.size();
         samplePictureNum = samplePhotos.size();
-        if (sampleManOnePath!=null)
-            sampleManOneNum=1;
-        if (sampleManTwoPath!=null)
-            sampleManTwoNum=1;
-        if (monitorManSignPath!=null)
-            monitorManSignNum=1;
+        if (sampleManOnePath != null)
+            sampleManOneNum = 1;
+        if (sampleManTwoPath != null)
+            sampleManTwoNum = 1;
+        if (monitorManSignPath != null)
+            monitorManSignNum = 1;
 
         if (isSubmit && !CanSubmit()) {
             return;
@@ -838,7 +847,12 @@ public class SamplingFormActivity extends BaseActivity
                     , (o, position) -> {
                 if (position == 0) {
                     if (canGoback) {
-                        saveBehavior(true);
+                        if (!isSaving) {
+                            isSaving = true;
+                            saveBehavior(true);
+                        } else {
+                            showToast("正在保存，请勿提交");
+                        }
                     } else
                         showToast("请等待表单信息完整下载");
                 }
@@ -882,7 +896,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             PictureSelector
                     .create(SamplingFormActivity.this, SAMPLE)
-                    .selectPicture(true, 600, 600, 1, 1);
+                    .selectPicture(false, 600, 600, 1, 1);
 
         });
     }
@@ -902,7 +916,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             PictureSelector
                     .create(SamplingFormActivity.this, SAMPLING)
-                    .selectPicture(true, 600, 600, 1, 1);
+                    .selectPicture(false, 600, 600, 1, 1);
 
         });
     }
@@ -929,7 +943,7 @@ public class SamplingFormActivity extends BaseActivity
             }
             PictureSelector
                     .create(SamplingFormActivity.this, ENVIRONMENT)
-                    .selectPicture(true, 600, 600, 1, 1);
+                    .selectPicture(false, 600, 600, 1, 1);
 
         });
 
@@ -1106,22 +1120,25 @@ public class SamplingFormActivity extends BaseActivity
         switch (requestCode) {
             case ENVIRONMENT:
                 if (data != null) {
-                    String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath = getCacheDir().getPath() + "/environment" + environmentPictureNum + ".png";
-                    if (!BaseUtil.copyFile(picturePath, newPath)) {
-                        showToast("请检查文件访问权限");
-                        break;
-                    }
-                    environmentPhotos.add(newPath);
+                    new Thread(() -> {
+                        String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
+                        String newPath = getCacheDir().getPath() + "/environment" + environmentPictureNum + ".png";
+                        runOnUiThread(() -> showToast("后台图片压缩中"));
+                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+                        bm = BitmapUtil.compressImage(bm);
+                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+                        bm.recycle();
+                        environmentPhotos.add(newPath);
 //                    sampleAdapter.setPhotos(samplePhotos);
-                    runOnUiThread(() -> {
-                        environmentAdapter.notifyDataSetChanged();
-                    });
-                    environmentPictureNum++;
+                        runOnUiThread(() -> {
+                            environmentAdapter.notifyDataSetChanged();
+                            environmentPictureNum++;
+                        });
+                    }).start();
                 }
                 break;
             case ENVIRONMENT_SELECT:
-                if (data!=null){
+                if (data != null) {
                     String filePath = GetPathFromUri.getPath(this, data.getData());
                     environmentPhotos.add(filePath);
 //                    environmentAdapter.setPhotos(environmentPhotos);
@@ -1131,22 +1148,25 @@ public class SamplingFormActivity extends BaseActivity
                 break;
             case SAMPLING:
                 if (data != null) {
-                    String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath = getCacheDir().getPath() + "/sampling" + samplingPictureNum + ".png";
-                    if (!BaseUtil.copyFile(picturePath, newPath)) {
-                        showToast("请检查文件访问权限");
-                        break;
-                    }
-                    samplingPhotos.add(newPath);
+                    new Thread(() -> {
+                        String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
+                        String newPath = getCacheDir().getPath() + "/sampling" + samplingPictureNum + ".png";
+                        runOnUiThread(() -> showToast("后台图片压缩中"));
+                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+                        bm = BitmapUtil.compressImage(bm);
+                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+                        bm.recycle();
+                        samplingPhotos.add(newPath);
 //                    sampleAdapter.setPhotos(samplePhotos);
-                    runOnUiThread(() -> {
-                        samplingAdapter.notifyDataSetChanged();
-                    });
-                    samplingPictureNum++;
+                        runOnUiThread(() -> {
+                            samplingAdapter.notifyDataSetChanged();
+                        });
+                        samplingPictureNum++;
+                    }).start();
                 }
                 break;
             case SAMPLING_SELECT:
-                if (data!=null){
+                if (data != null) {
                     String filePath = GetPathFromUri.getPath(this, data.getData());
                     samplingPhotos.add(filePath);
 //                    environmentAdapter.setPhotos(environmentPhotos);
@@ -1156,18 +1176,21 @@ public class SamplingFormActivity extends BaseActivity
                 break;
             case SAMPLE:
                 if (data != null) {
-                    String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                    String newPath = getCacheDir().getPath() + "/sample" + samplePictureNum + ".png";
-                    if (!BaseUtil.copyFile(picturePath, newPath)) {
-                        showToast("请检查文件访问权限");
-                        break;
-                    }
-                    samplePhotos.add(newPath);
+                    new Thread(() -> {
+                        String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
+                        String newPath = getCacheDir().getPath() + "/sample" + samplePictureNum + ".png";
+                        runOnUiThread(() -> showToast("后台图片压缩中"));
+                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+                        bm = BitmapUtil.compressImage(bm);
+                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+                        bm.recycle();
+                        samplePhotos.add(newPath);
 //                    sampleAdapter.setPhotos(samplePhotos);
-                    runOnUiThread(() -> {
-                        sampleAdapter.notifyDataSetChanged();
-                    });
-                    samplePictureNum++;
+                        runOnUiThread(() -> {
+                            sampleAdapter.notifyDataSetChanged();
+                        });
+                        samplePictureNum++;
+                    }).start();
                 }
                 break;
 
@@ -1465,12 +1488,14 @@ public class SamplingFormActivity extends BaseActivity
     public void onSavedorSubmit() {
 //        showToast("表单上传成功");
         formUploadDialog.dismiss();
+        isSaving = false;
         app.removeActivity_(SamplingFormActivity.this);
     }
 
     @Override
     public void onFailSaveOrSubmit(String msg) {
         showToast(msg);
+        isSaving = false;
         formUploadDialog.dismiss();
     }
 
@@ -1555,6 +1580,7 @@ public class SamplingFormActivity extends BaseActivity
 
     /**
      * 填充内容
+     *
      * @param files
      */
     private void placeHolderPicture(List<FileDetailData> files) {

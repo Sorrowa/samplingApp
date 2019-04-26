@@ -7,6 +7,10 @@ public class FileDetailData {
 //            "FileName": "左中右框架模板标注_PxCook",
 //            "FilePath": "/Upload/20190321/ReName_左中右框架模板标注_PxCook-副本(2)-副本(1).png"
 
+//    环境照片=0,
+//    采样照片=1,
+//    样品照片=2,
+//    采样视频=3,
     private String Id;
     private String SampFormId;
     private String FileType;
