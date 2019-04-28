@@ -157,7 +157,9 @@ public class ApiModel {
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body =
-                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                MultipartBody.Part.createFormData("file"
+                        , InternetUtil.to_Chanese(file.getName())
+                        , requestFile);
         return apiUploadFile.uploadFile(body);
     }
 

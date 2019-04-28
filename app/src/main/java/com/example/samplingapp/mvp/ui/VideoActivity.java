@@ -16,6 +16,10 @@ import android.widget.VideoView;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.BaseUtil;
+
+import java.io.File;
+import java.util.Objects;
 
 public class VideoActivity extends BaseActivity {
 
@@ -46,9 +50,33 @@ public class VideoActivity extends BaseActivity {
         if (!SamplingFormActivity.canDelete){
             text_delete.setVisibility(View.GONE);
         }
-        initView();
+        if (BaseUtil.isNetUrl(path)){
+            initNetWorkData();
+        }else{
+            initView();
+        }
 
         text_delete.setVisibility(View.GONE);
+    }
+
+    /**
+     * 初始化网络数据
+     */
+    private void initNetWorkData() {
+        text_back.setOnClickListener(view -> finish());
+        showLoadingDialog();
+        image_play.setVisibility(View.GONE);
+        new Thread(() -> {
+            File f = BaseUtil.saveUrlAs(BaseUtil.to_Chanese(path)
+                            , Objects.requireNonNull(VideoActivity.this.getExternalCacheDir()).getAbsolutePath()
+                            , "GET"
+                            , "缓存视频");
+            runOnUiThread(() -> {
+                initVideo(f.getPath());
+                dismissLoadingDialog();
+                image_play.setVisibility(View.VISIBLE);
+            });
+        }).start();
     }
 
     private void initView() {
@@ -60,6 +88,10 @@ public class VideoActivity extends BaseActivity {
             finish();
         });
 
+        initVideo(path);
+    }
+
+    private void initVideo(String path){
         video_view.setVideoPath(path);
         MediaController controller=new MediaController(this);
         video_view.setMediaController(controller);
@@ -85,6 +117,5 @@ public class VideoActivity extends BaseActivity {
                 video_view.start();
             }
         });
-
     }
 }

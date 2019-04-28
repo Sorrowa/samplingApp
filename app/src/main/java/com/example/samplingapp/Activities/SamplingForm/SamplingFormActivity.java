@@ -53,13 +53,11 @@ import com.example.samplingapp.mvp.ui.DrawActivity;
 import com.example.samplingapp.mvp.ui.PreviewActivity;
 import com.example.samplingapp.mvp.ui.VideoActivity;
 import com.example.samplingapp.utils.BaseUtil;
-import com.example.samplingapp.utils.BitmapUtil;
 import com.example.samplingapp.utils.FileUtil;
 import com.example.samplingapp.utils.GlideUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
@@ -193,6 +191,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.environment_photo)
     RecyclerView environment_photo;
     List<String> environmentPhotos = new ArrayList<>();
+    List<String> environmentPhotos_upload = new ArrayList<>();
     EnvironmentAdapter environmentAdapter;
     private volatile int environmentPictureNum = 0;
     //采样照片
@@ -201,6 +200,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.sampling_photo)
     RecyclerView sampling_photo;
     List<String> samplingPhotos = new ArrayList<>();
+    List<String> samplingPhotos_upload = new ArrayList<>();
     SamplingAdapter samplingAdapter;
     private volatile int samplingPictureNum = 0;
     //样品照片
@@ -209,6 +209,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.sample_photo)
     RecyclerView sample_photo;
     List<String> samplePhotos = new ArrayList<>();
+    List<String> samplePhotos_upload = new ArrayList<>();
     SampleAdapter sampleAdapter;
     private volatile int samplePictureNum = 0;
     //视频
@@ -217,6 +218,7 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.sample_video)
     RecyclerView sample_video;
     List<String> sampleVideo = new ArrayList<>();
+    List<String> sampleVideo_upload = new ArrayList<>();
     VideoAdapter videoAdapter;
     private volatile int videoNum = 0;
     //备注
@@ -231,16 +233,19 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.sample_man_sign)
     ImageView sample_man_sign;
     String sampleManOnePath = null;
+    String sampleManOnePath_upload = null;
     private volatile int sampleManOneNum = 0;
     //二号采样签名
     @BindView(R.id.sample_man_sign_two)
     ImageView sample_man_sign_two;
     String sampleManTwoPath = null;
+    String sampleManTwoPath_upload = null;
     private volatile int sampleManTwoNum = 0;
     //监督人签名
     @BindView(R.id.monitor_man_sign)
     ImageView monitor_man_sign;
     String monitorManSignPath = null;
+    String monitorManSignPath_upload = null;
     private volatile int monitorManSignNum = 0;
     //所属单位
     @BindView(R.id.company_info)
@@ -265,13 +270,14 @@ public class SamplingFormActivity extends BaseActivity
 
     List<FileData> files = new ArrayList<>();
 
-    private boolean isSubmit = false;
+    private volatile boolean isSubmit = false;
 
-    private boolean canGoback = true;//判断是否可以退出当前活动
+    private volatile boolean canGoback = true;//判断是否可以退出当前活动
+    private volatile boolean fileIsOk = true;
 
-    private String word_status = null;
+    private volatile String word_status = null;
 
-    private boolean isSaving = false;
+    private volatile boolean isSaving = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -409,19 +415,38 @@ public class SamplingFormActivity extends BaseActivity
     }
 
     private void initEdit() {
+        water_temp.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                water_temp.clearFocus();
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//                    InputMethodManager imm = null;
+//                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+//                } else {
+//                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+//                    if (manager != null)
+//                        manager.hideSoftInputFromWindow(water_temp.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                }
+                Climate.requestFocus();
+                return true;
+            }
+            return false;
+        });
         Climate.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND
                     || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 Climate.clearFocus();
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    InputMethodManager imm = null;
-                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                } else {
-                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
-                    if (manager != null)
-                        manager.hideSoftInputFromWindow(Climate.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//                    InputMethodManager imm = null;
+//                    imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+//                } else {
+//                    InputMethodManager manager = ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+//                    if (manager != null)
+//                        manager.hideSoftInputFromWindow(Climate.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                }
+                Pressure.requestFocus();
                 return true;
             }
             return false;
@@ -552,10 +577,9 @@ public class SamplingFormActivity extends BaseActivity
                 -> {
             if (canGoback)
                 if (!isSaving) {
-                    isSaving = true;
                     saveBehavior(false);
                 } else {
-                    showToast("正在提交，请勿点击保存");
+                    showToast("正在提交，请勿重复保存");
                 }
             else
                 showToast("请等待数据完整下载");
@@ -567,10 +591,27 @@ public class SamplingFormActivity extends BaseActivity
             return;
         }
 
+        environmentPhotos_upload.clear();
+        samplingPhotos_upload.clear();
+        sampleVideo_upload.clear();
+        samplePhotos_upload.clear();
+
+        if (!fileIsOk){
+            showToast("请等待文件完全下载!");
+            return;
+        }
+        isSaving = true;
+
         environmentPictureNum = environmentPhotos.size();
         samplingPictureNum = samplingPhotos.size();
         videoNum = sampleVideo.size();
         samplePictureNum = samplePhotos.size();
+
+        environmentPhotos_upload = new ArrayList<>(10);
+        samplingPhotos_upload = new ArrayList<>(20);
+        sampleVideo_upload = new ArrayList<>(20);
+        samplePhotos_upload = new ArrayList<>(20);
+
         if (sampleManOnePath != null)
             sampleManOneNum = 1;
         if (sampleManTwoPath != null)
@@ -605,37 +646,112 @@ public class SamplingFormActivity extends BaseActivity
             //如果没有图片上传
             runOnUiThread(() -> pictureUploadDialog.dismiss());
             saveAllData(this.isSubmit);
+            return;
         }
+        files.clear();
 
+        int ipLength = BaseUtil.removeLastChar(InternetUtil.SERVER_IP).length();
+        boolean updating = false;
         if (environmentPictureNum > 0) {
-            for (String path : environmentPhotos) {
-                presenter.uploadFile(path, this, FormPresenter.ENVIRONMENT);
+            for (int i = 0; i < environmentPhotos.size(); i++) {
+                if (BaseUtil.isNetUrl(environmentPhotos.get(i))) {
+                    //是从网络上下载的字符串
+                    String temp = BaseUtil.TruncateHeadString(environmentPhotos.get(i), ipLength);
+                    environmentPictureNum--;
+                    saveAsAFile("env" + i, FormPresenter.ENVIRONMENT
+                            , temp);
+                } else {
+                    updating = true;
+                    presenter.uploadFile(environmentPhotos.get(i), this, FormPresenter.ENVIRONMENT);
+                }
             }
         }
         if (samplingPictureNum > 0) {
-            for (String path : samplingPhotos) {
-                presenter.uploadFile(path, this, FormPresenter.SAMPLING);
+            for (int i = 0; i < samplingPhotos.size(); i++) {
+                if (BaseUtil.isNetUrl(samplingPhotos.get(i))) {
+                    //是从网络上下载的字符串
+                    String temp = BaseUtil.TruncateHeadString(samplingPhotos.get(i), ipLength);
+                    samplingPictureNum--;
+                    saveAsAFile("sampling" + i, FormPresenter.SAMPLING
+                            , temp);
+                } else {
+                    updating = true;
+                    presenter.uploadFile(samplingPhotos.get(i)
+                            , this, FormPresenter.SAMPLING);
+                }
             }
         }
         if (samplePictureNum > 0) {
-            for (String path : samplePhotos) {
-                presenter.uploadFile(path, this, FormPresenter.SAMPLE);
+            for (int i = 0; i < samplePhotos.size(); i++) {
+                if (BaseUtil.isNetUrl(samplePhotos.get(i))) {
+                    //是从网络上下载的字符串
+                    String temp = BaseUtil.TruncateHeadString(samplePhotos.get(i), ipLength);
+                    samplePictureNum--;
+                    saveAsAFile("sample" + i, FormPresenter.SAMPLE
+                            , temp);
+                } else {
+                    updating = true;
+                    presenter.uploadFile(samplePhotos.get(i)
+                            , this, FormPresenter.SAMPLE);
+                }
             }
         }
         if (videoNum > 0) {
+            int i=0;
             for (String path : sampleVideo) {
-                presenter.uploadFile(path, this, FormPresenter.VIDEO);
+                if (BaseUtil.isNetUrl(path)){
+                    String temp = BaseUtil.TruncateHeadString(path, ipLength);
+                    saveAsAFile("video" + i, FormPresenter.VIDEO
+                            , temp);
+                    videoNum--;
+                }else{
+                    updating = true;
+                    presenter.uploadFile(path, this, FormPresenter.VIDEO);
+                }
+                i++;
             }
         }
         if (sampleManOneNum > 0) {
-            presenter.uploadFile(sampleManOnePath, this, FormPresenter.SAMPLEMAN);
+            if (BaseUtil.isNetUrl(sampleManOnePath)) {
+                sampleManOnePath_upload = BaseUtil.TruncateHeadString(sampleManOnePath, ipLength);
+                saveAsAFile("ManOne", FormPresenter.SAMPLEMAN
+                        , sampleManOnePath_upload);
+                sampleManOneNum--;
+            } else {
+                updating = true;
+                presenter.uploadFile(sampleManOnePath, this, FormPresenter.SAMPLEMAN);
+            }
         }
         if (sampleManTwoNum > 0) {
-            presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMAN);
+            if (BaseUtil.isNetUrl(sampleManTwoPath)) {
+                sampleManTwoPath_upload = BaseUtil.TruncateHeadString(sampleManTwoPath, ipLength);
+                saveAsAFile("ManTwo", FormPresenter.SAMPLEMAN
+                        , sampleManTwoPath_upload);
+                sampleManTwoNum--;
+            } else {
+                updating = true;
+                presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMAN);
+            }
         }
         if (monitorManSignNum > 0) {
-            presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
+            if (BaseUtil.isNetUrl(monitorManSignPath)) {
+                monitorManSignPath_upload = BaseUtil.TruncateHeadString(monitorManSignPath, ipLength);
+                saveAsAFile("mon", FormPresenter.MONITOR
+                        , monitorManSignPath_upload);
+                monitorManSignNum--;
+            } else {
+                updating = true;
+                presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
+            }
         }
+
+        if (!updating) {
+            //说明没有更新逻辑
+            runOnUiThread(() -> pictureUploadDialog.dismiss());
+            saveAllData(isSubmit);
+        }
+
+
     }
 
     private boolean CanSubmit() {
@@ -688,7 +804,7 @@ public class SamplingFormActivity extends BaseActivity
         add_sample_video.setOnClickListener(view -> {
 
 
-            if (sampleVideo.size() > 1) {
+            if (sampleVideo.size() > 2) {
                 showToast("超出视频可接受上限！");
                 return;
             }
@@ -754,7 +870,6 @@ public class SamplingFormActivity extends BaseActivity
 //                    , pointData.getProjectPointId());
 //            startActivity(intent);
 //        });
-        //todo:点击事件处理
         List<String> list = new ArrayList<>();
         list.add("正常");
         list.add("异常");
@@ -809,12 +924,15 @@ public class SamplingFormActivity extends BaseActivity
         if (samplingMethod != null)
             data.setSampMethod(samplingMethod.getSampMethod());
         data.setWeather(Weather.getText().toString());
-        data.setTempature(water_temp.getText().toString() + " ℃");
-        data.setGTempature(Climate.getText().toString() + " ℃");
-        data.setPressure(Pressure.getText().toString() + " MPa");
+        data.setTempature(water_temp.getText().toString().trim() + " ℃");
+        data.setGTempature(Climate.getText().toString().trim() + " ℃");
+        data.setPressure(Pressure.getText().toString().trim() + " MPa");
         data.setTransMethod(transparent_way.getText().toString());
         data.setSampDesc(samp_desc.getText().toString());//备注
         data.setUserUnit(company_info.getText().toString());//所属单位
+        for (FileData one : files) {
+            Log.e("zzh", "文件名:" + one.getFilePath());
+        }
         presenter.saveForm(data, files, this, isSubmit);
         isSaved = true;
     }
@@ -848,10 +966,9 @@ public class SamplingFormActivity extends BaseActivity
                 if (position == 0) {
                     if (canGoback) {
                         if (!isSaving) {
-                            isSaving = true;
                             saveBehavior(true);
                         } else {
-                            showToast("正在保存，请勿提交");
+                            showToast("上传数据，请勿重复提交");
                         }
                     } else
                         showToast("请等待表单信息完整下载");
@@ -1122,15 +1239,14 @@ public class SamplingFormActivity extends BaseActivity
                 if (data != null) {
                     new Thread(() -> {
                         String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                        String newPath = getCacheDir().getPath() + "/environment" + environmentPictureNum + ".png";
-                        runOnUiThread(() -> showToast("后台图片压缩中"));
-                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
-                        bm = BitmapUtil.compressImage(bm);
-                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
-                        bm.recycle();
-                        environmentPhotos.add(newPath);
-//                    sampleAdapter.setPhotos(samplePhotos);
+//                        String newPath = getCacheDir().getPath() + "/environment" + environmentPictureNum + ".png";
+//                        runOnUiThread(() -> showToast("后台图片压缩中"));
+//                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+//                        bm = BitmapUtil.compressImage(bm);
+//                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+//                        bm.recycle();
                         runOnUiThread(() -> {
+                            environmentPhotos.add(picturePath);
                             environmentAdapter.notifyDataSetChanged();
                             environmentPictureNum++;
                         });
@@ -1150,18 +1266,18 @@ public class SamplingFormActivity extends BaseActivity
                 if (data != null) {
                     new Thread(() -> {
                         String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                        String newPath = getCacheDir().getPath() + "/sampling" + samplingPictureNum + ".png";
-                        runOnUiThread(() -> showToast("后台图片压缩中"));
-                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
-                        bm = BitmapUtil.compressImage(bm);
-                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
-                        bm.recycle();
-                        samplingPhotos.add(newPath);
+//                        String newPath = getCacheDir().getPath() + "/sampling" + samplingPictureNum + ".png";
+//                        runOnUiThread(() -> showToast("后台图片压缩中"));
+//                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+//                        bm = BitmapUtil.compressImage(bm);
+//                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+//                        bm.recycle();
 //                    sampleAdapter.setPhotos(samplePhotos);
                         runOnUiThread(() -> {
+                            samplingPhotos.add(picturePath);
                             samplingAdapter.notifyDataSetChanged();
+                            samplingPictureNum++;
                         });
-                        samplingPictureNum++;
                     }).start();
                 }
                 break;
@@ -1178,18 +1294,18 @@ public class SamplingFormActivity extends BaseActivity
                 if (data != null) {
                     new Thread(() -> {
                         String picturePath = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                        String newPath = getCacheDir().getPath() + "/sample" + samplePictureNum + ".png";
-                        runOnUiThread(() -> showToast("后台图片压缩中"));
-                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
-                        bm = BitmapUtil.compressImage(bm);
-                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
-                        bm.recycle();
-                        samplePhotos.add(newPath);
+//                        String newPath = getCacheDir().getPath() + "/sample" + samplePictureNum + ".png";
+//                        runOnUiThread(() -> showToast("后台图片压缩中"));
+//                        Bitmap bm = BitmapUtil.getBitmapFromSDCard(picturePath);
+//                        bm = BitmapUtil.compressImage(bm);
+//                        BitmapUtil.saveBitmapToSDCard(bm, newPath);
+//                        bm.recycle();
 //                    sampleAdapter.setPhotos(samplePhotos);
                         runOnUiThread(() -> {
+                            samplePhotos.add(picturePath);
                             sampleAdapter.notifyDataSetChanged();
+                            samplePictureNum++;
                         });
-                        samplePictureNum++;
                     }).start();
                 }
                 break;
@@ -1456,7 +1572,7 @@ public class SamplingFormActivity extends BaseActivity
             case "1":
                 if (pictureUploadDialog == null) {
                     View layout = getLayoutInflater().inflate(R.layout.dialog_picture_upload, null);
-                    pictureUploadDialog = new Dialog(this);
+                    pictureUploadDialog = new Dialog(this,R.style.loadingDialog);
                     pictureUploadDialog.setContentView(layout);
                     pictureUploadDialog.setCancelable(false);
                     pictureUploadDialog.setCanceledOnTouchOutside(true);
@@ -1468,7 +1584,7 @@ public class SamplingFormActivity extends BaseActivity
                 if (formUploadDialog == null) {
                     View layout = getLayoutInflater().inflate(R.layout.dialog_form_upload
                             , null);
-                    formUploadDialog = new Dialog(this);
+                    formUploadDialog = new Dialog(this,R.style.loadingDialog);
                     formUploadDialog.setContentView(layout);
                     formUploadDialog.setCancelable(false);
                     formUploadDialog.setCanceledOnTouchOutside(true);
@@ -1483,13 +1599,19 @@ public class SamplingFormActivity extends BaseActivity
 
     /**
      * 表单保存回调接口
+     *
+     * @param data
      */
     @Override
-    public void onSavedorSubmit() {
+    public void onSavedorSubmit(String data) {
 //        showToast("表单上传成功");
         formUploadDialog.dismiss();
         isSaving = false;
-        app.removeActivity_(SamplingFormActivity.this);
+        if (isSubmit) {
+            app.removeActivity_(SamplingFormActivity.this);
+        } else if (this.data.getId() == null) {
+            this.data.setId(data);
+        }
     }
 
     @Override
@@ -1545,9 +1667,9 @@ public class SamplingFormActivity extends BaseActivity
                     .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
                     + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude())));
         }
-        Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1));
-        water_temp.setText(detailData.getTempature().substring(0, detailData.getTempature().length() - 1));
-        Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3));
+        Climate.setText(detailData.getGTempature().substring(0, detailData.getGTempature().length() - 1).trim());
+        water_temp.setText(detailData.getTempature().substring(0, detailData.getTempature().length() - 1).trim());
+        Pressure.setText(detailData.getPressure().substring(0, detailData.getPressure().length() - 3).trim());
         Weather.setText(detailData.getWeather());
         sampling_method.setText(detailData.getMethodName());
         if (detailData.getPointSatus().equals("0")) {
@@ -1572,96 +1694,91 @@ public class SamplingFormActivity extends BaseActivity
         new Thread() {
             @Override
             public void run() {
-                injectFiles(data.getFiles());
+                injectFiles_new(data.getFiles());
             }
         }.start();
 
     }
 
     /**
-     * 填充内容
-     *
-     * @param files
-     */
-    private void placeHolderPicture(List<FileDetailData> files) {
-
-    }
-
-    /**
      * 文件注入
+     * 高效化文件注入
      *
      * @param files
      */
-    private void injectFiles(List<FileDetailData> files) {
+    private void injectFiles_new(List<FileDetailData> files) {
         String Ip = BaseUtil.removeLastChar(InternetUtil.SERVER_IP);
-        int i = 0;
-        for (FileDetailData detailData : files) {
-            File file = BaseUtil.saveUrlAs(BaseUtil.to_Chanese(Ip + detailData.getFilePath())
-                    , Objects.requireNonNull(this.getExternalCacheDir()).getAbsolutePath()
-                    , "GET"
-                    , detailData.getFileName());
-            switch (detailData.getFileType()) {
+        for (FileDetailData file : files) {
+            switch (file.getFileType()) {
                 case "0":
-                    environmentPhotos.add(file.getPath());
+                    //环境
+                    environmentPhotos.add(Ip + file.getFilePath());
 //                    environmentAdapter.setPhotos(environmentPhotos);
                     handler.post(() -> environmentAdapter.notifyDataSetChanged());
                     break;
                 case "1":
-                    samplingPhotos.add(file.getPath());
+                    samplingPhotos.add(Ip + file.getFilePath());
 //                    samplingAdapter.setPhotos(samplingPhotos);
                     handler.post(() -> samplingAdapter.notifyDataSetChanged());
                     break;
                 case "2":
-                    samplePhotos.add(file.getPath());
+                    samplePhotos.add(Ip + file.getFilePath());
 //                    sampleAdapter.setPhotos(samplePhotos);
                     handler.post(() -> sampleAdapter.notifyDataSetChanged());
                     break;
                 case "3":
                     //采样视频
-                    sampleVideo.add(file.getPath());
+                    //原逻辑是将文件下载下来
+                    new Thread(() -> {
+//                        fileIsOk=false;
+//                        File f = BaseUtil.saveUrlAs(BaseUtil.to_Chanese(Ip + file.getFilePath())
+//                                , Objects.requireNonNull(SamplingFormActivity.this.getExternalCacheDir()).getAbsolutePath()
+//                                , "GET"
+//                                , file.getFileName());
+                        sampleVideo.add(Ip + file.getFilePath());
+//                        fileIsOk=true;
 //                    videoAdapter.setPaths(sampleVideo);
-                    handler.post(() -> videoAdapter.notifyDataSetChanged());
+//                        handler.post(() -> videoAdapter.notifyDataSetChanged());
+                        runOnUiThread(() -> videoAdapter.notifyDataSetChanged());
+                    }).start();
                     break;
                 case "4":
                     if (sampleManOnePath == null) {
-                        sampleManOnePath = file.getPath();
-                        Bitmap bm = BitmapFactory.decodeFile(sampleManOnePath);
+                        sampleManOnePath = Ip + file.getFilePath();
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            sample_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
+                            GlideUtil.loadImageViewLodingRotate(this, sampleManOnePath, sample_man_sign, 90f);
                         });
                         sampleManOneNum++;
                         break;
                     }
                     if (sampleManTwoPath == null) {
-                        sampleManTwoPath = file.getPath();
-                        Bitmap bm = BitmapFactory.decodeFile(sampleManTwoPath);
+                        sampleManTwoPath = Ip + file.getFilePath();
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                                 return;
-                            sample_man_sign_two.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
+                            GlideUtil.loadImageViewLodingRotate(this, sampleManTwoPath, sample_man_sign_two, 90f);
                         });
                         sampleManTwoNum++;
                         break;
                     }
                     break;
                 case "5":
-                    monitorManSignPath = file.getPath();
-                    Bitmap bm = BitmapFactory.decodeFile(monitorManSignPath);
+                    monitorManSignPath = Ip + file.getFilePath();
                     runOnUiThread(() -> {
                         if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
                             return;
-                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
+//                        monitor_man_sign.setImageBitmap(BaseUtil.rotateBitmap(bm, 90f));
+                        GlideUtil.loadImageViewLodingRotate(this, monitorManSignPath, monitor_man_sign, 90f);
                     });
                     monitorManSignNum++;
                     break;
             }
-            i++;
         }
         canGoback = true;
-//        handler.post(() -> dismissLoadingDialog());
     }
+
 
     @Override
     public void onFailGetPrevious(String msg) {

@@ -167,7 +167,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView , EasyPe
         if (loadingDialog == null) {
             View layout = getLayoutInflater().inflate(R.layout.dialog_loading
                     , null);
-            loadingDialog = new Dialog(this);
+            loadingDialog = new Dialog(this,R.style.loadingDialog);
             loadingDialog.setContentView(layout);
             loadingDialog.setCancelable(false);
             loadingDialog.setCanceledOnTouchOutside(true);
@@ -190,7 +190,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView , EasyPe
         if (compressDialog == null) {
             View layout = getLayoutInflater().inflate(R.layout.dialog_compress
                     , null);
-            compressDialog = new Dialog(this);
+            compressDialog = new Dialog(this,R.style.loadingDialog);
             compressDialog.setContentView(layout);
             compressDialog.setCancelable(false);
             compressDialog.setCanceledOnTouchOutside(false);

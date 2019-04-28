@@ -90,7 +90,7 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
                     break;
                 case 505:
 //                    listener.onError("app发生未知错误");
-                    listener.onError("定位失败，请检查运营商网络或者WiFi网络是否正常开启");
+//                    listener.onError("定位失败，请检查运营商网络或者WiFi网络是否正常开启");
                     break;
             }
         }
@@ -157,7 +157,7 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
             public void onResponse(Call<SaveOrSubmitFormMessage> call, Response<SaveOrSubmitFormMessage> response) {
                 SaveOrSubmitFormMessage message=response.body();
                 if (message!=null && message.getSuccess()){
-                    listener.onSavedorSubmit();
+                    listener.onSavedorSubmit(message.getData());
                 }else if (message!=null && !message.getSuccess()){
                     listener.onFailSaveOrSubmit(message.getMessage());
                 }else{
@@ -235,7 +235,7 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
     }
 
     public interface SaveOrSubmitListener {
-        void onSavedorSubmit();
+        void onSavedorSubmit(String data);
 
         void onFailSaveOrSubmit(String msg);
     }

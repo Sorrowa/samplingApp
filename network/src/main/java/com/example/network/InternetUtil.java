@@ -1,5 +1,8 @@
 package com.example.network;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * 记录所有的连接信息
  */
@@ -76,4 +79,36 @@ public class InternetUtil {
      * 获取点位统计信息
      */
     public static final String GETPOINTCOUNT="api/GetPointCount";
+
+
+    //url转码
+    public static String to_Chanese(String str) {
+        String s_chin = "";
+        String s_ch_one;
+//        str=str.replace("%28","(").replace("%29",")");
+        for (int i = 0; i < str.length(); i++) {
+            s_ch_one = str.substring(i, i + 1);
+            if (vd(s_ch_one)) {
+                try {
+                    s_chin = s_chin + URLEncoder.encode(s_ch_one, "utf8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                s_chin = s_chin + s_ch_one;
+            }
+        }
+        return s_chin.replace("%28","(").replace("%29",")");
+    }
+
+    //判断是否有汉字
+    public static boolean vd(String str) {
+        byte[] bytes = str.getBytes();
+        if (bytes.length > 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

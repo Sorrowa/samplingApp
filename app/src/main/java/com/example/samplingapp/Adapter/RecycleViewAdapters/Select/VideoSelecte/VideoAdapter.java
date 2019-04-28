@@ -2,6 +2,7 @@ package com.example.samplingapp.Adapter.RecycleViewAdapters.Select.VideoSelecte;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.R;
 import com.example.samplingapp.mvp.ui.VideoActivity;
 import com.example.samplingapp.utils.BaseUtil;
+import com.example.samplingapp.utils.GlideUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,28 +29,57 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     private List<String> paths;
     private SamplingFormActivity context;
 
-    public VideoAdapter(List<String> paths, SamplingFormActivity context){
-        this.paths=paths;
-        this.context=context;
+    public VideoAdapter(List<String> paths, SamplingFormActivity context) {
+        this.paths = paths;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_video,parent,false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_video, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        File file = new File(paths.get(position));
-        if(file.exists()){
-            Bitmap bm=BaseUtil.getVideoThumb(paths.get(position));
-            if (bm!=null){
-                holder.item_video.setImageBitmap(bm);
-            }else{
+
+        if (BaseUtil.isNetUrl(paths.get(position))) {
+            //如果是网络路径
+//            new Thread(() -> {
+//                Bitmap bm =null;
+//                if (android.os.Build.BRAND.equals("sansung")){
+//                    bm=BaseUtil.getVideoThumbnail(paths.get(position),200,200
+//                            , MediaStore.Images.Thumbnails.MINI_KIND);
+//                }else{
+//                    bm = BaseUtil.getNetVideoBitmap(paths.get(position));
+//                }
+//                if (bm != null) {
+////                GlideUtil.loadBitmapSize(context,bm,200,200,holder.item_video);
+//                    Bitmap finalBm = bm;
+//                    context.runOnUiThread(() ->
+//                            holder.item_video.setImageBitmap(finalBm));
+//                } else {
+//                    context.runOnUiThread(() ->
+//                            holder.item_video.setImageDrawable(context
+//                                    .getResources().getDrawable(R.drawable.placeholder)));
+////                context.showToast("视频文件加载失败");
+//                }
+//            }).start();
+            GlideUtil.loadCover(holder.item_video,paths.get(position),context);
+        } else {
+            //如果是本地文件路径
+            File file = new File(paths.get(position));
+            if (file.exists()) {
+                Bitmap bm = BaseUtil.getVideoThumb(paths.get(position));
+                if (bm != null) {
+                    holder.item_video.setImageBitmap(bm);
+                } else {
+                    holder.item_video.setImageDrawable(context
+                            .getResources().getDrawable(R.drawable.placeholder));
 //                context.showToast("视频文件加载失败");
+                }
             }
         }
 
@@ -60,15 +91,33 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         }
 
         holder.item_video.setOnClickListener(view -> {
-            Intent intent=new Intent(context, VideoActivity.class);
-            intent.putExtra("path",paths.get(position));
-            context.startActivityForResult(intent,VideoActivity.VIDEO_ACTIVITY);
+            if (BaseUtil.isNetUrl(paths.get(position))) {
+                new AlertView("提示", "预览将会花费流量"
+                        , "取消"
+                        , new String[]{"确定"}
+                        , null
+                        , context,
+                        AlertView.Style.Alert
+                        , (o, position1) -> {
+                    if (position1 == 0) {
+                        Intent intent = new Intent(context, VideoActivity.class);
+                        intent.putExtra("path", paths.get(position));
+                        context.startActivityForResult(intent, VideoActivity.VIDEO_ACTIVITY);
+                    }
+                })
+                        .show();
+            } else {
+                Intent intent = new Intent(context, VideoActivity.class);
+                intent.putExtra("path", paths.get(position));
+                context.startActivityForResult(intent, VideoActivity.VIDEO_ACTIVITY);
+            }
         });
 
     }
 
     /**
      * 显示删除框
+     *
      * @param ps
      */
     private void showDialog(int ps) {
@@ -79,7 +128,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 , context,
                 AlertView.Style.Alert
                 , (o, position) -> {
-            if (position==0){
+            if (position == 0) {
                 //删除当前项
                 paths.remove(ps);
                 notifyDataSetChanged();
@@ -98,13 +147,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 //        this.paths.addAll(paths);
 //    }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView item_video;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            item_video=itemView.findViewById(R.id.item_video);
+            item_video = itemView.findViewById(R.id.item_video);
         }
     }
 }

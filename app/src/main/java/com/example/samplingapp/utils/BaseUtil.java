@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -30,6 +31,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -369,6 +372,131 @@ public class BaseUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 判断url是本地还是网络
+     * @param url
+     * @return
+     */
+    public static boolean isNetUrl(String url) {
+        boolean reault = false;
+        if (url != null) {
+            if (url.toLowerCase().startsWith("http") || url.toLowerCase().startsWith("rtsp") || url.toLowerCase().startsWith("mms")) {
+                reault = true;
+            }
+        }
+        return reault;
+    }
+
+
+    //从头开始删除字符的方法
+    public static String TruncateHeadString(String origin, int count) {
+        if (origin == null || origin.length() < count) {
+            return null;
+        }
+        char[] arr = origin.toCharArray();
+        char[] ret = new char[arr.length - count];
+        for (int i = 0; i < ret.length; i ++) {
+            ret[i] = arr[i + count];
+        }
+
+        return String.copyValueOf(ret);
+    }
+
+
+    /**
+     * 根据网络地址获取第一帧图片
+     * @param videoUrl
+     * @return
+     */
+    public static Bitmap getNetVideoBitmap(String videoUrl) {
+//        Bitmap bitmap = null;
+//
+//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        try {
+//            //根据url获取缩略图
+//            retriever.setDataSource(videoUrl, new HashMap());
+//            //获得第一帧图片
+//            bitmap = retriever.getFrameAtTime();
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        } finally {
+//            retriever.release();
+//            if (bitmap!=null){
+//                return bitmap;
+//            }else
+//                return null;
+//        }
+
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try
+        {
+            if (videoUrl.startsWith("http://")
+                    || videoUrl.startsWith("https://")
+                    || videoUrl.startsWith("widevine://"))
+            {
+                retriever.setDataSource(videoUrl, new Hashtable<String, String>());
+            }
+            else
+            {
+                retriever.setDataSource(videoUrl);
+            }
+            bitmap = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC); //retriever.getFrameAtTime(-1);
+        }
+        catch (IllegalArgumentException ex)
+        {
+            // Assume this is a corrupt video file
+            ex.printStackTrace();
+        }
+        catch (RuntimeException ex)
+        {
+            // Assume this is a corrupt video file.
+            ex.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                retriever.release();
+            }
+            catch (RuntimeException ex)
+            {
+                // Ignore failures while cleaning up.
+                ex.printStackTrace();
+            }
+        }
+
+        if (bitmap == null)
+        {
+            return null;
+        }
+
+        return bitmap;
+    }
+
+
+    /**
+     * 获取视频的缩略图
+     * 先通过ThumbnailUtils来创建一个视频的缩略图，然后再利用ThumbnailUtils来生成指定大小的缩略图。
+     * 如果想要的缩略图的宽和高都小于MICRO_KIND，则类型要使用MICRO_KIND作为kind的值，这样会节省内存。
+     * @param videoPath 视频的路径
+     * @param width 指定输出视频缩略图的宽度
+     * @param height 指定输出视频缩略图的高度度
+     * @param kind 参照MediaStore.Images(Video).Thumbnails类中的常量MINI_KIND和MICRO_KIND。
+     *            其中，MINI_KIND: 512 x 384，MICRO_KIND: 96 x 96
+     * @return 指定大小的视频缩略图
+     */
+    public static Bitmap getVideoThumbnail(String videoPath, int width, int height,int kind) {
+        Bitmap bitmap = null;
+        // 获取视频的缩略图
+        bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind); //調用ThumbnailUtils類的靜態方法createVideoThumbnail獲取視頻的截圖；
+        if(bitmap!= null){
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);//調用ThumbnailUtils類的靜態方法extractThumbnail將原圖片（即上方截取的圖片）轉化為指定大小；
+        }
+        return bitmap;
     }
 
 }

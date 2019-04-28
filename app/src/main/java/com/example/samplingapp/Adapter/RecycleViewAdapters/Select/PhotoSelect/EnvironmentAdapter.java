@@ -43,10 +43,17 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GlideUtil.loadImageViewSize(context, photos.get(position)
-                , 200
-                , 200
-                , holder.imageView);
+        if (BaseUtil.isNetUrl(photos.get(position))) {
+            GlideUtil.loadImageViewLodingSize(context,photos.get(position)
+                    ,200
+                    ,200
+                    ,holder.imageView);
+        } else
+            GlideUtil.loadImageViewSize(context, photos.get(position)
+                    , 200
+                    , 200
+                    , holder.imageView);
+
         holder.imageView.setLongClickable(true);
         if (!SamplingFormActivity.status.equals("1")) {
             holder.imageView.setOnLongClickListener(view -> {

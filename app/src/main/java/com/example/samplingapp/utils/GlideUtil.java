@@ -1,14 +1,19 @@
 package com.example.samplingapp.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.GlideTool.RotateTransformation;
+
+import java.io.ByteArrayOutputStream;
 
 public class GlideUtil {
 
@@ -22,12 +27,34 @@ public class GlideUtil {
     }
 
     //设置加载中以及加载失败图片
-    public static void loadImageViewLoding(Context mContext, String path, ImageView mImageView
-            , int loadingDrawable, int errorDrawable) {
+    public static void loadImageViewLodingSize(Context mContext, String path,
+                                               int width, int height,ImageView mImageView) {
         Glide.with(mContext)
                 .load(path)
-                .placeholder(loadingDrawable)
-                .error(errorDrawable)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .override(width, height)
+                .into(mImageView);
+    }
+
+    //设置加载中以及加载失败图片
+    public static void loadImageViewLoding(Context mContext, String path,
+                                               ImageView mImageView) {
+        Glide.with(mContext)
+                .load(path)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(mImageView);
+    }
+
+    //旋转角度图片
+    public static void loadImageViewLodingRotate(Context mContext, String path,
+                                           ImageView mImageView,float rot) {
+        Glide.with(mContext)
+                .load(path)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .transform(new RotateTransformation(rot))
                 .into(mImageView);
     }
 
@@ -67,6 +94,34 @@ public class GlideUtil {
     //设置跳过内存缓存
     public static void loadImageViewCache(Context mContext, String path, ImageView mImageView) {
         Glide.with(mContext).load(path).skipMemoryCache(true).into(mImageView);
+    }
+
+    //加载bitmap
+    public static void loadBitmapSize(Context mContext, Bitmap bitmap
+            ,int width, int height,ImageView mImageView){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes=baos.toByteArray();
+        Glide.with(mContext).load(bytes).into(mImageView);
+    }
+
+    /**
+     * 加载第四秒的帧数作为封面
+     *  url就是视频的地址
+     */
+    public static void loadCover(ImageView imageView, String url, Context context) {
+
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Glide.with(context)
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .frame(200)
+                                .centerCrop()
+                                .error(R.drawable.placeholder)//可以忽略
+                                .placeholder(R.drawable.placeholder)//可以忽略
+                )
+                .load(url)
+                .into(imageView);
     }
 
 }

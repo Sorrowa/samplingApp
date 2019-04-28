@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
+import com.example.samplingapp.utils.GlideUtil;
 
 import java.io.File;
 
@@ -58,11 +59,15 @@ public class PreviewActivity extends BaseActivity {
             finish();
         });
 
-        File file = new File(path);
-        if(file.exists()){
-            Bitmap bm = BitmapFactory.decodeFile(path);
-            photoView.setImageBitmap(bm);
-        }
+//        File file = new File(path);
+//        if(file.exists()){
+//            Bitmap bm = BitmapFactory.decodeFile(path);
+//            photoView.setImageBitmap(bm);
+//        }
+        GlideUtil.loadImageViewLoding(this
+                ,path
+                ,photoView
+        );
     }
 
 
