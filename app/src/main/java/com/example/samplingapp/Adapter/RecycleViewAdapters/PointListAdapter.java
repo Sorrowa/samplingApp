@@ -62,7 +62,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         }
         holder.stateImg.setOnClickListener(view -> {
             showLoadingDialog();
-            Location.beginToGetNowLocation2(context, new BDAbstractLocationListener() {
+            Location.beginToGetNowLocation(context, new BDAbstractLocationListener() {
                 @Override
                 public void onReceiveLocation(BDLocation bdLocation) {
                     dismissLoadingDialog();

@@ -68,12 +68,12 @@ public class BNaviMainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bnavi_main);
         ButterKnife.bind(this);
-        Latitude=getIntent().getDoubleExtra("Latitude",0);
-        Longitude=getIntent().getDoubleExtra("Longitude",0);
-        Latitude1=getIntent().getDoubleExtra("Latitude1",0);
-        Longitude1=getIntent().getDoubleExtra("Longitude1",0);
+        Latitude = getIntent().getDoubleExtra("Latitude", 0);
+        Longitude = getIntent().getDoubleExtra("Longitude", 0);
+        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
+        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
 
-        startPt = new LatLng(Latitude,Longitude);
+        startPt = new LatLng(Latitude, Longitude);
         endPt = new LatLng(Latitude1, Longitude1);
         initMapStatus();
         initToolbar();
@@ -104,26 +104,27 @@ public class BNaviMainActivity extends BaseActivity {
     /**
      * 初始化地图状态
      */
-    private void initMapStatus(){
+    private void initMapStatus() {
         mBaiduMap = mMapView.getMap();
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(startPt).zoom(15);
-        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        builder.target(startPt).zoom(18.0f);
+//        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
     /**
      * 初始化导航起终点Marker
      */
-    public void initOverlay(){
+    public void initOverlay() {
         MarkerOptions ooA = new MarkerOptions().position(startPt).icon(bdStart)
                 .zIndex(9).draggable(true);
 
         mStartMarker = (Marker) (mBaiduMap.addOverlay(ooA));
-//        mStartMarker.setDraggable(true);
+        mStartMarker.setDraggable(false);
         MarkerOptions ooB = new MarkerOptions().position(endPt).icon(bdEnd)
                 .zIndex(5);
         mEndMarker = (Marker) (mBaiduMap.addOverlay(ooB));
-//        mEndMarker.setDraggable(true);
+        mEndMarker.setDraggable(false);
     }
 
     /**
@@ -157,7 +158,8 @@ public class BNaviMainActivity extends BaseActivity {
     private void routePlanWithBikeParam() {
         BikeNavigateHelper.getInstance().routePlanWithRouteNode(bikeParam, new IBRoutePlanListener() {
             @Override
-            public void onRoutePlanStart() {}
+            public void onRoutePlanStart() {
+            }
 
             @Override
             public void onRoutePlanSuccess() {
@@ -172,6 +174,12 @@ public class BNaviMainActivity extends BaseActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     protected void onPause() {

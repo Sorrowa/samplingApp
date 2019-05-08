@@ -4,29 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".utils.Location.BNaviMainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".utils.Location.BNaviMainActivity">
 
-    
+
     <com.baidu.mapapi.map.MapView
+        android:id="@+id/baidu_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/baidu_map">
+        android:layout_height="match_parent">
 
     </com.baidu.mapapi.map.MapView>
-    <include layout="@layout/toolbar_generative"/>
+
+    <include layout="@layout/toolbar_generative" />
+
     <TextView
         android:id="@+id/begin_nav"
         android:layout_width="270dp"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp"
-        android:textSize="14dp"
-        android:layout_marginStart="35dp"
+        android:background="@drawable/login_button_bg"
+        android:gravity="center"
         android:text="开始导航"
         android:textColor="@color/white"
-        android:gravity="center"
-        android:background="@drawable/login_button_bg"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"/>
+        android:textSize="14dp" />
 
 </RelativeLayout>
