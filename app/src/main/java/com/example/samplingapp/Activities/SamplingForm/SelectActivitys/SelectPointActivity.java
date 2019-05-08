@@ -63,7 +63,7 @@ public class SelectPointActivity extends BaseActivity implements PointViewPagerS
     private void initData() {
         presenter.getProjectListInfo("0",projectId,this);
         View layout = getLayoutInflater().inflate(R.layout.dialog_waitting_network, null);
-        dialog=new Dialog(this);
+        dialog=new Dialog(this,R.style.loadingDialog);
         dialog.setContentView(layout);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);

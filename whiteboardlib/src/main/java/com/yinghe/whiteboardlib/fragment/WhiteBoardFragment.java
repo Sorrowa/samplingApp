@@ -537,6 +537,7 @@ public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawCha
         //设置点击监听
         mSketchView.setOnDrawChangedListener(this);//设置撤销动作监听器
         btn_add.setOnClickListener(this);
+        btn_add.setVisibility(View.GONE);
         btn_stroke.setOnClickListener(this);
         btn_eraser.setOnClickListener(this);
         btn_undo.setOnClickListener(this);

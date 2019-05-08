@@ -87,29 +87,29 @@ public class DrawActivity extends BaseActivity {
             file=whihteFragment.saveInOI(String.valueOf(getApplication().getFilesDir()),String.valueOf(type));
             isSaved=true;
         }
-        new AlertView("提示", "是否保存？"
-                , "取消"
-                , new String[]{"确定"}
-                , null
-                , DrawActivity.this,
-                AlertView.Style.Alert
-                , (o, position) -> {
-            if (position == 0) {
-                Intent intent=new Intent();
-                intent.putExtra("path",file.getAbsolutePath());
-                setResult(type,intent);
-            }else{
-                Intent intent=new Intent();
-                intent.putExtra("path","0");
-                setResult(type,intent);
-            }
-            finish();
-        }).show();
+//        new AlertView("提示", "是否保存？"
+//                , "取消"
+//                , new String[]{"确定"}
+//                , null
+//                , DrawActivity.this,
+//                AlertView.Style.Alert
+//                , (o, position) -> {
+//            if (position == 0) {
+//                Intent intent=new Intent();
+//                intent.putExtra("path",file.getAbsolutePath());
+//                setResult(type,intent);
+//            }else{
+//                Intent intent=new Intent();
+//                intent.putExtra("path","0");
+//                setResult(type,intent);
+//            }
+//            finish();
+//        }).show();
 
-//        Intent intent=new Intent();
-//        intent.putExtra("path",file.getAbsolutePath());
-//        setResult(type,intent);
-//        finish();
+        Intent intent=new Intent();
+        intent.putExtra("path",file.getAbsolutePath());
+        setResult(type,intent);
+        finish();
     }
 
 //    private void showSavingDialog(){

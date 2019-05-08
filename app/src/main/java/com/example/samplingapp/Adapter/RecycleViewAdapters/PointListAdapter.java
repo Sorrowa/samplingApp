@@ -118,7 +118,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         if (loadingDialog == null) {
             View layout = context.getLayoutInflater().inflate(R.layout.dialog_loading
                     , null);
-            loadingDialog = new Dialog(context);
+            loadingDialog = new Dialog(context,R.style.loadingDialog);
             loadingDialog.setContentView(layout);
             loadingDialog.setCancelable(false);
             loadingDialog.setCanceledOnTouchOutside(true);

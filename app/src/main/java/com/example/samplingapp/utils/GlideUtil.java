@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -106,7 +105,7 @@ public class GlideUtil {
     }
 
     /**
-     * 加载第四秒的帧数作为封面
+     * 加载第4000000=四秒的帧数作为封面
      *  url就是视频的地址
      */
     public static void loadCover(ImageView imageView, String url, Context context) {

@@ -1604,7 +1604,7 @@ public class SamplingFormActivity extends BaseActivity
      */
     @Override
     public void onSavedorSubmit(String data) {
-//        showToast("表单上传成功");
+        showToast("表单上传成功");
         formUploadDialog.dismiss();
         isSaving = false;
         if (isSubmit) {
