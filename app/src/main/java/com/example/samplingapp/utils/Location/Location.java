@@ -37,9 +37,11 @@ public class Location {
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         //高精度模式下，必须为true
         option.setOpenGps(true);
+
         //设置是否为流氓进程
         option.setIgnoreKillProcess(true);
-        //坐标系默认国家坐标系
+        //坐标系默认国家坐标系_百度
+        option.setCoorType("bd09ll");
         //定位请求时间
         option.setScanSpan(0);
 
@@ -57,6 +59,7 @@ public class Location {
         option.setOpenGps(true);
         //设置是否为流氓进程
         option.setIgnoreKillProcess(true);
+        option.setCoorType("bd09ll");
         //坐标系默认国家坐标系
         //定位请求时间
         option.setScanSpan(0);
