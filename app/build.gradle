@@ -16,6 +16,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        release {
+            storeFile file("jdkKey.jks")
+            storePassword "jzxy502"
+            keyAlias "key0"
+            keyPassword "jzxy502"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
