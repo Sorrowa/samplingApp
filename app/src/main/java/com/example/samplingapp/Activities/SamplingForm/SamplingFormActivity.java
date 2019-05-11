@@ -600,7 +600,7 @@ public class SamplingFormActivity extends BaseActivity
             showToast("请等待文件完全下载!");
             return;
         }
-        isSaving = true;
+
 
         environmentPictureNum = environmentPhotos.size();
         samplingPictureNum = samplingPhotos.size();
@@ -634,6 +634,8 @@ public class SamplingFormActivity extends BaseActivity
             showToast("每种图片都需要提交");
             return;
         }
+
+        isSaving = true;
         showDialog("1");
         this.isSubmit = isSubmit;
         if (environmentPictureNum <= 0

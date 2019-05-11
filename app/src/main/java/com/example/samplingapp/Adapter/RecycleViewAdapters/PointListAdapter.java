@@ -62,9 +62,13 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         }
         holder.stateImg.setOnClickListener(view -> {
             showLoadingDialog();
-            Location.beginToGetNowLocation(context, new BDAbstractLocationListener() {
+            Location.beginToGetNowLocation(context.getApplicationContext(), new BDAbstractLocationListener() {
+                int i=0;
                 @Override
                 public void onReceiveLocation(BDLocation bdLocation) {
+                    if (i>0){
+                        return;
+                    }
                     dismissLoadingDialog();
                     Intent intent = new Intent();
                     intent.putExtra("Latitude", bdLocation.getLatitude());
@@ -73,6 +77,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
                     intent.putExtra("Longitude1", Double.parseDouble(pointData.get(position).getLongitude()));
                     intent.setClass(context, BNaviMainActivity.class);
                     context.startActivity(intent);
+                    i++;
                 }
             });
         });

@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -126,7 +126,7 @@
             android:value="640" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="BUCy0fi2MSm92aN17Cw5BDXk0IIp9Hsa" />
+            android:value="s1242mrCdNoUcgWrZd9GZGKEAe8VKayB" />
 
         <activity
             android:name=".Activities.LoginActivity"

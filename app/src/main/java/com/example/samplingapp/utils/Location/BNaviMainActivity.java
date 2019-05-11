@@ -107,9 +107,10 @@ public class BNaviMainActivity extends BaseActivity {
     private void initMapStatus() {
         mBaiduMap = mMapView.getMap();
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(startPt).zoom(18.0f);
+        builder.target(startPt);
 //        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
     }
 
     /**
