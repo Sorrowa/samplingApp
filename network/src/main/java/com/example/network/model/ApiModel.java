@@ -241,6 +241,12 @@ public class ApiModel {
 //        return apiPointList.getPointList(projectId);
 //    }
 
+    /**
+     * 获取点位详情
+     * @param id
+     * @param taken
+     * @return
+     */
     public static  Call<PointDetailMessage> getPointDetai(String id,String taken){
         Retrofit retrofit=RetrofitHelper.getTokenRetrofit(taken);
         if (retrofit==null){
