@@ -61,20 +61,24 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
             holder.pointState.setTextColor(Color.parseColor("#ff8a00"));
         }
         holder.stateImg.setOnClickListener(view -> {
-            showLoadingDialog();
-            Location.beginToGetNowLocation(context, new BDAbstractLocationListener() {
-                @Override
-                public void onReceiveLocation(BDLocation bdLocation) {
-                    dismissLoadingDialog();
-                    Intent intent = new Intent();
-                    intent.putExtra("Latitude", bdLocation.getLatitude());
-                    intent.putExtra("Longitude", bdLocation.getLongitude());
-                    intent.putExtra("Latitude1", Double.parseDouble(pointData.get(position).getLatitude()));
-                    intent.putExtra("Longitude1", Double.parseDouble(pointData.get(position).getLongitude()));
-                    intent.setClass(context, BNaviMainActivity.class);
-                    context.startActivity(intent);
-                }
-            });
+            Intent intent = new Intent();
+            intent.putExtra("Latitude1", Double.parseDouble(pointData.get(position).getLatitude()));
+            intent.putExtra("Longitude1", Double.parseDouble(pointData.get(position).getLongitude()));
+            intent.setClass(context, BNaviMainActivity.class);
+            context.startActivity(intent);
+//            showLoadingDialog();
+//            Location.beginToGetNowLocation(context, new BDAbstractLocationListener() {
+//                @Override
+//                public void onReceiveLocation(BDLocation bdLocation) {
+//                    dismissLoadingDialog();
+//
+//                    intent.putExtra("Latitude", bdLocation.getLatitude());
+//                    intent.putExtra("Longitude", bdLocation.getLongitude());
+//
+//
+//
+//                }
+//            });
         });
         if (listener != null) {
             holder.itemView.setOnClickListener(view -> listener.onClick(pointData.get(position)));

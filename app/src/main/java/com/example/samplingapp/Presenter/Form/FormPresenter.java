@@ -8,8 +8,10 @@ import com.example.core.Entity.Data.FileData;
 import com.example.core.Entity.Data.FormData;
 import com.example.core.Entity.Data.FormDetailSubmitData;
 import com.example.core.Entity.Data.FormSubmitData;
+import com.example.core.Entity.Data.PointDetailByIdData;
 import com.example.core.Entity.message.FileMessage;
 import com.example.core.Entity.message.FormDetailMessage;
+import com.example.core.Entity.message.PointDetailMessage;
 import com.example.core.Entity.message.SaveOrSubmitFormMessage;
 import com.example.network.model.ApiModel;
 import com.example.samplingapp.Activities.SamplingForm.SamplingFormActivity;
@@ -136,6 +138,7 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
 
     /**
      * 表单保存接口
+     *
      * @param formData
      * @param files
      * @param listener
@@ -144,23 +147,23 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
     public void saveForm(FormData formData
             , List<FileData> files
             , SaveOrSubmitListener listener
-            ,boolean isSubmit) {
-        FormSubmitData data=new FormSubmitData();
+            , boolean isSubmit) {
+        FormSubmitData data = new FormSubmitData();
         data.setFiles(files);
         data.setForm(formData);
         data.setSubmit(isSubmit);
-        Call<SaveOrSubmitFormMessage> call=ApiModel.saveForm(ShareUtil.getToken((App) (getView().getApplication()))
-                ,data);
+        Call<SaveOrSubmitFormMessage> call = ApiModel.saveForm(ShareUtil.getToken((App) (getView().getApplication()))
+                , data);
         assert call != null;
         call.enqueue(new Callback<SaveOrSubmitFormMessage>() {
             @Override
             public void onResponse(Call<SaveOrSubmitFormMessage> call, Response<SaveOrSubmitFormMessage> response) {
-                SaveOrSubmitFormMessage message=response.body();
-                if (message!=null && message.getSuccess()){
+                SaveOrSubmitFormMessage message = response.body();
+                if (message != null && message.getSuccess()) {
                     listener.onSavedorSubmit(message.getData());
-                }else if (message!=null && !message.getSuccess()){
+                } else if (message != null && !message.getSuccess()) {
                     listener.onFailSaveOrSubmit(message.getMessage());
-                }else{
+                } else {
                     listener.onFailSaveOrSubmit("发生未知错误!");
                 }
             }
@@ -174,22 +177,23 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
 
     /**
      * 获取表单详细信息
+     *
      * @param formId
      * @param listener
      */
-    public void getPreviousForm(String formId,PreviousListener listener){
-        Call<FormDetailMessage> call=ApiModel.getForm(formId
-                ,ShareUtil.getToken((App) (getView().getApplication())));
-        assert call!=null;
+    public void getPreviousForm(String formId, PreviousListener listener) {
+        Call<FormDetailMessage> call = ApiModel.getForm(formId
+                , ShareUtil.getToken((App) (getView().getApplication())));
+        assert call != null;
         call.enqueue(new Callback<FormDetailMessage>() {
             @Override
             public void onResponse(Call<FormDetailMessage> call, Response<FormDetailMessage> response) {
-                FormDetailMessage message=response.body();
-                if (message==null){
+                FormDetailMessage message = response.body();
+                if (message == null) {
                     listener.onFailGetPrevious("发生未知错误");
                     return;
                 }
-                if (!message.getSuccess()){
+                if (!message.getSuccess()) {
                     listener.onFailGetPrevious(message.getMessage());
                     return;
                 }
@@ -205,9 +209,43 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
         });
     }
 
+    public void getPointDetailData(String id, GetPointlDataListener listener) {
+        Call<PointDetailMessage> call = ApiModel.getPointDetai(id
+                , ShareUtil.getToken((App) (getView().getApplication())));
+        assert call != null;
+        call.enqueue(new Callback<PointDetailMessage>() {
+            @Override
+            public void onResponse(Call<PointDetailMessage> call, Response<PointDetailMessage> response) {
+                PointDetailMessage message = response.body();
+                if (message == null) {
+                    listener.getPointFail("发生未知错误");
+                    return;
+                }
+                if (!message.getSuccess()) {
+                    listener.getPointFail(message.getMessage());
+                    return;
+                }
+                //成功！
+                listener.getPointSuccess(message.getData());
+            }
 
-    public interface PreviousListener{
+            @Override
+            public void onFailure(Call<PointDetailMessage> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public interface GetPointlDataListener {
+        void getPointSuccess(PointDetailByIdData data);
+
+        void getPointFail(String s);
+    }
+
+    public interface PreviousListener {
         void onGetPrevious(FormDetailSubmitData data);
+
         void onFailGetPrevious(String msg);
     }
 

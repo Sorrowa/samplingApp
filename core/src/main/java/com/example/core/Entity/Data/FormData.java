@@ -35,9 +35,18 @@ public class FormData {
     private String TransMethod;
     private double ActLongitude;
     private double ActLatitude;
-    private String Distance="0";
+    private String Distance = "0";
     private String SampDesc;
     private String UserUnit;
+    private String PointId;
+
+    public String getPointId() {
+        return PointId;
+    }
+
+    public void setPointId(String pointId) {
+        PointId = pointId;
+    }
 
     public String getId() {
         return Id;

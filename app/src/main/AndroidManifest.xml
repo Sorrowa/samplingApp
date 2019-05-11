@@ -126,7 +126,7 @@
             android:value="640" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="BUCy0fi2MSm92aN17Cw5BDXk0IIp9Hsa" />
+            android:value="mwruGo5zbkC2ZRxda7To4T6BRXX34Od5" />
 
         <activity
             android:name=".Activities.LoginActivity"

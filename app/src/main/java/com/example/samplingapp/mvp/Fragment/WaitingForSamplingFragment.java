@@ -40,7 +40,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
 
     private static MainPresenter presenter;
     private List<ProjectData> datas=new ArrayList<>();
-    private static SamplingTaskAdapter adapater;
+    private static SamplingTaskAdapter adapter;
 
     @Nullable
     @Override
@@ -121,8 +121,8 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         r.setLayoutManager(manager);
-        adapater=new SamplingTaskAdapter(datas);
-        r.setAdapter(adapater);
+        adapter=new SamplingTaskAdapter(datas);
+        r.setAdapter(adapter);
     }
 
     private void showToast(String text){
@@ -134,7 +134,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
     @Override
     public void onSuccess(List<ProjectData> data) {
         presenter.getView().handleRunnable(() -> {
-            adapater.setDatas(data);
+            adapter.setDatas(data);
             BaseUtil.softInput(presenter.getView());
             showChange();
             presenter.getView().dismissLoadingDialog();
@@ -143,7 +143,7 @@ public class WaitingForSamplingFragment extends Fragment implements MainPresente
     }
 
     private void showChange(){
-        adapater.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

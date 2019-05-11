@@ -81,6 +81,12 @@ public class InternetUtil {
     public static final String GETPOINTCOUNT="api/GetPointCount";
 
 
+    /**
+     * 获取点位详情
+     */
+    public static final String getPointDetail="api/GetPointDetailById";
+
+
     //url转码
     public static String to_Chanese(String str) {
         String s_chin = "";
