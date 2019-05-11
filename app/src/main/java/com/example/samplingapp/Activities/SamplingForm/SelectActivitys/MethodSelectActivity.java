@@ -81,7 +81,7 @@ public class MethodSelectActivity extends BaseActivity implements MethodSelectPr
 
     private void initToolbar() {
         left_item.setImageDrawable(getDrawable(R.drawable.go_back));
-        title.setText("请选择点位");
+        title.setText("采样方法");
         left_item.setOnClickListener(view -> doBack());
     }
 

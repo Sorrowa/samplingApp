@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.bikenavi.BikeNavigateHelper;
 import com.baidu.mapapi.bikenavi.adapter.IBEngineInitListener;
 import com.baidu.mapapi.bikenavi.adapter.IBRoutePlanListener;
@@ -21,6 +23,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
@@ -28,6 +31,7 @@ import com.example.samplingapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class BNaviMainActivity extends BaseActivity {
 
@@ -43,7 +47,7 @@ public class BNaviMainActivity extends BaseActivity {
     private double Longitude1;
 
     @BindView(R.id.baidu_map)
-    MapView mMapView;
+    TextureMapView mMapView;
     @BindView(R.id.center_title)
     TextView title;
     @BindView(R.id.left_item)
@@ -60,33 +64,52 @@ public class BNaviMainActivity extends BaseActivity {
     private LatLng endPt;
 
     private BikeNaviLaunchParam bikeParam;
+    private boolean isFirstLoc = true; // 是否首次定位
 
     private static boolean isPermissionRequested = false;
+    private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bnavi_main);
-        ButterKnife.bind(this);
-        Latitude = getIntent().getDoubleExtra("Latitude", 0);
-        Longitude = getIntent().getDoubleExtra("Longitude", 0);
-        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
-        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
+        mUnbinder = ButterKnife.bind(this);
+//        Latitude = getIntent().getDoubleExtra("Latitude", 0);
+//        Longitude = getIntent().getDoubleExtra("Longitude", 0);
 
-        startPt = new LatLng(Latitude, Longitude);
-        endPt = new LatLng(Latitude1, Longitude1);
-        initMapStatus();
         initToolbar();
-        /*构造导航起终点参数对象*/
-        BikeRouteNodeInfo bikeStartNode = new BikeRouteNodeInfo();
-        bikeStartNode.setLocation(startPt);
-        BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
-        bikeEndNode.setLocation(endPt);
-        bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
-        /* 初始化起终点Marker */
-        initOverlay();
+        initLocation();
+//        startPt = new LatLng(Latitude, Longitude);
         /*开始骑行导航*/
         begin_nav.setOnClickListener(view -> startBikeNavi());
+    }
+
+    private void initLocation() {
+        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
+        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
+        endPt = new LatLng(Latitude1, Longitude1);
+        getStartData();
+    }
+
+    /**
+     * 获取起点位置
+     */
+    private void getStartData() {
+        Location.beginToGetNowLocation(this, new BDAbstractLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                startPt = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
+                initMapStatus();
+                /*构造导航起终点参数对象*/
+                BikeRouteNodeInfo bikeStartNode = new BikeRouteNodeInfo();
+                bikeStartNode.setLocation(startPt);
+                BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
+                bikeEndNode.setLocation(endPt);
+                bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
+                /* 初始化起终点Marker */
+                initOverlay();
+            }
+        });
     }
 
     private void initToolbar() {
@@ -105,12 +128,15 @@ public class BNaviMainActivity extends BaseActivity {
      * 初始化地图状态
      */
     private void initMapStatus() {
-        mBaiduMap = mMapView.getMap();
-        MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(startPt);
+        if (isFirstLoc) {
+            isFirstLoc = false;
+            mBaiduMap = mMapView.getMap();
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(startPt).zoom(18.0f);
 //        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        }
+
     }
 
     /**
@@ -198,7 +224,9 @@ public class BNaviMainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-        bdStart.recycle();
-        bdEnd.recycle();
+//        bdStart.recycle();
+//        bdEnd.recycle();
+        if (mUnbinder != null && mUnbinder != Unbinder.EMPTY)
+            mUnbinder.unbind();
     }
 }

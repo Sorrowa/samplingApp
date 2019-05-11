@@ -26,12 +26,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.bigkoo.alertview.AlertView;
 import com.example.core.Entity.Data.FileData;
 import com.example.core.Entity.Data.FileDetailData;
 import com.example.core.Entity.Data.FormData;
 import com.example.core.Entity.Data.FormDetailData;
 import com.example.core.Entity.Data.FormDetailSubmitData;
+import com.example.core.Entity.Data.PointDetailByIdData;
 import com.example.core.Entity.Data.PointDetailData;
 import com.example.core.Entity.Data.SampMethodData;
 import com.example.core.Others.GetPathFromUri;
@@ -277,7 +280,7 @@ public class SamplingFormActivity extends BaseActivity
 
     private volatile String word_status = null;
 
-    private volatile boolean isSaving = false;
+    private volatile boolean isSaving = false;//是否正在保存（提交）
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -586,6 +589,11 @@ public class SamplingFormActivity extends BaseActivity
         });
     }
 
+    /**
+     * 保存或者提交
+     *
+     * @param isSubmit @true提交 @false保存
+     */
     private void saveBehavior(boolean isSubmit) {
         if (!isEnough()) {
             return;
@@ -596,7 +604,7 @@ public class SamplingFormActivity extends BaseActivity
         sampleVideo_upload.clear();
         samplePhotos_upload.clear();
 
-        if (!fileIsOk){
+        if (!fileIsOk) {
             showToast("请等待文件完全下载!");
             return;
         }
@@ -626,10 +634,11 @@ public class SamplingFormActivity extends BaseActivity
         if (isSubmit && (environmentPictureNum <= 0
                 || samplingPictureNum <= 0
                 || samplePictureNum <= 0
-                || videoNum <= 0
+//                || videoNum <= 0
                 || sampleManOneNum <= 0
                 || sampleManTwoNum <= 0
-                || monitorManSignNum <= 0)) {
+//                || monitorManSignNum <= 0
+        )) {
             //如果没有图片上传
             showToast("每种图片都需要提交");
             return;
@@ -638,6 +647,7 @@ public class SamplingFormActivity extends BaseActivity
         isSaving = true;
         showDialog("1");
         this.isSubmit = isSubmit;
+        isSaving = true;
         if (environmentPictureNum <= 0
                 && samplingPictureNum <= 0
                 && samplePictureNum <= 0
@@ -654,6 +664,7 @@ public class SamplingFormActivity extends BaseActivity
 
         int ipLength = BaseUtil.removeLastChar(InternetUtil.SERVER_IP).length();
         boolean updating = false;
+
         if (environmentPictureNum > 0) {
             for (int i = 0; i < environmentPhotos.size(); i++) {
                 if (BaseUtil.isNetUrl(environmentPhotos.get(i))) {
@@ -699,14 +710,14 @@ public class SamplingFormActivity extends BaseActivity
             }
         }
         if (videoNum > 0) {
-            int i=0;
+            int i = 0;
             for (String path : sampleVideo) {
-                if (BaseUtil.isNetUrl(path)){
+                if (BaseUtil.isNetUrl(path)) {
                     String temp = BaseUtil.TruncateHeadString(path, ipLength);
                     saveAsAFile("video" + i, FormPresenter.VIDEO
                             , temp);
                     videoNum--;
-                }else{
+                } else {
                     updating = true;
                     presenter.uploadFile(path, this, FormPresenter.VIDEO);
                 }
@@ -763,8 +774,8 @@ public class SamplingFormActivity extends BaseActivity
                 || sampling_method.getText().equals("请选择")
                 || sampling_status.getText().equals("请选择")
                 || transparent_way.getText().equals("请选择")
-                || samp_desc.getText().toString().equals("")
-                || company_info.getText().toString().equals("")
+//                || samp_desc.getText().toString().equals("")
+//                || company_info.getText().toString().equals("")
                 || Weather.getText().equals("")) {
             showToast("表单没有填写完全!");
             return false;
@@ -1371,14 +1382,24 @@ public class SamplingFormActivity extends BaseActivity
      */
     @SuppressLint("SetTextI18n")
     private void getAndShowDistance() {
-        this.data.setDistance(String.valueOf(BaseUtil.FomatNumber2(BaseUtil.getDistance(Double.parseDouble(pointData.getLatitude())
-                , Double.parseDouble(pointData.getLongitude())
-                , this.data.getActLatitude()
-                , this.data.getActLongitude()))));//计算距离之后，保留一位小数
-        if (nowLocation != null) {
-            place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(this.data.getDistance())));
+//        this.data.setDistance(String.valueOf(BaseUtil.FomatNumber2(BaseUtil.getDistance(Double.parseDouble(pointData.getLatitude())
+//                , Double.parseDouble(pointData.getLongitude())
+//                , this.data.getActLatitude()
+//                , this.data.getActLongitude()))));//计算距离之后，保留一位小数
+//        if (nowLocation != null) {
+//            place.setText(nowLocation + "\n 距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(this.data.getDistance())));
+//        } else {
+//            presenter.beginLocation(this, this);
+//        }
+        //这里改用百度地图的测距工具
+        LatLng lat1 = new LatLng(data.getActLatitude(), data.getActLongitude());
+        LatLng lat2 = new LatLng(Double.parseDouble(pointData.getLatitude()),
+                Double.parseDouble(pointData.getLongitude()));
+        double distance = DistanceUtil.getDistance(lat1, lat2);
+        if (distance != -1) {
+            place.setText(nowLocation + "\n" + BaseUtil.FomatNumber2(distance) + "米");
         } else {
-            presenter.beginLocation(this, this);
+            showToast("定位异常");
         }
     }
 
@@ -1418,9 +1439,7 @@ public class SamplingFormActivity extends BaseActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.get_place:
-                //获取位置
-                showToast("开始定位！");
-                presenter.beginLocation(getApplicationContext(), this);
+                refreshDistance();
                 break;
             case R.id.location:
                 //获取位置
@@ -1428,6 +1447,15 @@ public class SamplingFormActivity extends BaseActivity
                 presenter.beginLocation(getApplicationContext(), this);
                 break;
         }
+    }
+
+    /**
+     * 刷新距离
+     */
+    private void refreshDistance() {
+        showToast("开始定位！");
+        //获取位置
+        presenter.beginLocation(getApplicationContext(), this);
     }
 
     @Override
@@ -1454,6 +1482,24 @@ public class SamplingFormActivity extends BaseActivity
         if (pointData != null && pointData.getLatitude() != null
                 && pointData.getLongitude() != null) {
             getAndShowDistance();
+        } else if (data.getPointId() != null && !data.getPointId().equals("")) {
+            presenter.getPointDetailData(data.getPointId(), new FormPresenter.GetPointlDataListener() {
+                @Override
+                public void getPointSuccess(PointDetailByIdData detailData) {
+                    pointData.setId(detailData.getId());
+                    pointData.setLatitude(detailData.getLatitude());
+                    pointData.setLongitude(detailData.getLongitude());
+                    pointData.setName(detailData.getName());
+                    if (data.getActLatitude() != 0 && data.getActLatitude() != 0) {
+                        getAndShowDistance();
+                    }
+                }
+
+                @Override
+                public void getPointFail(String s) {
+                    showToast(s);
+                }
+            });
         }
     }
 
@@ -1574,7 +1620,7 @@ public class SamplingFormActivity extends BaseActivity
             case "1":
                 if (pictureUploadDialog == null) {
                     View layout = getLayoutInflater().inflate(R.layout.dialog_picture_upload, null);
-                    pictureUploadDialog = new Dialog(this,R.style.loadingDialog);
+                    pictureUploadDialog = new Dialog(this, R.style.loadingDialog);
                     pictureUploadDialog.setContentView(layout);
                     pictureUploadDialog.setCancelable(false);
                     pictureUploadDialog.setCanceledOnTouchOutside(true);
@@ -1586,7 +1632,7 @@ public class SamplingFormActivity extends BaseActivity
                 if (formUploadDialog == null) {
                     View layout = getLayoutInflater().inflate(R.layout.dialog_form_upload
                             , null);
-                    formUploadDialog = new Dialog(this,R.style.loadingDialog);
+                    formUploadDialog = new Dialog(this, R.style.loadingDialog);
                     formUploadDialog.setContentView(layout);
                     formUploadDialog.setCancelable(false);
                     formUploadDialog.setCanceledOnTouchOutside(true);
@@ -1626,12 +1672,12 @@ public class SamplingFormActivity extends BaseActivity
     /**
      * 获取以保存的表单信息
      *
-     * @param data
+     * @param submitData
      */
     @SuppressLint("SetTextI18n")
     @Override
-    public void onGetPrevious(FormDetailSubmitData data) {
-        FormDetailData detailData = data.getDetail();
+    public void onGetPrevious(FormDetailSubmitData submitData) {
+        FormDetailData detailData = submitData.getDetail();
 
         projectId = detailData.getProjectId();
 
@@ -1642,6 +1688,7 @@ public class SamplingFormActivity extends BaseActivity
             return;
         }
 
+        data.setPointId(detailData.getPointId());
         this.data.setProjectPointId(detailData.getProjectPointId());
         this.data.setPointSampPlan(detailData.getPointSampPlan());
         this.data.setId(detailData.getId());
@@ -1696,7 +1743,7 @@ public class SamplingFormActivity extends BaseActivity
         new Thread() {
             @Override
             public void run() {
-                injectFiles_new(data.getFiles());
+                injectFiles_new(submitData.getFiles());
             }
         }.start();
 

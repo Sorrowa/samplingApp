@@ -8,12 +8,12 @@
     tools:context=".utils.Location.BNaviMainActivity">
 
 
-    <com.baidu.mapapi.map.MapView
+    <com.baidu.mapapi.map.TextureMapView
         android:id="@+id/baidu_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"/>
 
-    </com.baidu.mapapi.map.MapView>
 
     <include layout="@layout/toolbar_generative" />
 

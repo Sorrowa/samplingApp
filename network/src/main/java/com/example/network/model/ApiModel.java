@@ -6,6 +6,7 @@ import com.example.core.Entity.message.FileMessage;
 import com.example.core.Entity.message.FormDetailMessage;
 import com.example.core.Entity.message.LoginMessage;
 import com.example.core.Entity.message.PointCountMessage;
+import com.example.core.Entity.message.PointDetailMessage;
 import com.example.core.Entity.message.PointListMessage;
 import com.example.core.Entity.message.PointRecyListMessage;
 import com.example.core.Entity.message.ProjectMessage;
@@ -24,6 +25,7 @@ import com.example.network.RetrofitInterface.ApiGetProjectInterface;
 import com.example.network.RetrofitInterface.ApiGetSampByPoint;
 import com.example.network.RetrofitInterface.ApiGetSampMethodList;
 import com.example.network.RetrofitInterface.ApiLoginInterface;
+import com.example.network.RetrofitInterface.ApiPointDetail;
 import com.example.network.RetrofitInterface.ApiUploadFile;
 
 import java.io.File;
@@ -238,4 +240,14 @@ public class ApiModel {
 //        ApiPointList apiPointList=retrofit.create(ApiPointList.class);
 //        return apiPointList.getPointList(projectId);
 //    }
+
+    public static  Call<PointDetailMessage> getPointDetai(String id,String taken){
+        Retrofit retrofit=RetrofitHelper.getTokenRetrofit(taken);
+        if (retrofit==null){
+            return null;
+        }
+        ApiPointDetail apiPointDetail=retrofit.create(ApiPointDetail.class);
+        return apiPointDetail.getPointDetail(id);
+
+    }
 }
