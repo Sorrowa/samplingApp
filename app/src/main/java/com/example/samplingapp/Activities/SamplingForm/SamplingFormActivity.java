@@ -946,7 +946,9 @@ public class SamplingFormActivity extends BaseActivity
         for (FileData one : files) {
             Log.e("zzh", "文件名:" + one.getFilePath());
         }
-        presenter.saveForm(data, files, this, isSubmit);
+        if (presenter!=null){
+            presenter.saveForm(data, files, this, isSubmit);
+        }
         isSaved = true;
     }
 

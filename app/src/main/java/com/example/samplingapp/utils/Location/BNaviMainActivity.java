@@ -23,7 +23,6 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
@@ -47,7 +46,7 @@ public class BNaviMainActivity extends BaseActivity {
     private double Longitude1;
 
     @BindView(R.id.baidu_map)
-    TextureMapView mMapView;
+    MapView mMapView;
     @BindView(R.id.center_title)
     TextView title;
     @BindView(R.id.left_item)
@@ -116,10 +115,7 @@ public class BNaviMainActivity extends BaseActivity {
         title.setText("导航");
         left_item.setImageDrawable(getDrawable(R.drawable.go_back));
         left_item.setOnClickListener(view -> {
-            mMapView.onDestroy();
-            bdStart.recycle();
-            bdEnd.recycle();
-            finish();
+            BNaviMainActivity.this.onBackPressed();
         });
     }
 
