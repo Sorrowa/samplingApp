@@ -460,14 +460,14 @@ public class BaseUtil {
     }
 
     /**
-     * 判断是否为整数
+     * 判断是否为数字，包含小数
      * @param str 传入的字符串
      * @return 是整数返回true,否则返回false
      */
     public static boolean isInteger(String str) {
         String one = str.trim();
-        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-        return pattern.matcher(one).matches();
+        String pattern = "^[0-9]+(.[0-9]+)?$";
+        return one.matches(pattern);
     }
 
 

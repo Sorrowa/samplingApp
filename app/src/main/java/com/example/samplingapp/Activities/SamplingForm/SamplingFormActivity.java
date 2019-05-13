@@ -594,7 +594,18 @@ public class SamplingFormActivity extends BaseActivity
         if (isSubmit && (!BaseUtil.isInteger(water_temp.getText().toString())
                 || !BaseUtil.isInteger(Climate.getText().toString())
                 || !BaseUtil.isInteger(Pressure.getText().toString()))) {
-            showToast("气温，水温，气压只能输入整数");
+            StringBuilder res=new StringBuilder();
+            if (!BaseUtil.isInteger(water_temp.getText().toString())){
+                res.append(",水温");
+            }
+            if (!BaseUtil.isInteger(Climate.getText().toString())){
+                res.append(",气温");
+            }
+            if (!BaseUtil.isInteger(Pressure.getText().toString())){
+                res.append(",气压");
+            }
+            res.replace(0,1,"");
+            showToast(res.toString()+"只能输入数字");
             return;
         }
         if (!fileIsOk) {
