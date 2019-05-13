@@ -48,10 +48,13 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
 //            Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
 //            holder.imageView.setImageBitmap(bm);
 //        }
-        GlideUtil.loadImageViewSize(context,photos.get(position)
-                ,200
-                ,200
-                ,holder.imageView);
+        if (photos.get(position).equals("1")) {
+            holder.imageView.setImageDrawable(context.getDrawable(R.drawable.placeholder));
+        } else
+            GlideUtil.loadImageViewSize(context, photos.get(position)
+                    , 200
+                    , 200
+                    , holder.imageView);
         holder.imageView.setOnClickListener(view -> {
             Intent intent=new Intent(context, PreviewActivity.class);
             intent.putExtra("path",photos.get(position));

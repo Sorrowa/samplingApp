@@ -56,7 +56,7 @@ public class SamplingPointActivity extends BaseActivity implements PointSelectPr
         initView();
 
         View layout = getLayoutInflater().inflate(R.layout.dialog_waitting_network, null);
-        dialog=new Dialog(this);
+        dialog=new Dialog(this,R.style.loadingDialog);
         dialog.setContentView(layout);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);

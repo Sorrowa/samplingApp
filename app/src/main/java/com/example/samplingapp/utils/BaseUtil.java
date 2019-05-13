@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -411,24 +412,6 @@ public class BaseUtil {
      * @return
      */
     public static Bitmap getNetVideoBitmap(String videoUrl) {
-//        Bitmap bitmap = null;
-//
-//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        try {
-//            //根据url获取缩略图
-//            retriever.setDataSource(videoUrl, new HashMap());
-//            //获得第一帧图片
-//            bitmap = retriever.getFrameAtTime();
-//        } catch (IllegalArgumentException e) {
-//            e.printStackTrace();
-//        } finally {
-//            retriever.release();
-//            if (bitmap!=null){
-//                return bitmap;
-//            }else
-//                return null;
-//        }
-
         Bitmap bitmap = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try
@@ -474,6 +457,17 @@ public class BaseUtil {
         }
 
         return bitmap;
+    }
+
+    /**
+     * 判断是否为整数
+     * @param str 传入的字符串
+     * @return 是整数返回true,否则返回false
+     */
+    public static boolean isInteger(String str) {
+        String one = str.trim();
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(one).matches();
     }
 
 

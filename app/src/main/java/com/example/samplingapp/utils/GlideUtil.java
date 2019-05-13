@@ -20,6 +20,8 @@ public class GlideUtil {
     public static void loadImageViewSize(Context mContext, String path, int width, int height, ImageView mImageView) {
         Glide.with(mContext)
                 .load(path)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .override(width, height)
                 .skipMemoryCache(true)
                 .into(mImageView);

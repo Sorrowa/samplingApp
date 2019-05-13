@@ -22,23 +22,23 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHolder>{
+public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHolder> {
 
 
     private Activity context;
     private List<String> photos;
 
-    public SamplingAdapter(Activity context, List<String> photos){
-        this.context=context;
-        this.photos=photos;
+    public SamplingAdapter(Activity context, List<String> photos) {
+        this.context = context;
+        this.photos = photos;
     }
 
     @NonNull
     @Override
     public SamplingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo
-                ,parent,false);
-        SamplingAdapter.ViewHolder holder=new SamplingAdapter.ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo
+                , parent, false);
+        SamplingAdapter.ViewHolder holder = new SamplingAdapter.ViewHolder(view);
         return holder;
     }
 
@@ -49,15 +49,18 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
 //            Bitmap bm = BitmapFactory.decodeFile(photos.get(position));
 //            holder.imageView.setImageBitmap(bm);
 //        }
-        GlideUtil.loadImageViewSize(context,photos.get(position)
-                ,200
-                ,200
-                ,holder.imageView);
+        if (photos.get(position).equals("1")) {
+            holder.imageView.setImageDrawable(context.getDrawable(R.drawable.placeholder));
+        } else
+            GlideUtil.loadImageViewSize(context, photos.get(position)
+                    , 200
+                    , 200
+                    , holder.imageView);
         holder.imageView.setOnClickListener(view -> {
-            Intent intent=new Intent(context, PreviewActivity.class);
-            intent.putExtra("path",photos.get(position));
-            intent.putExtra("type","2");
-            context.startActivityForResult(intent,PreviewActivity.PREVIEWACTIVITY);
+            Intent intent = new Intent(context, PreviewActivity.class);
+            intent.putExtra("path", photos.get(position));
+            intent.putExtra("type", "2");
+            context.startActivityForResult(intent, PreviewActivity.PREVIEWACTIVITY);
         });
         holder.imageView.setLongClickable(true);
         if (!SamplingFormActivity.status.equals("1")) {
@@ -70,6 +73,7 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
 
     /**
      * 显示删除框
+     *
      * @param ps
      */
     private void showDialog(int ps) {
@@ -80,7 +84,7 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
                 , context,
                 AlertView.Style.Alert
                 , (o, position) -> {
-            if (position==0){
+            if (position == 0) {
                 //删除当前项
                 photos.remove(ps);
                 notifyDataSetChanged();
@@ -100,13 +104,13 @@ public class SamplingAdapter extends RecyclerView.Adapter<SamplingAdapter.ViewHo
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.item_photo);
+            imageView = itemView.findViewById(R.id.item_photo);
         }
     }
 }

@@ -43,6 +43,7 @@ public class FormPresenter extends BasePresenter<SamplingFormActivity> {
     public static final int VIDEO = 3;
     public static final int SAMPLEMAN = 4;
     public static final int MONITOR = 5;
+    public static final int SAMPLEMANT = 6;
 
     public void beginLocation(Context context, LocationListener listener) {
         MyLocationListener myListener = new MyLocationListener(listener);

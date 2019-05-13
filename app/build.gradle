@@ -97,4 +97,7 @@ dependencies {
     implementation files('libs/IndoorscapeAlbumPlugin.jar')
     //仿苹果弹出框
     implementation 'com.bigkoo:alertview:1.0.3'
+    //RxJava
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
 }

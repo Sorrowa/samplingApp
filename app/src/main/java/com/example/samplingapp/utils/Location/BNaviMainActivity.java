@@ -73,10 +73,9 @@ public class BNaviMainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bnavi_main);
         mUnbinder = ButterKnife.bind(this);
-//        Latitude = getIntent().getDoubleExtra("Latitude", 0);
-//        Longitude = getIntent().getDoubleExtra("Longitude", 0);
 
         initToolbar();
+        initMapStatusFirst();
         initLocation();
 //        startPt = new LatLng(Latitude, Longitude);
         /*开始骑行导航*/
@@ -148,6 +147,16 @@ public class BNaviMainActivity extends BaseActivity {
                 .zIndex(5);
         mEndMarker = (Marker) (mBaiduMap.addOverlay(ooB));
         mEndMarker.setDraggable(false);
+    }
+
+    /**
+     * 初始化地图状态
+     */
+    private void initMapStatusFirst() {
+        mBaiduMap = mMapView.getMap();
+        MapStatus.Builder builder = new MapStatus.Builder();
+        builder.target(new LatLng(40.048424, 116.313513)).zoom(15);
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
     /**

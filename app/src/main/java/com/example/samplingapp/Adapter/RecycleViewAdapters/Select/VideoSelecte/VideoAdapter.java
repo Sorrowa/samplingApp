@@ -47,27 +47,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         if (BaseUtil.isNetUrl(paths.get(position))) {
             //如果是网络路径
-//            new Thread(() -> {
-//                Bitmap bm =null;
-//                if (android.os.Build.BRAND.equals("sansung")){
-//                    bm=BaseUtil.getVideoThumbnail(paths.get(position),200,200
-//                            , MediaStore.Images.Thumbnails.MINI_KIND);
-//                }else{
-//                    bm = BaseUtil.getNetVideoBitmap(paths.get(position));
-//                }
-//                if (bm != null) {
-////                GlideUtil.loadBitmapSize(context,bm,200,200,holder.item_video);
-//                    Bitmap finalBm = bm;
-//                    context.runOnUiThread(() ->
-//                            holder.item_video.setImageBitmap(finalBm));
-//                } else {
-//                    context.runOnUiThread(() ->
-//                            holder.item_video.setImageDrawable(context
-//                                    .getResources().getDrawable(R.drawable.placeholder)));
-////                context.showToast("视频文件加载失败");
-//                }
-//            }).start();
-            GlideUtil.loadCover(holder.item_video,paths.get(position),context);
+            GlideUtil.loadCover(holder.item_video, paths.get(position), context);
+        } else if (paths.get(position).equals("1")) {
+            holder.item_video.setImageDrawable(context.getDrawable(R.drawable.placeholder));
         } else {
             //如果是本地文件路径
             File file = new File(paths.get(position));

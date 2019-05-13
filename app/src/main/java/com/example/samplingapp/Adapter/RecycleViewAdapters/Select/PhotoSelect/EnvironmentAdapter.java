@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,10 +45,12 @@ public class EnvironmentAdapter extends RecyclerView.Adapter<EnvironmentAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (BaseUtil.isNetUrl(photos.get(position))) {
-            GlideUtil.loadImageViewLodingSize(context,photos.get(position)
-                    ,200
-                    ,200
-                    ,holder.imageView);
+            GlideUtil.loadImageViewLodingSize(context, photos.get(position)
+                    , 200
+                    , 200
+                    , holder.imageView);
+        } else if (photos.get(position).equals("1")) {
+            holder.imageView.setImageDrawable(context.getDrawable(R.drawable.placeholder));
         } else
             GlideUtil.loadImageViewSize(context, photos.get(position)
                     , 200

@@ -254,7 +254,8 @@ public class TaskDetailActivity extends TaskBaseActivity implements TaskPresente
         if (deleteDialog == null) {
             View layout = getLayoutInflater().inflate(R.layout.dialog_form_delete
                     , null);
-            deleteDialog = new Dialog(TaskDetailActivity.this);
+            deleteDialog = new Dialog(TaskDetailActivity.this
+                    ,R.style.loadingDialog);
             deleteDialog.setContentView(layout);
             deleteDialog.setCancelable(false);
             deleteDialog.setCanceledOnTouchOutside(true);

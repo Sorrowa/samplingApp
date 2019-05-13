@@ -31,6 +31,7 @@ public class BaseActivity extends AppCompatActivity implements BaseView , EasyPe
 
     Dialog loadingDialog;
     Dialog compressDialog;
+    Dialog uploadDialog;
 
     private static boolean isOK = false;
 
@@ -179,6 +180,29 @@ public class BaseActivity extends AppCompatActivity implements BaseView , EasyPe
     public void dismissLoadingDialog() {
         if (loadingDialog!=null){
             loadingDialog.dismiss();
+        }
+    }
+
+
+    /**
+     * 显示加载中的图标
+     */
+    public void showUploadDialog() {
+        if (uploadDialog == null) {
+            View layout = getLayoutInflater().inflate(R.layout.dialog_upload
+                    , null);
+            uploadDialog = new Dialog(this,R.style.loadingDialog);
+            uploadDialog.setContentView(layout);
+            uploadDialog.setCancelable(false);
+            uploadDialog.setCanceledOnTouchOutside(true);
+            uploadDialog.setOnCancelListener(dialog -> showToast("后台将继续处理"));
+        }
+        uploadDialog.show();
+    }
+
+    public void dismissUploadDialog() {
+        if (uploadDialog!=null){
+            uploadDialog.dismiss();
         }
     }
 
