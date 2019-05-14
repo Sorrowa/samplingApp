@@ -109,7 +109,7 @@ public class SamplingFormActivity extends BaseActivity
 
     private boolean isSaved = false;
 
-    private boolean canSave=true;
+    private boolean canSave = true;
 
     private Handler handler = new Handler();
 
@@ -124,11 +124,12 @@ public class SamplingFormActivity extends BaseActivity
     TextView person_name;
     String personName;
     //位置获取
-//    R.id.get_place, R.id.location
     @BindView(R.id.get_place)
     ImageView get_place;
     @BindView(R.id.location)
     View location;
+    @BindView(R.id.location_line)
+    View location_line;
     //点位选择
     @BindView(R.id.point_select)
     View point_select;//点位选择
@@ -186,6 +187,20 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.sampling_time_text)
     TextView sampling_time_text;
     String time;
+    //提交时间
+    @BindView(R.id.time_update)
+    View time_update;
+    @BindView(R.id.sample_update_time)
+    TextView sample_update_time;
+    @BindView(R.id.update_time_line)
+    View update_time_line;
+    //采样状态
+    @BindView(R.id.status_line)
+    View status_line;
+    @BindView(R.id.status_view)
+    View status_view;
+    @BindView(R.id.form_status)
+    TextView form_status;
     //照片
     @BindView(R.id.shrink_picture)
     ImageView shrink_picture;
@@ -288,7 +303,13 @@ public class SamplingFormActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sampling_form);
+
+        if (getIntent().getStringExtra("status") != null
+                && getIntent().getStringExtra("status").equals("1")) {
+            setContentView(R.layout.activity_sampling_form_upload);
+        }else{
+            setContentView(R.layout.activity_sampling_form);
+        }
         ButterKnife.bind(this);
 
         data = new FormData();//存储表单信息
@@ -319,6 +340,11 @@ public class SamplingFormActivity extends BaseActivity
             unEditableView();
             canGoback = false;
             get_place.setVisibility(View.GONE);
+            time_update.setVisibility(View.VISIBLE);
+            update_time_line.setVisibility(View.VISIBLE);
+            //隐藏导航
+            location.setVisibility(View.GONE);
+            location_line.setVisibility(View.GONE);
         }
         if (status != null) {
 //            get_place.setVisibility(View.GONE);
@@ -581,31 +607,12 @@ public class SamplingFormActivity extends BaseActivity
      */
     private void saveBehavior(boolean isSubmit) {
 
-        if (!canSave){
+        if (!canSave) {
             showToast("请等待文件上传完毕");
             return;
         }
 
         if (!isEnough()) {
-            return;
-        }
-
-
-        if (isSubmit && (!BaseUtil.isInteger(water_temp.getText().toString())
-                || !BaseUtil.isInteger(Climate.getText().toString())
-                || !BaseUtil.isInteger(Pressure.getText().toString()))) {
-            StringBuilder res=new StringBuilder();
-            if (!BaseUtil.isInteger(water_temp.getText().toString())){
-                res.append(",水温");
-            }
-            if (!BaseUtil.isInteger(Climate.getText().toString())){
-                res.append(",气温");
-            }
-            if (!BaseUtil.isInteger(Pressure.getText().toString())){
-                res.append(",气压");
-            }
-            res.replace(0,1,"");
-            showToast(res.toString()+"只能输入数字");
             return;
         }
         if (!fileIsOk) {
@@ -638,6 +645,24 @@ public class SamplingFormActivity extends BaseActivity
         )) {
             //如果没有图片上传
             showToast("每种图片都需要提交");
+            return;
+        }
+
+        if (isSubmit && (!BaseUtil.isInteger(water_temp.getText().toString())
+                || !BaseUtil.isInteger(Climate.getText().toString())
+                || !BaseUtil.isInteger(Pressure.getText().toString()))) {
+            StringBuilder res = new StringBuilder();
+            if (!BaseUtil.isInteger(water_temp.getText().toString())) {
+                res.append(",水温");
+            }
+            if (!BaseUtil.isInteger(Climate.getText().toString())) {
+                res.append(",气温");
+            }
+            if (!BaseUtil.isInteger(Pressure.getText().toString())) {
+                res.append(",气压");
+            }
+            res.replace(0, 1, "");
+            showToast(res.toString() + "只能输入数字");
             return;
         }
 
@@ -1172,7 +1197,7 @@ public class SamplingFormActivity extends BaseActivity
                     showUploadDialog();
                     sampleManOnePath = data.getStringExtra("path");
                     //这里直接上传图片
-                    canSave=false;
+                    canSave = false;
                     presenter.uploadFile(sampleManOnePath, this, FormPresenter.SAMPLEMAN);
                     File file = new File(sampleManOnePath);
                     if (file.exists()) {
@@ -1188,7 +1213,7 @@ public class SamplingFormActivity extends BaseActivity
                     if (data.getStringExtra("path").equals("0"))
                         break;
                     showUploadDialog();
-                    canSave=false;
+                    canSave = false;
                     sampleManTwoPath = data.getStringExtra("path");
                     presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMANT);
                     File file = new File(sampleManTwoPath);
@@ -1205,7 +1230,7 @@ public class SamplingFormActivity extends BaseActivity
                     if (data.getStringExtra("path").equals("0"))
                         break;
                     showUploadDialog();
-                    canSave=false;
+                    canSave = false;
                     monitorManSignPath = data.getStringExtra("path");
                     presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
                     File file = new File(monitorManSignPath);
@@ -1250,7 +1275,7 @@ public class SamplingFormActivity extends BaseActivity
                     //新逻辑，直接上传图片
 //                    showToast("正在上传图片");
                     showUploadDialog();
-                    canSave=false;
+                    canSave = false;
                     presenter.uploadFile(picturePath, this, FormPresenter.ENVIRONMENT);
                 }
                 break;
@@ -1268,7 +1293,7 @@ public class SamplingFormActivity extends BaseActivity
                     //新逻辑，直接上传图片
 //                    showToast("正在上传图片");
                     showUploadDialog();
-                    canSave=false;
+                    canSave = false;
                     presenter.uploadFile(picturePath, this, FormPresenter.SAMPLING);
                 }
                 break;
@@ -1287,7 +1312,7 @@ public class SamplingFormActivity extends BaseActivity
                     //新逻辑，直接上传图片
 //                    showToast("正在上传图片");
                     showUploadDialog();
-                    canSave=false;
+                    canSave = false;
                     presenter.uploadFile(picturePath, this, FormPresenter.SAMPLE);
                 }
                 break;
@@ -1299,7 +1324,7 @@ public class SamplingFormActivity extends BaseActivity
                         showToast("您的文件太大了!");
                         return;
                     }
-                    canSave=false;
+                    canSave = false;
 //                    showToast("正在上传视频");
                     showUploadDialog();
                     presenter.uploadFile(videoPath, this, FormPresenter.VIDEO);
@@ -1311,7 +1336,7 @@ public class SamplingFormActivity extends BaseActivity
                 List<LocalMedia> selectList = com.luck.picture.lib.PictureSelector.obtainMultipleResult(data);
                 if (selectList.size() <= 0)
                     break;
-                canSave=false;
+                canSave = false;
 //                showToast("正在压缩并上传视频");
                 showUploadDialog();
                 LocalMedia localMedia = selectList.get(0);
@@ -1357,6 +1382,7 @@ public class SamplingFormActivity extends BaseActivity
         LatLng lat2 = new LatLng(Double.parseDouble(pointData.getLatitude()),
                 Double.parseDouble(pointData.getLongitude()));
         double distance = DistanceUtil.getDistance(lat1, lat2);
+        data.setDistance(BaseUtil.FomatNumber2(distance));
         if (distance != -1) {
             place.setText(nowLocation + "\n" + BaseUtil.FomatNumber2(distance) + "米");
         } else {
@@ -1513,42 +1539,42 @@ public class SamplingFormActivity extends BaseActivity
         if (isOk) {
             switch (type) {
                 case FormPresenter.ENVIRONMENT:
-                    canSave=true;
+                    canSave = true;
                     environmentPhotos.add("1");
-                    environmentAdapter.notifyItemChanged(environmentPhotos.size()-1);
+                    environmentAdapter.notifyItemChanged(environmentPhotos.size() - 1);
                     RxUtil.addPhoto(environmentPhotos, environmentAdapter, path, this);
                     break;
                 case FormPresenter.SAMPLING:
-                    canSave=true;
+                    canSave = true;
                     samplingPhotos.add("1");
-                    samplingAdapter.notifyItemChanged(samplingPhotos.size()-1);
+                    samplingAdapter.notifyItemChanged(samplingPhotos.size() - 1);
                     RxUtil.addPhoto(samplingPhotos, samplingAdapter, path, this);
                     break;
                 case FormPresenter.SAMPLE:
-                    canSave=true;
+                    canSave = true;
                     samplePhotos.add("1");
-                    sampleAdapter.notifyItemChanged(samplePhotos.size()-1);
+                    sampleAdapter.notifyItemChanged(samplePhotos.size() - 1);
                     RxUtil.addPhoto(samplePhotos, sampleAdapter, path, this);
                     break;
                 case FormPresenter.VIDEO:
-                    canSave=true;
+                    canSave = true;
                     sampleVideo.add("1");
-                    videoAdapter.notifyItemChanged(sampleVideo.size()-1);
+                    videoAdapter.notifyItemChanged(sampleVideo.size() - 1);
                     RxUtil.addPhoto(sampleVideo, videoAdapter, path, this);
                     break;
                 case FormPresenter.SAMPLEMAN:
                     //保存和提交的逻辑会自动将它转变成file
-                    canSave=true;
-                    sampleManOnePath=BaseUtil.removeLastChar(InternetUtil.SERVER_IP)+path;
+                    canSave = true;
+                    sampleManOnePath = BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
                     break;
                 case FormPresenter.SAMPLEMANT:
-                    canSave=true;
-                    sampleManTwoPath=BaseUtil.removeLastChar(InternetUtil.SERVER_IP)+path;
+                    canSave = true;
+                    sampleManTwoPath = BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
                     break;
                 case FormPresenter.MONITOR:
                     //同上
-                    canSave=true;
-                    monitorManSignPath=BaseUtil.removeLastChar(InternetUtil.SERVER_IP)+path;
+                    canSave = true;
+                    monitorManSignPath = BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
                     break;
             }
             dismissUploadDialog();
@@ -1673,7 +1699,8 @@ public class SamplingFormActivity extends BaseActivity
             place.setText("N" + BaseUtil
                     .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
                     + "; E" + BaseUtil.FomatNumber(Double.parseDouble(detailData.getActLongitude()))
-                    + "\n距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(detailData.getDistance())));
+                    + "\n距离为:" + BaseUtil.FomatNumber2(Double.parseDouble(detailData.getDistance()))
+                    + " 米");
         } else {
             place.setText("N" + BaseUtil
                     .FomatNumber(Double.parseDouble(detailData.getActLatitude()))
@@ -1696,6 +1723,26 @@ public class SamplingFormActivity extends BaseActivity
         company_info.setText(detailData.getUserUnit());
         pointData = new PointDetailData();
         pointData.setProjectPointId(detailData.getProjectPointId());
+        //提交时间显示
+        sample_update_time.setText(detailData.getSubmitTime());
+        //表单状态显示
+        status_line.setVisibility(View.VISIBLE);
+        status_view.setVisibility(View.VISIBLE);
+        switch (detailData.getStatus()){
+            case "0":
+                form_status.setText("待提交");
+                break;
+            case "1":
+                form_status.setText("已提交");
+                break;
+            case "2":
+                form_status.setText("打回");
+                break;
+            case "3":
+                form_status.setText("重采");
+                break;
+        }
+
 //        injectFiles(data.getFiles());
 
         dismissLoadingDialog();

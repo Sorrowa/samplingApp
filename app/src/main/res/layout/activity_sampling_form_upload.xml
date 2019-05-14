@@ -19,8 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--采样人员-->
+            <!--采样点位-->
             <RelativeLayout
+                android:id="@+id/point_select"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -30,24 +31,30 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
-                    android:gravity="center_vertical|end"
-                    android:text="采样人员"
+                    android:gravity="center_vertical"
+                    android:text="采样点位"
                     android:textColor="#333333"
                     android:textSize="14dp" />
 
                 <TextView
-                    android:id="@+id/person_name"
+                    android:id="@+id/point_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/transparent"
-                    android:gravity="center_vertical|end"
-                    android:hint="选择点位后出现"
-                    android:textColor="@color/sampling_static_color"
+                    android:layout_marginEnd="35dp"
+                    android:gravity="center_vertical"
+                    android:text="请选择"
+                    android:textColor="#999999"
                     android:textSize="14dp" />
 
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/right_arrows" />
             </RelativeLayout>
 
             <View
@@ -105,10 +112,8 @@
                 android:layout_marginEnd="10dp"
                 android:background="@color/across_road" />
 
-
-            <!--采样点位-->
+            <!--采样人员-->
             <RelativeLayout
-                android:id="@+id/point_select"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -118,30 +123,24 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="采样点位"
+                    android:gravity="center_vertical|end"
+                    android:text="采样人员"
                     android:textColor="#333333"
                     android:textSize="14dp" />
 
                 <TextView
-                    android:id="@+id/point_name"
+                    android:id="@+id/person_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="35dp"
-                    android:gravity="center_vertical"
-                    android:text="请选择"
-                    android:textColor="#999999"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical|end"
+                    android:hint="选择点位后出现"
+                    android:textColor="@color/sampling_static_color"
                     android:textSize="14dp" />
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/right_arrows" />
             </RelativeLayout>
 
             <View
@@ -150,6 +149,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@color/across_road" />
+
+
 
             <!--水温-->
             <RelativeLayout
