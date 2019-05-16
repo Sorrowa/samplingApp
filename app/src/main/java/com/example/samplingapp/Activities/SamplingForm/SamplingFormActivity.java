@@ -17,7 +17,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -882,16 +881,6 @@ public class SamplingFormActivity extends BaseActivity
                     , pointData.getProjectPointId());
             startActivity(intent);
         });
-//        getPointStatus.setOnClickListener(view -> {
-//            if (pointData == null) {
-//                showToast("请先选择点位!");
-//                return;
-//            }
-//            Intent intent = new Intent(SamplingFormActivity.this, SamplingStatusActivity.class);
-//            intent.putExtra("pointId"
-//                    , pointData.getProjectPointId());
-//            startActivity(intent);
-//        });
         List<String> list = new ArrayList<>();
         list.add("正常");
         list.add("异常");
@@ -914,6 +903,9 @@ public class SamplingFormActivity extends BaseActivity
         });
     }
 
+    /**
+     * 初始化时间选择器
+     */
     private void initTimePicker() {
         time_pick.setOnClickListener(view -> {
             TimePickerDialog dialogMonthDayHourMin = new TimePickerDialog.Builder()
@@ -952,9 +944,9 @@ public class SamplingFormActivity extends BaseActivity
         data.setTransMethod(transparent_way.getText().toString());
         data.setSampDesc(samp_desc.getText().toString());//备注
         data.setUserUnit(company_info.getText().toString());//所属单位
-        for (FileData one : files) {
-            Log.e("zzh", "文件名:" + one.getFilePath());
-        }
+//        for (FileData one : files) {
+//            Log.e("zzh", "文件名:" + one.getFilePath());
+//        }
         if (presenter != null) {
             presenter.saveForm(data, files, this, isSubmit);
         }
@@ -1140,7 +1132,6 @@ public class SamplingFormActivity extends BaseActivity
             //跳转到绘图界面
             Intent intent = new Intent(SamplingFormActivity.this, DrawActivity.class);
             intent.putExtra("type", SAMPLEMANONE);
-//            intent.putExtra("path",sampleManOnePath);
             startActivityForResult(intent, SAMPLEMANONE);
         });
     }
@@ -1743,12 +1734,8 @@ public class SamplingFormActivity extends BaseActivity
                 break;
         }
 
-//        injectFiles(data.getFiles());
-
         dismissLoadingDialog();
         showToast("后台继续获取信息");
-
-//        placeHolderPicture(data.getFiles());
 
         new Thread() {
             @Override
@@ -1789,15 +1776,7 @@ public class SamplingFormActivity extends BaseActivity
                     //采样视频
                     //原逻辑是将文件下载下来
                     new Thread(() -> {
-//                        fileIsOk=false;
-//                        File f = BaseUtil.saveUrlAs(BaseUtil.to_Chanese(Ip + file.getFilePath())
-//                                , Objects.requireNonNull(SamplingFormActivity.this.getExternalCacheDir()).getAbsolutePath()
-//                                , "GET"
-//                                , file.getFileName());
                         sampleVideo.add(Ip + file.getFilePath());
-//                        fileIsOk=true;
-//                    videoAdapter.setPaths(sampleVideo);
-//                        handler.post(() -> videoAdapter.notifyDataSetChanged());
                         runOnUiThread(() -> videoAdapter.notifyDataSetChanged());
                     }).start();
                     break;

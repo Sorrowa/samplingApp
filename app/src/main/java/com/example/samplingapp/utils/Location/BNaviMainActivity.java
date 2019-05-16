@@ -35,10 +35,8 @@ import butterknife.Unbinder;
 public class BNaviMainActivity extends BaseActivity {
 
 
-    private BitmapDescriptor bdStart = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_start);
-    private BitmapDescriptor bdEnd = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_end);
+    private BitmapDescriptor bdStart;
+    private BitmapDescriptor bdEnd;
 
     private double Latitude;
     private double Longitude;
@@ -73,6 +71,11 @@ public class BNaviMainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bnavi_main);
         mUnbinder = ButterKnife.bind(this);
+
+        bdStart = BitmapDescriptorFactory
+                .fromResource(R.drawable.icon_start);
+        bdEnd = BitmapDescriptorFactory
+                .fromResource(R.drawable.icon_end);
 
         initToolbar();
         initMapStatusFirst();
@@ -229,8 +232,8 @@ public class BNaviMainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-//        bdStart.recycle();
-//        bdEnd.recycle();
+        bdStart.recycle();
+        bdEnd.recycle();
         if (mUnbinder != null && mUnbinder != Unbinder.EMPTY)
             mUnbinder.unbind();
     }
