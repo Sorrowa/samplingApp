@@ -52,6 +52,8 @@ dependencies {
     implementation project(':core')
     implementation project(':videocompressor')
     implementation project(':whiteboardlib')
+    implementation project(':check_app')
+    implementation project(":pictureselector")
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
@@ -80,7 +82,7 @@ dependencies {
     //定位sdk设置
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //选择图片框架
-    implementation 'com.github.wildma:PictureSelector:1.1.2'
+//    implementation 'com.github.wildma:PictureSelector:1.1.2'
     //视频选择框架
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //预览图片

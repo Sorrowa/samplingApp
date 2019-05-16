@@ -1,1 +1,1 @@
-include ':app', ':network', ':core', ':videocompressor', ':whiteboardlib'
+include ':app', ':network', ':core', ':videocompressor', ':whiteboardlib', 'check_app', ':pictureselector'

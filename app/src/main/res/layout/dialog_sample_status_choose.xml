@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <!--清晰度-->
+        <RelativeLayout
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp">
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/clear_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="清澈"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/clear_box"/>
+
+        </RelativeLayout>
+
+        <!--不清晰-->
+        <RelativeLayout
+            android:id="@+id/unclear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            android:layout_alignParentEnd="true"
+            >
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/unclear_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="浑浊"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/unclear_box"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <!--无异味-->
+        <RelativeLayout
+            android:id="@+id/unsmell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp">
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/unsmell_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="无异味"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/unsmell_box"/>
+
+        </RelativeLayout>
+
+        <!--有异味-->
+        <RelativeLayout
+            android:id="@+id/smell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            android:layout_alignParentEnd="true"
+            >
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/smell_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="有异味"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/smell_box"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <!--无色-->
+        <RelativeLayout
+            android:id="@+id/nocolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp">
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/nocolor_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="无色"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/nocolor_box"/>
+
+        </RelativeLayout>
+
+        <!--自定义颜色-->
+        <RelativeLayout
+            android:id="@+id/color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            android:layout_alignParentEnd="true"
+            >
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/color_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:id="@+id/a"
+                android:text="显"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/color_box"/>
+            <EditText
+                android:id="@+id/b"
+                android:layout_width="46dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:maxLength="8"
+                android:maxLines="1"
+                android:layout_toEndOf="@id/a"
+                android:padding="1dp"
+                android:background="@drawable/dialog_status_bg"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="色"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/b" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <!--无明显浮油-->
+        <RelativeLayout
+            android:id="@+id/nooil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp">
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/nooil_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="无明显浮油"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/nooil_box"/>
+
+        </RelativeLayout>
+
+        <!--有明显浮油-->
+        <RelativeLayout
+            android:id="@+id/oil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            android:layout_alignParentEnd="true"
+            >
+
+            <com.litao.android.checkbox_sample.CheckBoxSample
+                android:id="@+id/oil_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:focusable="true"
+                app:color_background="@color/generate"
+                app:color_border="#FFFFFFFF"
+                app:size="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:text="有明显浮油"
+                android:textColor="@color/sampling_static_color"
+                android:textSize="14dp"
+                android:layout_toEndOf="@id/oil_box"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/transparent" />
+
+</LinearLayout>

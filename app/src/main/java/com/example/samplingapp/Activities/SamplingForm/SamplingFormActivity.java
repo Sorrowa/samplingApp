@@ -18,7 +18,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -61,6 +63,7 @@ import com.example.samplingapp.utils.RxUtil;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
+import com.litao.android.checkbox_sample.CheckBoxSample;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
@@ -180,6 +183,21 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.transparent_way_arrows)
     ImageView transparent_way_arrows;
     int transparentWay;
+    //样品性状
+    @BindView(R.id.sample_status)
+    TextView sample_status;
+    @BindView(R.id.sample_status_way_arrows)
+    ImageView sample_status_way_arrows;
+    Boolean isclear=false;
+    Boolean iFclear=false;
+    Boolean issmell=false;
+    Boolean iFsmell=false;
+    Boolean iscolor=false;
+    Boolean iFcolor=false;
+    Boolean isoil=false;
+    Boolean iFoil=false;
+    String colorText;
+    String resText;//记录性状字符串（使用,分开）
     //采样时间
     @BindView(R.id.time_pick)
     View time_pick;
@@ -306,7 +324,7 @@ public class SamplingFormActivity extends BaseActivity
         if (getIntent().getStringExtra("status") != null
                 && getIntent().getStringExtra("status").equals("1")) {
             setContentView(R.layout.activity_sampling_form_upload);
-        }else{
+        } else {
             setContentView(R.layout.activity_sampling_form);
         }
         ButterKnife.bind(this);
@@ -425,6 +443,9 @@ public class SamplingFormActivity extends BaseActivity
         company_info.setFocusable(false);
         company_info.setFocusableInTouchMode(false);
 
+        sample_status.setClickable(false);
+        sample_status_way_arrows.setClickable(false);
+
         save_sampling.setVisibility(View.GONE);
     }
 
@@ -440,9 +461,239 @@ public class SamplingFormActivity extends BaseActivity
         initWeather();
         initTransport();
         initSampleMethod();
+        initSampleStatus();
         initSave();
 
         initEdit();
+    }
+
+    /**
+     * 样品性状
+     */
+    private void initSampleStatus() {
+//        @BindView(R.id.sample_status)
+//        TextView sample_status;
+//        @BindView(R.id.sample_status_way_arrows)
+//        ImageView sample_status_way_arrows;
+        sample_status.setOnClickListener(view -> showStatusDialog());
+        sample_status_way_arrows.setOnClickListener(view -> showStatusDialog());
+    }
+
+    /**
+     * 显示性状选择
+     */
+    private void showStatusDialog() {
+
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater
+                .from(this)
+                .inflate(R.layout.dialog_sample_status_choose, null);
+
+        //清晰度选择配置
+        CheckBoxSample clear_box = viewGroup.findViewById(R.id.clear_box);
+        CheckBoxSample unclear_box = viewGroup.findViewById(R.id.unclear_box);
+        View clear = viewGroup.findViewById(R.id.clear);
+        View unclear=viewGroup.findViewById(R.id.unclear);
+        clear.setOnClickListener(view -> {
+            isclear=true;
+            if (clear_box.isChecked()) {
+                clear_box.setChecked(false, true);
+            } else{
+                clear_box.setChecked(true, true);
+                unclear_box.setChecked(false,true);
+                iFclear=true;
+            }
+        });
+        unclear.setOnClickListener(view -> {
+            isclear=true;
+            if (unclear_box.isChecked()){
+                unclear_box.setChecked(false,true);
+            }else{
+                unclear_box.setChecked(true,true);
+                clear_box.setChecked(false,true);
+                iFclear=false;
+            }
+        });
+        //异味配置
+        CheckBoxSample unsmell_box = viewGroup.findViewById(R.id.unsmell_box);
+        CheckBoxSample smell_box = viewGroup.findViewById(R.id.smell_box);
+        View unsmell = viewGroup.findViewById(R.id.unsmell);
+        View smell=viewGroup.findViewById(R.id.smell);
+        unsmell.setOnClickListener(view -> {
+            issmell=true;
+            if (unsmell_box.isChecked()){
+                unsmell_box.setChecked(false,true);
+            }else{
+                unsmell_box.setChecked(true,true);
+                smell_box.setChecked(false,true);
+                iFsmell=false;
+            }
+        });
+        smell.setOnClickListener(view -> {
+            issmell=true;
+            if (smell_box.isChecked()){
+                smell_box.setChecked(false,true);
+            }else{
+                smell_box.setChecked(true,true);
+                unsmell_box.setChecked(false,true);
+                iFsmell=true;
+            }
+        });
+        //颜色配置
+        CheckBoxSample nocolor_box = viewGroup.findViewById(R.id.nocolor_box);
+        CheckBoxSample color_box = viewGroup.findViewById(R.id.color_box);
+        View nocolor = viewGroup.findViewById(R.id.nocolor);
+        View color=viewGroup.findViewById(R.id.color);
+        EditText b=viewGroup.findViewById(R.id.b);
+        b.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                b.clearFocus();
+                InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                return true;
+            }
+            return false;
+        });
+        nocolor.setOnClickListener(view -> {
+            iscolor=true;
+            if (nocolor_box.isChecked()){
+                nocolor_box.setChecked(false,true);
+            }else{
+                nocolor_box.setChecked(true,true);
+                color_box.setChecked(false,true);
+                iFcolor=false;
+            }
+        });
+        color.setOnClickListener(view -> {
+            iscolor=true;
+            if (color_box.isChecked()){
+                color_box.setChecked(false,true);
+            }else{
+                color_box.setChecked(true,true);
+                nocolor_box.setChecked(false,true);
+                iFcolor=true;
+            }
+        });
+        //油配置
+        CheckBoxSample nooil_box = viewGroup.findViewById(R.id.nooil_box);
+        CheckBoxSample oil_box = viewGroup.findViewById(R.id.oil_box);
+        View nooil = viewGroup.findViewById(R.id.nooil);
+        View oil=viewGroup.findViewById(R.id.oil);
+        nooil.setOnClickListener(view -> {
+            isoil=true;
+            if (nooil_box.isChecked()){
+                nooil_box.setChecked(false,true);
+            }else{
+                nooil_box.setChecked(true,true);
+                oil_box.setChecked(false,true);
+                iFoil=false;
+            }
+        });
+        oil.setOnClickListener(view -> {
+            isoil=true;
+            if (oil_box.isChecked()){
+                oil_box.setChecked(false,true);
+            }else{
+                oil_box.setChecked(true,true);
+                nooil_box.setChecked(false,true);
+                iFoil=true;
+            }
+        });
+
+
+        //将保存的状态表示上去
+        if (isclear){
+            if (iFclear){
+                clear_box.setChecked(true,true);
+            }else{
+                unclear_box.setChecked(true,true);
+            }
+        }
+        if (issmell){
+            if (iFsmell){
+                smell_box.setChecked(true,true);
+            }else{
+                unsmell_box.setChecked(true,true);
+            }
+        }
+        if (iscolor){
+            if (iFcolor){
+                b.setText(colorText);
+                color_box.setChecked(true,true);
+            }else{
+                nocolor_box.setChecked(true,true);
+            }
+        }
+        if (isoil){
+            if (iFoil){
+                oil_box.setChecked(true,true);
+            }else{
+                nooil_box.setChecked(true,true);
+            }
+        }
+
+        AlertView dialog = new AlertView.Builder().setContext(this)
+                .setStyle(AlertView.Style.Alert)
+                .setTitle("样品性状")
+                .setMessage(null)
+                .setCancelText("取消")
+                .setDestructive("确定")
+                .setOthers(null)
+                .setOnItemClickListener((o, position) -> {
+                    if (position!=0)
+                        return;
+                    StringBuilder builder=new StringBuilder();
+                    StringBuilder re=new StringBuilder();
+                    if (clear_box.isChecked()){
+                        builder.append("清澈,");
+                        re.append("清澈,");
+                    }else if (unclear_box.isChecked()){
+                        builder.append("不清澈,");
+                        re.append("不清澈,");
+                    }else{
+                        isclear=false;
+                    }
+
+                    if (unsmell_box.isChecked()){
+                        builder.append("无异味"+"\n");
+                        re.append("无异味,");
+                    }else if (smell_box.isChecked()){
+                        builder.append("有异味"+"\n");
+                        re.append("有异味,");
+                    }else{
+                        issmell=false;
+                    }
+
+                    if (nocolor_box.isChecked()){
+                        builder.append("无色,");
+                        re.append("无色,");
+                    }else if (color_box.isChecked()){
+                        colorText=b.getText().toString();
+                        builder.append(b.getText().toString()+"色,");
+                        re.append(b.getText().toString()+"色,");
+                    }else{
+                        iscolor=false;
+                    }
+
+                    if (nooil_box.isChecked()){
+                        builder.append("无明显浮油,");
+                        re.append("无明显浮油,");
+                    }else if (oil_box.isChecked()){
+                        builder.append("有明显浮油,");
+                        re.append("有明显浮油,");
+                    }else{
+                        isoil=false;
+                    }
+                    if (builder.length()!=0){
+                        builder.delete(builder.length()-1,builder.length());
+                        re.delete(re.length()-1,re.length());
+                    }
+                    resText=re.toString();//记录上传的字符串(即不包含换行符的性状)
+                    sample_status.setText(builder.toString());
+                })
+                .build();
+        dialog.addExtView(viewGroup);
+        dialog.show();
     }
 
     private void initEdit() {
@@ -1719,7 +1970,7 @@ public class SamplingFormActivity extends BaseActivity
         //表单状态显示
         status_line.setVisibility(View.VISIBLE);
         status_view.setVisibility(View.VISIBLE);
-        switch (detailData.getStatus()){
+        switch (detailData.getStatus()) {
             case "0":
                 form_status.setText("待提交");
                 break;

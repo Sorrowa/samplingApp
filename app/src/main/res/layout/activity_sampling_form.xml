@@ -501,6 +501,56 @@
                 android:layout_marginEnd="10dp"
                 android:background="@color/across_road" />
 
+
+            <!--样品性状-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="样品性状"
+                    android:textColor="#333333"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/sample_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="35dp"
+                    android:background="#00000000"
+                    android:gravity="center_vertical|end"
+                    android:hint="请选择"
+                    android:textColor="@color/sampling_static_color"
+                    android:textSize="14dp"
+                    android:maxEms="18"
+                    android:ellipsize="end"/>
+
+                <ImageView
+                    android:id="@+id/sample_status_way_arrows"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/right_arrows" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/across_road" />
+
             <!--采样时间-->
             <RelativeLayout
                 android:id="@+id/time_pick"
