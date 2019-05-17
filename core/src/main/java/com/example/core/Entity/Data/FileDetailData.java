@@ -6,7 +6,7 @@ public class FileDetailData {
 //            "FileType": 2,
 //            "FileName": "左中右框架模板标注_PxCook",
 //            "FilePath": "/Upload/20190321/ReName_左中右框架模板标注_PxCook-副本(2)-副本(1).png"
-
+//    "UserUnit"//所属单位
 //    环境照片=0,
 //    采样照片=1,
 //    样品照片=2,
@@ -16,6 +16,7 @@ public class FileDetailData {
     private String FileType;
     private String FileName;
     private String FilePath;
+    private String UserUnit;
 
     public String getId() {
         return Id;
@@ -55,5 +56,13 @@ public class FileDetailData {
 
     public void setFilePath(String filePath) {
         FilePath = filePath;
+    }
+
+    public String getUserUnit() {
+        return UserUnit;
+    }
+
+    public void setUserUnit(String userUnit) {
+        UserUnit = userUnit;
     }
 }

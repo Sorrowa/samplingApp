@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="现场照片"
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/sampling_static_color"/>
+    
+    <TextView
+        android:id="@+id/b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="@string/one_description"
+        android:layout_margin="10dp"
+        android:layout_below="@id/a"
+        android:textColor="@color/sampling_static_color"/>
+
+    <TextView
+        android:id="@+id/c"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="采样照片"
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/b"
+        android:textColor="@color/sampling_static_color"/>
+
+    <TextView
+        android:id="@+id/d"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="@string/two_description"
+        android:layout_margin="10dp"
+        android:layout_below="@id/c"
+        android:textColor="@color/sampling_static_color"/>
+
+    <TextView
+        android:id="@+id/e"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="样品照片"
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/d"
+        android:textColor="@color/sampling_static_color"/>
+
+    <TextView
+        android:id="@+id/f"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="@string/three_description"
+        android:layout_margin="10dp"
+        android:layout_below="@id/e"
+        android:textColor="@color/sampling_static_color"/>
+
+</RelativeLayout>

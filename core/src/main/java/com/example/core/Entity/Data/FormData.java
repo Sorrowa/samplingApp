@@ -20,7 +20,7 @@ public class FormData {
 //            "ActLatitude":"31.0236",
 //            "Distance":"25",
 //            "SampDesc":"测试采样单备注"
-
+//    SampCondition
     private String Id;
     private String PointSampPlan;
     private String ProjectPointId;
@@ -39,6 +39,7 @@ public class FormData {
     private String SampDesc;
     private String UserUnit;
     private String PointId;
+    private String SampCondition;
 
     public String getPointId() {
         return PointId;
@@ -183,5 +184,13 @@ public class FormData {
 
     public void setUserUnit(String userUnit) {
         UserUnit = userUnit;
+    }
+
+    public String getSampCondition() {
+        return SampCondition;
+    }
+
+    public void setSampCondition(String sampCondition) {
+        SampCondition = sampCondition;
     }
 }

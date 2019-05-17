@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">现场采样</string>
+    <string name="one_description">清晰的反映断面周边的环境，特别是存在排污口、居民区、船只码头、畜禽养殖等情况。
+上游、下游、左岸、右岸、水面全貌、环境条件（气温、气压等）各一张</string>
+    <string name="two_description">清晰的反映采样过程的情况，特别是仪器操作过程、采样时环境背景、样品采集操作过程的情况。</string>
+    <string name="three_description">能清晰反映样品的采集数量、保存剂添加、固定剂添加、分装过程、外观性状，能体现现场样品。</string>
 </resources>

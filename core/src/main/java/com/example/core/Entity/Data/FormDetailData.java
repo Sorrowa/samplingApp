@@ -32,6 +32,7 @@ public class FormDetailData {
 //            "ApproveTime": "2019-03-22 14:13:36",
 //            "ApproveUser": "admin",
 //            "UserUnit": null
+//    "SampCondition": null
     private String PointCode;
     private String PointId;
     private String PointName;
@@ -63,6 +64,7 @@ public class FormDetailData {
     private String ApproveTime;
     private String ApproveUser;
     private String UserUnit;
+    private String SampCondition;
 
     public String getPointCode() {
         return PointCode;
@@ -310,5 +312,13 @@ public class FormDetailData {
 
     public void setUserUnit(String userUnit) {
         UserUnit = userUnit;
+    }
+
+    public String getSampCondition() {
+        return SampCondition;
+    }
+
+    public void setSampCondition(String sampCondition) {
+        SampCondition = sampCondition;
     }
 }

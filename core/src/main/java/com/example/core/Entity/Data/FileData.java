@@ -8,6 +8,7 @@ public class FileData {
     private String FileType;
     private String FileName;
     private String FilePath;
+    private String UserUnit;
 
     public String getFileType() {
         return FileType;
@@ -31,5 +32,13 @@ public class FileData {
 
     public void setFilePath(String filePath) {
         FilePath = filePath;
+    }
+
+    public String getUserUnit() {
+        return UserUnit;
+    }
+
+    public void setUserUnit(String userUnit) {
+        UserUnit = userUnit;
     }
 }
