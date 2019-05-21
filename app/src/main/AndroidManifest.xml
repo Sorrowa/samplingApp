@@ -116,9 +116,9 @@
             tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".utils.Location.BNaviGuideActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator" />
+            android:launchMode="singleTop"
+            tools:ignore="InnerclassSeparator"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.wildma.pictureselector.PictureSelectActivity"
@@ -145,6 +145,17 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="s1242mrCdNoUcgWrZd9GZGKEAe8VKayB" />
+
+
+        <meta-data
+            android:name="BaiduMobAd_CELL_LOCATION"
+            android:value="true" />
+        <meta-data
+            android:name="BaiduMobAd_GPS_LOCATION"
+            android:value="true" />
+        <meta-data
+            android:name="BaiduMobAd_WIFI_LOCATION"
+            android:value="true" />
 
         <activity
             android:name=".Activities.LoginActivity"

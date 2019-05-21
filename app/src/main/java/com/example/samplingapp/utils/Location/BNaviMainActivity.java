@@ -24,6 +24,12 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.walknavi.WalkNavigateHelper;
+import com.baidu.mapapi.walknavi.adapter.IWEngineInitListener;
+import com.baidu.mapapi.walknavi.adapter.IWRoutePlanListener;
+import com.baidu.mapapi.walknavi.model.WalkRoutePlanError;
+import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
+import com.baidu.mapapi.walknavi.params.WalkRouteNodeInfo;
 import com.example.samplingapp.Base.BaseActivity;
 import com.example.samplingapp.R;
 
@@ -61,6 +67,8 @@ public class BNaviMainActivity extends BaseActivity {
     private LatLng endPt;
 
     private BikeNaviLaunchParam bikeParam;
+    private WalkNaviLaunchParam walkParam;
+
     private boolean isFirstLoc = true; // 是否首次定位
 
     private static boolean isPermissionRequested = false;
@@ -88,6 +96,11 @@ public class BNaviMainActivity extends BaseActivity {
     private void initLocation() {
         Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
         Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
+        if (Latitude1 <= 3 || Latitude1 >= 53 || Longitude1 <= 73 || Longitude1 >= 135) {
+            Latitude1 = 40.048424;
+            Longitude1 = 116.313513;
+            showToast("定位信号弱");
+        }
         endPt = new LatLng(Latitude1, Longitude1);
         getStartData();
     }
@@ -106,7 +119,18 @@ public class BNaviMainActivity extends BaseActivity {
                 bikeStartNode.setLocation(startPt);
                 BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
                 bikeEndNode.setLocation(endPt);
-                bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
+                bikeParam = new BikeNaviLaunchParam()
+                        .startNodeInfo(bikeStartNode)
+                        .endNodeInfo(bikeEndNode)
+                        .vehicle(1);
+                //初始化步行导航的信息
+                WalkRouteNodeInfo walkStartNodeInfo = new WalkRouteNodeInfo();
+                walkStartNodeInfo.setLocation(startPt);
+                WalkRouteNodeInfo walkEndNodeInfo = new WalkRouteNodeInfo();
+                walkEndNodeInfo.setLocation(endPt);
+                walkParam = new WalkNaviLaunchParam()
+                        .startNodeInfo(walkStartNodeInfo)
+                        .endNodeInfo(walkEndNodeInfo);
                 /* 初始化起终点Marker */
                 initOverlay();
             }
@@ -166,23 +190,19 @@ public class BNaviMainActivity extends BaseActivity {
      * 开始骑行导航
      */
     private void startBikeNavi() {
-        Log.d("zzh", "startBikeNavi");
         try {
             BikeNavigateHelper.getInstance().initNaviEngine(this, new IBEngineInitListener() {
                 @Override
                 public void engineInitSuccess() {
-                    Log.d("zzh", "BikeNavi engineInitSuccess");
                     routePlanWithBikeParam();
                 }
 
                 @Override
                 public void engineInitFail() {
-                    Log.d("zzh", "BikeNavi engineInitFail");
                     BikeNavigateHelper.getInstance().unInitNaviEngine();
                 }
             });
         } catch (Exception e) {
-            Log.d("zzh", "startBikeNavi Exception");
             e.printStackTrace();
         }
     }
@@ -237,4 +257,48 @@ public class BNaviMainActivity extends BaseActivity {
         if (mUnbinder != null && mUnbinder != Unbinder.EMPTY)
             mUnbinder.unbind();
     }
-}
+
+    /**
+     * 开始步行导航
+     */
+    private void startWalk() {
+        // 获取导航控制类
+        // 引擎初始化
+        WalkNavigateHelper.getInstance().initNaviEngine(this, new IWEngineInitListener() {
+
+            @Override
+            public void engineInitSuccess() {
+                //引擎初始化成功的回调
+                routeWalkPlanWithParam();
+            }
+
+            @Override
+            public void engineInitFail() {
+                //引擎初始化失败的回调
+            }
+        });
+    }
+
+    private void routeWalkPlanWithParam() {
+        //发起算路
+        WalkNavigateHelper.getInstance().routePlanWithRouteNode(walkParam, new IWRoutePlanListener() {
+            @Override
+            public void onRoutePlanStart() {
+                //开始算路的回调
+            }
+
+            @Override
+            public void onRoutePlanSuccess() {
+                //算路成功
+                //跳转至诱导页面
+                Intent intent = new Intent(BNaviMainActivity.this, BNaviGuideActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRoutePlanFail(WalkRoutePlanError walkRoutePlanError) {
+                //算路失败的回调
+            }
+        });
+    }
+    }

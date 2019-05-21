@@ -222,6 +222,7 @@
                 android:textSize="14dp"
                 android:maxLength="8"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:layout_toEndOf="@id/a"
                 android:padding="1dp"
                 android:background="@drawable/dialog_status_bg"/>

@@ -85,7 +85,9 @@ public class LoginActivity extends BaseActivity {
             }
             return false;
         });
+        initServerInput();
     }
+
 
 
     @OnClick({R.id.login_button, R.id.keyword_see})
@@ -110,6 +112,18 @@ public class LoginActivity extends BaseActivity {
                 canYouSee = !canYouSee;
                 break;
         }
+    }
+
+
+    /**
+     * 初始化地址填写栏
+     * 如果和默认的地址不一致，那么将填写的地址显示上去
+     */
+    private void initServerInput() {
+        if (ShareUtil.getIp(app)==null||ShareUtil.getIp(app).equals("http://192.168.1.124:129/")){
+            return;
+        }
+        serverIP.setText(BaseUtil.removeLastChar(ShareUtil.getIp(app)));
     }
 
     /**
@@ -166,7 +180,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFail(String error) {
                 //失败
-                showToast(error);
+                showToast("请检查网络或输入的网址");
                 dismissDialog();
             }
         });

@@ -76,7 +76,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings("NonAtomicOperationOnVolatileField")
 public class SamplingFormActivity extends BaseActivity
@@ -308,13 +307,24 @@ public class SamplingFormActivity extends BaseActivity
     @BindView(R.id.place)
     TextView place;
     String nowLocation;
-
     //保存与提交
     //保存
     @BindView(R.id.save)
     View save;
     @BindView(R.id.save_sampling)
     View save_sampling;
+    //请手写签名的提示
+    @BindView(R.id.sign_1)
+    TextView sign_1;
+    @BindView(R.id.sign_2)
+    TextView sign_2;
+    @BindView(R.id.sign_3)
+    TextView sign_3;
+    @BindView(R.id.sign_4)
+    TextView sign_4;
+    @BindView(R.id.sign_5)
+    TextView sign_5;
+
 
     private Dialog pictureUploadDialog;
     private Dialog formUploadDialog;
@@ -332,6 +342,8 @@ public class SamplingFormActivity extends BaseActivity
     private volatile String word_status = null;
 
     private volatile boolean isSaving = false;//是否正在保存（提交）
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,14 +467,29 @@ public class SamplingFormActivity extends BaseActivity
         sample_man_sign.setClickable(false);
         sample_man_sign_two.setClickable(false);
         monitor_man_sign.setClickable(false);
+        monitor_man_sign_2.setClickable(false);
+        monitor_man_sign_3.setClickable(false);
 
+        company_info.setHint("");
         company_info.setFocusable(false);
         company_info.setFocusableInTouchMode(false);
+        company_info_2.setHint("");
+        company_info_2.setFocusable(false);
+        company_info_2.setFocusableInTouchMode(false);
+        company_info_3.setHint("");
+        company_info_3.setFocusable(false);
+        company_info_3.setFocusableInTouchMode(false);
 
         sample_status.setClickable(false);
         sample_status_way_arrows.setClickable(false);
 
         save_sampling.setVisibility(View.GONE);
+
+        sign_1.setVisibility(View.GONE);
+        sign_2.setVisibility(View.GONE);
+        sign_3.setVisibility(View.GONE);
+        sign_4.setVisibility(View.GONE);
+        sign_5.setVisibility(View.GONE);
     }
 
     private void initView() {
@@ -513,27 +540,23 @@ public class SamplingFormActivity extends BaseActivity
      * 样品性状
      */
     private void initSampleStatus() {
-//        @BindView(R.id.sample_status)
-//        TextView sample_status;
-//        @BindView(R.id.sample_status_way_arrows)
-//        ImageView sample_status_way_arrows;
         sample_status.setOnClickListener(view -> {
-            if (sampling_status.getText().length()<=0){
+            if (sampling_status.getText().length() <= 0) {
                 showToast("请先选择状态");
                 return;
             }
-            if (sampling_status.getText().equals("异常")){
+            if (sampling_status.getText().equals("异常")) {
                 showToast("异常样品不能选择性状");
                 return;
             }
             showStatusDialog();
         });
         sample_status_way_arrows.setOnClickListener(view -> {
-            if (sampling_status.getText().length()<=0){
+            if (sampling_status.getText().length() <= 0) {
                 showToast("请先选择状态");
                 return;
             }
-            if (sampling_status.getText().equals("异常")){
+            if (sampling_status.getText().equals("异常")) {
                 showToast("异常样品不能选择性状");
                 return;
             }
@@ -710,8 +733,8 @@ public class SamplingFormActivity extends BaseActivity
                         builder.append("清澈,");
                         re.append("清澈,");
                     } else if (unclear_box.isChecked()) {
-                        builder.append("不清澈,");
-                        re.append("不清澈,");
+                        builder.append("浑浊,");
+                        re.append("浑浊,");
                     } else {
                         isclear = false;
                     }
@@ -941,7 +964,7 @@ public class SamplingFormActivity extends BaseActivity
         if (sampleManTwoPath != null)
             sampleManTwoNum = 1;
 
-        if (isSubmit && sampling_status.getText().equals("正常")&&sample_status.getText().equals("")){
+        if (isSubmit && sampling_status.getText().equals("正常") && sample_status.getText().equals("")) {
             showToast("请选择性状");
             return;
         }
@@ -994,7 +1017,7 @@ public class SamplingFormActivity extends BaseActivity
                     String temp = BaseUtil.TruncateHeadString(environmentPhotos.get(i), ipLength);
                     environmentPictureNum--;
                     saveAsAFile("env" + i, FormPresenter.ENVIRONMENT
-                            , temp,null);
+                            , temp, null);
                 } else {
                     //现在已经不可能来自本地了，在选择之后，会直接上传文件
                     updating = true;
@@ -1009,7 +1032,7 @@ public class SamplingFormActivity extends BaseActivity
                     String temp = BaseUtil.TruncateHeadString(samplingPhotos.get(i), ipLength);
                     samplingPictureNum--;
                     saveAsAFile("sampling" + i, FormPresenter.SAMPLING
-                            , temp,null);
+                            , temp, null);
                 } else {
                     updating = true;
                     presenter.uploadFile(samplingPhotos.get(i)
@@ -1024,7 +1047,7 @@ public class SamplingFormActivity extends BaseActivity
                     String temp = BaseUtil.TruncateHeadString(samplePhotos.get(i), ipLength);
                     samplePictureNum--;
                     saveAsAFile("sample" + i, FormPresenter.SAMPLE
-                            , temp,null);
+                            , temp, null);
                 } else {
                     updating = true;
                     presenter.uploadFile(samplePhotos.get(i)
@@ -1038,7 +1061,7 @@ public class SamplingFormActivity extends BaseActivity
                 if (BaseUtil.isNetUrl(path)) {
                     String temp = BaseUtil.TruncateHeadString(path, ipLength);
                     saveAsAFile("video" + i, FormPresenter.VIDEO
-                            , temp,null);
+                            , temp, null);
                     videoNum--;
                 } else {
                     updating = true;
@@ -1051,7 +1074,7 @@ public class SamplingFormActivity extends BaseActivity
             if (BaseUtil.isNetUrl(sampleManOnePath)) {
                 sampleManOnePath_upload = BaseUtil.TruncateHeadString(sampleManOnePath, ipLength);
                 saveAsAFile("ManOne", FormPresenter.SAMPLEMAN
-                        , sampleManOnePath_upload,null);
+                        , sampleManOnePath_upload, null);
                 sampleManOneNum--;
             } else {
                 updating = true;
@@ -1062,39 +1085,39 @@ public class SamplingFormActivity extends BaseActivity
             if (BaseUtil.isNetUrl(sampleManTwoPath)) {
                 sampleManTwoPath_upload = BaseUtil.TruncateHeadString(sampleManTwoPath, ipLength);
                 saveAsAFile("ManTwo", FormPresenter.SAMPLEMAN
-                        , sampleManTwoPath_upload,null);
+                        , sampleManTwoPath_upload, null);
             } else {
                 updating = true;
                 presenter.uploadFile(sampleManTwoPath, this, FormPresenter.SAMPLEMAN);
             }
         }
         //三个监督员
-        if (monitorManSignPath !=null) {
+        if (monitorManSignPath != null) {
             if (BaseUtil.isNetUrl(monitorManSignPath)) {
                 monitorManSignPath_upload = BaseUtil.TruncateHeadString(monitorManSignPath, ipLength);
                 saveAsAFile("mon", FormPresenter.MONITOR
-                        , monitorManSignPath_upload,company_info.getText().toString());
+                        , monitorManSignPath_upload, company_info.getText().toString());
             } else {
                 updating = true;
                 presenter.uploadFile(monitorManSignPath, this, FormPresenter.MONITOR);
             }
         }
-        if (monitorManSignPath2 !=null) {
+        if (monitorManSignPath2 != null) {
             if (BaseUtil.isNetUrl(monitorManSignPath2)) {
                 monitorManSignPath_upload = BaseUtil.TruncateHeadString(monitorManSignPath2, ipLength);
                 saveAsAFile("mon1", FormPresenter.MONITOR
-                        , monitorManSignPath_upload,company_info_2.getText().toString());
+                        , monitorManSignPath_upload, company_info_2.getText().toString());
                 monitorManSignNum--;
             } else {
                 updating = true;
                 presenter.uploadFile(monitorManSignPath2, this, FormPresenter.MONITOR);
             }
         }
-        if (monitorManSignPath3 !=null) {
+        if (monitorManSignPath3 != null) {
             if (BaseUtil.isNetUrl(monitorManSignPath3)) {
                 monitorManSignPath_upload = BaseUtil.TruncateHeadString(monitorManSignPath3, ipLength);
                 saveAsAFile("mon2", FormPresenter.MONITOR
-                        , monitorManSignPath_upload,company_info_3.getText().toString());
+                        , monitorManSignPath_upload, company_info_3.getText().toString());
             } else {
                 updating = true;
                 presenter.uploadFile(monitorManSignPath3, this, FormPresenter.MONITOR);
@@ -1948,11 +1971,11 @@ public class SamplingFormActivity extends BaseActivity
                     break;
                 case FormPresenter.MONITORT:
                     canSave = true;
-                    monitorManSignPath2=BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
+                    monitorManSignPath2 = BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
                     break;
                 case FormPresenter.MONITORR:
                     canSave = true;
-                    monitorManSignPath3=BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
+                    monitorManSignPath3 = BaseUtil.removeLastChar(InternetUtil.SERVER_IP) + path;
                     break;
             }
             dismissUploadDialog();
@@ -1965,17 +1988,18 @@ public class SamplingFormActivity extends BaseActivity
 
     /**
      * 记录存储的文件信息
+     *
      * @param name 名称
      * @param type 类型
      * @param path 路径
      * @param unit 机构
      */
-    private void saveAsAFile(String name, int type, String path,String unit) {
+    private void saveAsAFile(String name, int type, String path, String unit) {
         FileData data = new FileData();
         data.setFileName(name);
         data.setFilePath(path);
         data.setFileType(String.valueOf(type));
-        if (unit!=null)
+        if (unit != null)
             data.setUserUnit(unit);
         files.add(data);
     }
@@ -2153,6 +2177,8 @@ public class SamplingFormActivity extends BaseActivity
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < name.length; i++) {
             temp.append(name[i]);
+            //初始化信息
+            a(name[i]);
             if (i == 1) {
                 temp.append("\n");
             } else {
@@ -2161,6 +2187,44 @@ public class SamplingFormActivity extends BaseActivity
         }
         temp.delete(temp.length() - 1, temp.length());
         sample_status.setText(temp.toString());
+    }
+
+    private void a(String b) {
+        switch (b) {
+            case "清澈":
+                isclear = true;
+                iFclear = true;
+                break;
+            case "浑浊":
+                isclear = true;
+                iFclear = false;
+                break;
+            case "无异味":
+                issmell=true;
+                iFsmell=false;
+                break;
+            case "有异味":
+                issmell=true;
+                iFsmell=true;
+                break;
+            case "无色":
+                iscolor=true;
+                iFcolor=false;
+                break;
+            case "无明显浮油":
+                isoil=true;
+                iFoil=false;
+                break;
+            case "有明显浮油":
+                isoil=true;
+                iFoil=true;
+                break;
+        }
+        if (!b.equals("无色")&&b.substring(b.length()-1).equals("色")){
+            iscolor=true;
+            iFcolor=true;
+            colorText=b.substring(0,b.length()-1);
+        }
     }
 
     /**
@@ -2220,7 +2284,7 @@ public class SamplingFormActivity extends BaseActivity
                     }
                     break;
                 case "5":
-                    if (monitorManSignPath==null){
+                    if (monitorManSignPath == null) {
                         monitorManSignPath = Ip + file.getFilePath();
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
@@ -2230,7 +2294,7 @@ public class SamplingFormActivity extends BaseActivity
                             GlideUtil.loadImageViewLodingRotate(this, monitorManSignPath, monitor_man_sign, 90f);
                         });
                         monitorManSignNum++;
-                    }else if (monitorManSignPath2==null){
+                    } else if (monitorManSignPath2 == null) {
                         monitorManSignPath2 = Ip + file.getFilePath();
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
@@ -2240,7 +2304,7 @@ public class SamplingFormActivity extends BaseActivity
                             GlideUtil.loadImageViewLodingRotate(this, monitorManSignPath2, monitor_man_sign_2, 90f);
                         });
                         monitorManSignNum++;
-                    }else if (monitorManSignPath3==null){
+                    } else if (monitorManSignPath3 == null) {
                         monitorManSignPath3 = Ip + file.getFilePath();
                         runOnUiThread(() -> {
                             if (SamplingFormActivity.this.isDestroyed() || SamplingFormActivity.this.isFinishing())
