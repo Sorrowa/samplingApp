@@ -344,7 +344,6 @@ public class SamplingFormActivity extends BaseActivity
     private volatile boolean isSaving = false;//是否正在保存（提交）
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -437,6 +436,7 @@ public class SamplingFormActivity extends BaseActivity
 
         sampling_method_select.setClickable(false);
         sampling_method_arrows.setClickable(false);
+        sampling_method.setClickable(false);
 
         choose_status.setClickable(false);
         getPointStatus.setClickable(false);
@@ -1934,26 +1934,35 @@ public class SamplingFormActivity extends BaseActivity
                 case FormPresenter.ENVIRONMENT:
                     canSave = true;
                     environmentPhotos.add("1");
-                    environmentAdapter.notifyItemChanged(environmentPhotos.size() - 1);
-                    RxUtil.addPhoto(environmentPhotos, environmentAdapter, path, this);
+                    runOnUiThread(() -> {
+                        environmentAdapter.notifyItemChanged(environmentPhotos.size() - 1);
+                        RxUtil.addPhoto(environmentPhotos, environmentAdapter, path
+                                , SamplingFormActivity.this);
+                    });
                     break;
                 case FormPresenter.SAMPLING:
                     canSave = true;
                     samplingPhotos.add("1");
-                    samplingAdapter.notifyItemChanged(samplingPhotos.size() - 1);
-                    RxUtil.addPhoto(samplingPhotos, samplingAdapter, path, this);
+                    runOnUiThread(() -> {
+                        samplingAdapter.notifyItemChanged(samplingPhotos.size() - 1);
+                        RxUtil.addPhoto(samplingPhotos, samplingAdapter, path, SamplingFormActivity.this);
+                    });
                     break;
                 case FormPresenter.SAMPLE:
                     canSave = true;
                     samplePhotos.add("1");
-                    sampleAdapter.notifyItemChanged(samplePhotos.size() - 1);
-                    RxUtil.addPhoto(samplePhotos, sampleAdapter, path, this);
+                    runOnUiThread(() -> {
+                        sampleAdapter.notifyItemChanged(samplePhotos.size() - 1);
+                        RxUtil.addPhoto(samplePhotos, sampleAdapter, path, SamplingFormActivity.this);
+                    });
                     break;
                 case FormPresenter.VIDEO:
                     canSave = true;
                     sampleVideo.add("1");
-                    videoAdapter.notifyItemChanged(sampleVideo.size() - 1);
-                    RxUtil.addPhoto(sampleVideo, videoAdapter, path, this);
+                    runOnUiThread(() -> {
+                        videoAdapter.notifyItemChanged(sampleVideo.size() - 1);
+                        RxUtil.addPhoto(sampleVideo, videoAdapter, path, SamplingFormActivity.this);
+                    });
                     break;
                 case FormPresenter.SAMPLEMAN:
                     //保存和提交的逻辑会自动将它转变成file
@@ -2200,30 +2209,30 @@ public class SamplingFormActivity extends BaseActivity
                 iFclear = false;
                 break;
             case "无异味":
-                issmell=true;
-                iFsmell=false;
+                issmell = true;
+                iFsmell = false;
                 break;
             case "有异味":
-                issmell=true;
-                iFsmell=true;
+                issmell = true;
+                iFsmell = true;
                 break;
             case "无色":
-                iscolor=true;
-                iFcolor=false;
+                iscolor = true;
+                iFcolor = false;
                 break;
             case "无明显浮油":
-                isoil=true;
-                iFoil=false;
+                isoil = true;
+                iFoil = false;
                 break;
             case "有明显浮油":
-                isoil=true;
-                iFoil=true;
+                isoil = true;
+                iFoil = true;
                 break;
         }
-        if (!b.equals("无色")&&b.substring(b.length()-1).equals("色")){
-            iscolor=true;
-            iFcolor=true;
-            colorText=b.substring(0,b.length()-1);
+        if (!b.equals("无色") && b.substring(b.length() - 1).equals("色")) {
+            iscolor = true;
+            iFcolor = true;
+            colorText = b.substring(0, b.length() - 1);
         }
     }
 

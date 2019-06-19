@@ -43,6 +43,7 @@ public class BNaviGuideActivity extends BaseActivity implements CancelAdapt {
         mNaviHelper = BikeNavigateHelper.getInstance();
 
         View view = mNaviHelper.onCreate(BNaviGuideActivity.this);
+
         if (view != null) {
             setContentView(view);
         }

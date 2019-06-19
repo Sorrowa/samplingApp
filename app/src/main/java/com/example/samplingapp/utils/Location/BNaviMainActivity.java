@@ -94,8 +94,8 @@ public class BNaviMainActivity extends BaseActivity {
     }
 
     private void initLocation() {
-        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
-        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
+//        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
+//        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
         if (Latitude1 <= 3 || Latitude1 >= 53 || Longitude1 <= 73 || Longitude1 >= 135) {
             Latitude1 = 40.048424;
             Longitude1 = 116.313513;
@@ -182,7 +182,10 @@ public class BNaviMainActivity extends BaseActivity {
     private void initMapStatusFirst() {
         mBaiduMap = mMapView.getMap();
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(new LatLng(40.048424, 116.313513)).zoom(15);
+        Latitude1 = getIntent().getDoubleExtra("Latitude1", 0);
+        Longitude1 = getIntent().getDoubleExtra("Longitude1", 0);
+        builder.target(new LatLng(Longitude1
+                , Latitude1)).zoom(15);
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
@@ -301,4 +304,6 @@ public class BNaviMainActivity extends BaseActivity {
             }
         });
     }
-    }
+    //开始汽车导航
+
+}

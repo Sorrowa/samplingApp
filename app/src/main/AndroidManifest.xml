@@ -42,7 +42,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".Activities.TaskDetial.TaskSearchActivity"
             android:launchMode="singleTask"

@@ -33,6 +33,7 @@ public class BottomSelectDialog extends Dialog {
     public BottomSelectDialog(@NonNull Context context, int themeResId, OnClickListener listener) {
         super(context, themeResId);
         activity = (SamplingFormActivity) context;
+
         View contentView = getLayoutInflater().inflate(
                 R.layout.dialog_bottom_select, null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
